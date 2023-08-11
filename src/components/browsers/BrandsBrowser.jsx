@@ -38,7 +38,7 @@ const BrandsBrowser = ({setOpen, value, setValue}) => {
     try{
       var error = false;
       if(!error){
-        const response = await axios.post("/api/brands/get-active", {});
+        const response = await axios.post("/api/brands/active", {});
         const values = [];
         response.data.data.rows.map(val => {
           values.push({

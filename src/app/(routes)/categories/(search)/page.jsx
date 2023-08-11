@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { CircularProgress, MenuItem, InputAdornment, IconButton, Typography, Button, TextField } from '@mui/material';
 import { Add, ClearAll, Edit, FilterAlt, ImportExport, KeyboardArrowDown, KeyboardArrowLeft, KeyboardArrowRight, KeyboardArrowUp, Search } from '@mui/icons-material';
 import useWindowDimensions from '@/hooks/useWindowDimension';
+import SupportMenu from '@/components/headers/SupportMenu';
 
 const CategoriesSearch = () => {
   const router = useRouter();
@@ -166,18 +167,11 @@ const CategoriesSearch = () => {
           const values = [];
           response.data.data.data.map(val => {
             var status = "";
-            var imageUrl = "";
             if(val.status==="active"){
               status = "Active";
             }
             else if(val.status==="inactive"){
               status = "Inactive";
-            }
-            if(val.image_url==="none"){
-              imageUrl = "none";
-            }
-            else{
-              imageUrl = "https://tm-web.techmax.lk/"+val.image_url;
             }
             const temp = {
               index: index++,
@@ -223,6 +217,7 @@ const CategoriesSearch = () => {
   return (
     <div className='form_container' style={{minHeight: (height-80)}} ref={scrollRef} onScroll={onScroll}>
       <div className='form_container_medium' style={{minHeight: (height-80)}}>
+        <SupportMenu selected_root='categories'/>
         <div className='header_container'>
           <div className='header_container_left'>
             <span></span>

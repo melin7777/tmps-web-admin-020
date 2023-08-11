@@ -503,7 +503,7 @@ const Dashboard = () => {
             </div>
           </div>
           <div className='header_container_right'>
-            <div className=''>
+            <div className='flex flex-row'>
               <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/categories")}>Categories</Button>
               <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/brands")}>Brands</Button>
               <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/models")}>Models</Button>

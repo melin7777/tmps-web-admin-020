@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { CameraAlt, Cancel, Done, Search } from "@mui/icons-material";
-import { DialogActions, DialogContent, TextField, InputAdornment, CircularProgress, Button } from "@mui/material";
+import { DialogActions, DialogContent, TextField, InputAdornment, CircularProgress, Button, Avatar } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -94,10 +94,10 @@ const SellersBrowser = ({setOpen, value, setValue}) => {
         <DialogContent dividers sx={{background: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'start', alignItems: 'start', position: 'relative', height: 600, width: 'auto', minWidth: {sm: 500}}}>
           {viewItems.map(val=>
             <div key={val.id} onClick={()=>setSelectedItem(val)} className='flex flex-row w-full justify-between items-center' style={{borderBottom: '1px solid #e0e0e0', backgroundColor: selectedItem?.id===val.id?"#e7e5e4":"#ffffff"}}>
-              <div key={val.id} className='flex flex-col justify-center items-center w-[60px] h-[60px]'>
+              <div key={val.id} className='flex flex-col justify-center items-center'>
                 {val.image_url==="none" ? 
                   <CameraAlt sx={{width: 50, height: 50, color: '#cbd5e1'}}/> : 
-                  <div className='flex justify-center items-center relative w-[50px] h-[50px]'><Image src={val.image_url} alt="seller image" fill sizes='80px' priority={true} style={{objectFit: 'contain'}}/></div>
+                  <Avatar src={imageUrl} sx={{width: 30, height: 30}}/>
                 }
               </div>
               <div key={val.id} className='flex flex-col flex-1 justify-center items-start h-[60px] pl-3'>
