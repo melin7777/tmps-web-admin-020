@@ -15,7 +15,7 @@ body{
 }
 
 .form_container_medium{
-  @apply flex flex-col justify-start items-center px-3 py-3 bg-white shadow-md w-full max-w-2xl;
+  @apply flex flex-col justify-start items-center px-3 py-3 bg-white shadow-md w-full max-w-3xl;
 }
 
 .form_container_large{
