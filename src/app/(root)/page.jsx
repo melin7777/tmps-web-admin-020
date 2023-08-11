@@ -5,12 +5,13 @@ import { useRouter } from 'next/navigation';
 import axios from "axios";
 import Loading from '@/components/modals/Loading';
 import useWindowDimensions from '@/hooks/useWindowDimension';
-import { CalendarMonth, Search } from '@mui/icons-material';
+import { ArrowDropDown, CalendarMonth, Close, Search } from '@mui/icons-material';
 import { Button, CircularProgress, Dialog, MenuItem, TextField } from '@mui/material';
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, sub, lightFormat, format, parseISO, eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval, eachYearOfInterval, isEqual, subDays, isWithinInterval } from 'date-fns';
 import DateBrowser from '@/components/browsers/DateBrowser';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import SellersBrowser from '@/components/browsers/SellersBrowser';
 
 const Dashboard = () => {
   const router = useRouter();
@@ -97,6 +98,9 @@ const Dashboard = () => {
   const [searchDiscountDeliveries, setSearchDiscountDeliveries] = useState(0.0);
   const [searchNetTotalDeliveries, setSearchNetTotalDeliveries] = useState(0.0);
 
+  const [openSeller, setOpenSeller] = useState(false);
+  const [searchSeller, setSearchSeller] = useState({id: 0, first_name: "All", last_name: ""});
+
   useEffect(() => {
     if(session && session.user && status!=="loading"){
       if(session.user.status==="activation_pending"){
@@ -182,7 +186,7 @@ const Dashboard = () => {
     try{
       var error = false;
       var search_data = {};
-      search_data["seller_id"] = (session.user.id);
+      search_data["seller_id"] = (searchSeller.id);
       search_data["from_date"] = searchStartDateView;
       search_data["to_date"] = searchEndDateView;
       if(!error){
@@ -500,36 +504,53 @@ const Dashboard = () => {
           </div>
           <div className='header_container_right'>
             <div className=''>
-
+              <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/categories")}>Categories</Button>
+              <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/brands")}>Brands</Button>
+              <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/models")}>Models</Button>
+              <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/sellers")}>Sellers</Button>
+              <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/customers")}>Customers</Button>
+              <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/admins")}>Admins</Button>
             </div>
           </div>
         </div>
         <div className='form_fields_toolbar_container pb-4' style={{borderBottom: '1px solid #e8e8e8'}}>
-          <div className='form_fields_toolbar_container_left'>
-            <div className='form_text_field_constructed_xtra_small'>
-              <span className='form_text_field_constructed_label'>From</span>
-              <span className='form_text_field_constructed_text cursor-pointer' onClick={()=>setOpenStartDate(true)}>{searchStartDateView}</span>
-              <div className='form_text_field_constructed_actions_1'>
-                <CalendarMonth sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenStartDate(true)}/>
+          <div className='form_fields_toolbar_container_left_col'>
+            <div className='form_fields_toolbar_container_left_col_top'>
+              <div className='form_text_field_constructed'>
+                <span className='form_text_field_constructed_label'>Seller</span>
+                <span className='form_text_field_constructed_text' onClick={()=>setOpenSeller(true)}>{searchSeller.first_name+" "+searchSeller.last_name}</span>
+                <div className='form_text_field_constructed_actions'>
+                  <Close sx={{width: 20, height: 20, color: '#6b7280'}} onClick={()=>setSearchSeller({id: 0, first_name: "All", last_name: ""})}/>
+                  <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenSeller(true)}/>
+                </div>
               </div>
             </div>
-            <div className='form_text_field_constructed_xtra_small'>
-              <span className='form_text_field_constructed_label'>To</span>
-              <span className='form_text_field_constructed_text cursor-pointer' onClick={()=>setOpenEndDate(true)}>{searchEndDateView}</span>
-              <div className='form_text_field_constructed_actions_1'>
-                <CalendarMonth sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenEndDate(true)}/>
+            <div className='form_fields_toolbar_container_left_col_bottom'>
+              <div className='form_text_field_constructed_xtra_small'>
+                <span className='form_text_field_constructed_label'>From</span>
+                <span className='form_text_field_constructed_text cursor-pointer' onClick={()=>setOpenStartDate(true)}>{searchStartDateView}</span>
+                <div className='form_text_field_constructed_actions_1'>
+                  <CalendarMonth sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenStartDate(true)}/>
+                </div>
               </div>
+              <div className='form_text_field_constructed_xtra_small'>
+                <span className='form_text_field_constructed_label'>To</span>
+                <span className='form_text_field_constructed_text cursor-pointer' onClick={()=>setOpenEndDate(true)}>{searchEndDateView}</span>
+                <div className='form_text_field_constructed_actions_1'>
+                  <CalendarMonth sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenEndDate(true)}/>
+                </div>
+              </div>
+              <Button 
+                variant='contained' 
+                disabled={isLoading} 
+                style={{textTransform: 'none', height: 36}} 
+                startIcon={isLoading?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Search />}
+                onClick={()=>{getSearchData(); getSearchDataDeliveries()}}
+                size='small'
+              >Search</Button>
             </div>
-            <Button 
-              variant='contained' 
-              disabled={isLoading} 
-              style={{textTransform: 'none'}} 
-              startIcon={isLoading?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Search />}
-              onClick={()=>{getSearchData(); getSearchDataDeliveries()}}
-              size='small'
-            >Search</Button>
           </div>
-          <div className='form_fields_toolbar_container_right'>
+          <div className='form_fields_toolbar_container_right_end'>
             <TextField className='form_text_field_xtra_small'
               id='time-frame'
               value={searchTimeFrame}
@@ -646,6 +667,9 @@ const Dashboard = () => {
         </Dialog>
         <Dialog open={openEndDate} onClose={()=>setOpenEndDate(false)}>
           <DateBrowser {...{setOpen: setOpenEndDate, value: searchEndDate, setValue: setSearchEndDate}}/>
+        </Dialog>
+        <Dialog open={openSeller} onClose={()=>setOpenSeller(false)} scroll='paper'>
+          <SellersBrowser {...{setOpen: setOpenSeller, value: searchSeller, setValue: setSearchSeller}}/>
         </Dialog>
       </div>
     </div>

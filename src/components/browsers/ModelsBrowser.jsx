@@ -65,9 +65,9 @@ const ModelsBrowser = ({setOpen, value, setValue, dependedValue, setDependedValu
     <>
       <div className="flex flex-row justify-between items-center px-5 py-2">
         <div className="flex flex-col">
-          <span className="text-violet-600 font-medium text-lg">Select Model</span>          
+          <span className="text-zinc-800 font-medium text-lg">Select Model</span>          
           {selectedDependedItem.id>0 &&
-            <div className="flex flex-row justify-center items-center gap-2 bg-violet-600 rounded-xl px-2 py-1">
+            <div className="flex flex-row justify-center items-center gap-2 bg-zinc-800 rounded-xl px-2 py-1">
               <span className="flex flex-row text-white text-xs">{selectedDependedItem.description}</span>
               <Cancel sx={{width: 18, height: 18, color: '#fff', cursor: 'pointer'}} onClick={()=>setSelectedDependedItem({id: 0, description: "All"})}/>
             </div>
@@ -93,7 +93,7 @@ const ModelsBrowser = ({setOpen, value, setValue, dependedValue, setDependedValu
           {selectedItem && viewItems.map(val=>
             <>
               {selectedItem?.id===val.id?
-                <span key={val.id} onClick={()=>setSelectedItem(val)} className="text-violet-800 bg-violet-100 text-sm py-2 pl-3 w-full cursor-pointer" style={{borderBottom: '1px solid #c4b5fd'}}>{val.description}</span>
+                <span key={val.id} onClick={()=>setSelectedItem(val)} className="text-zinc-800 bg-zinc-100 text-sm py-2 pl-3 w-full cursor-pointer" style={{borderBottom: '1px solid #c4b5fd'}}>{val.description}</span>
               :
                 <span key={val.id} onClick={()=>setSelectedItem(val)} className="text-gray-500 text-sm py-2 w-full cursor-pointer" style={{borderBottom: '1px solid #d1d5db'}}>{val.description}</span>
               }

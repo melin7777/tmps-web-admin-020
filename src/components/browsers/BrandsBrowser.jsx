@@ -61,7 +61,7 @@ const BrandsBrowser = ({setOpen, value, setValue}) => {
   return (
     <>
       <div className="flex flex-row justify-between items-center px-5 py-2">
-        <span className="text-violet-600 font-medium text-lg">Select Brand</span>
+        <span className="text-zinc-800 font-medium text-lg">Select Brand</span>
         <TextField
           className='form_text_field_small'
           id='search-text'
@@ -82,7 +82,7 @@ const BrandsBrowser = ({setOpen, value, setValue}) => {
           {viewItems.map(val=>
             <>
               {selectedItem?.id===val.id?
-                <span key={val.id} onClick={()=>setSelectedItem(val)} className="text-violet-800 bg-violet-100 text-sm py-2 pl-3 w-full cursor-pointer" style={{borderBottom: '1px solid #c4b5fd'}}>{val.description}</span>
+                <span key={val.id} onClick={()=>setSelectedItem(val)} className="text-zinc-800 bg-zinc-100 text-sm py-2 pl-3 w-full cursor-pointer" style={{borderBottom: '1px solid #c4b5fd'}}>{val.description}</span>
               :
                 <span key={val.id} onClick={()=>setSelectedItem(val)} className="text-gray-500 text-sm py-2 w-full cursor-pointer" style={{borderBottom: '1px solid #d1d5db'}}>{val.description}</span>
               }
