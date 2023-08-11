@@ -48,38 +48,38 @@ const MainHeader = () => {
 
   const onSignOut = async () => {
     try {
-      localStorage.removeItem('inventory_search_data');
-      localStorage.removeItem('inventory_search_data');
-      localStorage.removeItem('inventory_search_rpp');
-      localStorage.removeItem('inventory_search_nop');
-      localStorage.removeItem('inventory_search_page');
-      localStorage.removeItem('inventory_search_sort_by');
-      localStorage.removeItem('inventory_search_order');
-      localStorage.removeItem('inventory_search_description');
-      localStorage.removeItem('inventory_search_brand');
-      localStorage.removeItem('inventory_search_model');
-      localStorage.removeItem('inventory_search_category');
-      localStorage.removeItem('inventory_search_status');
+      localStorage.removeItem('admin_inventory_search_data');
+      localStorage.removeItem('admin_inventory_search_data');
+      localStorage.removeItem('admin_inventory_search_rpp');
+      localStorage.removeItem('admin_inventory_search_nop');
+      localStorage.removeItem('admin_inventory_search_page');
+      localStorage.removeItem('admin_inventory_search_sort_by');
+      localStorage.removeItem('admin_inventory_search_order');
+      localStorage.removeItem('admin_inventory_search_description');
+      localStorage.removeItem('admin_inventory_search_brand');
+      localStorage.removeItem('admin_inventory_search_model');
+      localStorage.removeItem('admin_inventory_search_category');
+      localStorage.removeItem('admin_inventory_search_status');
 
-      localStorage.removeItem('orders_search_data');
-      localStorage.removeItem('orders_search_rpp');
-      localStorage.removeItem('orders_search_nop');
-      localStorage.removeItem('orders_search_page');
-      localStorage.removeItem('orders_search_sort_by');
-      localStorage.removeItem('orders_search_order');
-      localStorage.removeItem('orders_search_start_date');
-      localStorage.removeItem('orders_search_end_date');
-      localStorage.removeItem('orders_search_status');
+      localStorage.removeItem('admin_orders_search_data');
+      localStorage.removeItem('admin_orders_search_rpp');
+      localStorage.removeItem('admin_orders_search_nop');
+      localStorage.removeItem('admin_orders_search_page');
+      localStorage.removeItem('admin_orders_search_sort_by');
+      localStorage.removeItem('admin_orders_search_order');
+      localStorage.removeItem('admin_orders_search_start_date');
+      localStorage.removeItem('admin_orders_search_end_date');
+      localStorage.removeItem('admin_orders_search_status');
 
-      localStorage.removeItem('deliveries_search_data');
-      localStorage.removeItem('deliveries_search_rpp');
-      localStorage.removeItem('deliveries_search_nop');
-      localStorage.removeItem('deliveries_search_page');
-      localStorage.removeItem('deliveries_search_sort_by');
-      localStorage.removeItem('deliveries_search_order');
-      localStorage.removeItem('deliveries_search_start_date');
-      localStorage.removeItem('deliveries_search_end_date');
-      localStorage.removeItem('deliveries_search_status');
+      localStorage.removeItem('admin_deliveries_search_data');
+      localStorage.removeItem('admin_deliveries_search_rpp');
+      localStorage.removeItem('admin_deliveries_search_nop');
+      localStorage.removeItem('admin_deliveries_search_page');
+      localStorage.removeItem('admin_deliveries_search_sort_by');
+      localStorage.removeItem('admin_deliveries_search_order');
+      localStorage.removeItem('admin_deliveries_search_start_date');
+      localStorage.removeItem('admin_deliveries_search_end_date');
+      localStorage.removeItem('admin_deliveries_search_status');
     } 
     catch (e) {
       console.log("put storage error");
@@ -91,11 +91,11 @@ const MainHeader = () => {
 
   return (
     <div className="flex flex-row justify-center items-center w-full fixed top-0 z-50">
-      <div className="flex flex-row justify-between items-center w-full max-w-6xl bg-white" style={{borderBottom: "3px solid #7c3aed"}}>
+      <div className="flex flex-row justify-between items-center w-full max-w-6xl bg-white" style={{borderBottom: "3px solid #27272a"}}>
         <div className='flex flex-row flex-1'>
           <div onClick={()=>router.push("/")} className='flex flex-row gap-1 px-2 h-[40px] justify-start items-center cursor-pointer'>
             <div className='w-[50px] h-[30px] relative'><Image src='/logo-small.png' alt='logo' fill sizes='50px' priority={true} style={{objectFit: 'contain'}}/></div>
-            <p className='font-bold text-xl sm:text-2xl text-purple-600 hidden xs:flex'>TeckMax.lk</p>
+            <p className='font-bold text-xl sm:text-2xl text-zinc-800 hidden xs:flex'>TeckMax.lk</p>
           </div>
         </div>
         {status==="loading" && 
@@ -106,16 +106,16 @@ const MainHeader = () => {
         {status==="authenticated" && 
           <>
             <div className="flex flex-row justify-center items-center gap-1">
-              <IconButton onClick={()=>router.push('/notifications')}><Notifications sx={{width: 22, height: 22, color: '#7c3aed'}}/></IconButton>
-              <IconButton onClick={()=>router.push('/orders')}><FileCopy sx={{width: 22, height: 22, color: '#7c3aed'}}/></IconButton>
+              <IconButton onClick={()=>router.push('/notifications')}><Notifications sx={{width: 22, height: 22, color: '#27272a'}}/></IconButton>
+              <IconButton onClick={()=>router.push('/orders')}><FileCopy sx={{width: 22, height: 22, color: '#27272a'}}/></IconButton>
               <div className='flex flex-row justify-center items-center gap-2 cursor-pointer' onClick={()=>router.push('/profile')}>
                 {imageUrl==="none"?<Person sx={{width: 30, height: 30, color: '#047857'}}/>:<Avatar src={imageUrl} sx={{width: 30, height: 30}}/>}
                 <div className='flex-col justify-center items-start w-30 hidden md:flex'>
                   <span className='text-xs font-medium'>{session?.user.name}</span>
-                  <span className='text-xs text-purple-600'>{"Seller"}</span>
+                  <span className='text-xs text-zinc-800'>{"Admin"}</span>
                 </div>
               </div>
-              <IconButton ref={anchorRef} onClick={handleToggle}><Menu sx={{width: 28, height: 28, color: '#7c3aed'}}/></IconButton>
+              <IconButton ref={anchorRef} onClick={handleToggle}><Menu sx={{width: 28, height: 28, color: '#27272a'}}/></IconButton>
             </div>
             <Popper
               open={open}
@@ -136,7 +136,7 @@ const MainHeader = () => {
                       <MenuList autoFocusItem={open} onKeyDown={handleListKeyDown} sx={{width: 220}}>
                         <div className='flex-col justify-center items-start px-4 py-2 bg-white flex md:hidden'>
                           <span className='text-sm'>{session.user.name}</span>
-                          <span className='text-xs text-emerald-600'>{"Seller"}</span>
+                          <span className='text-xs text-emerald-600'>{"Admin"}</span>
                         </div>
                         <Divider className='flex md:hidden'/>
                         <MenuItem
@@ -145,7 +145,7 @@ const MainHeader = () => {
                             router.push("/");
                           }}
                         >
-                          <ListItemIcon><Dashboard sx={{width: 18, height: 18, color: '#7c3aed'}}/></ListItemIcon>
+                          <ListItemIcon><Dashboard sx={{width: 18, height: 18, color: '#27272a'}}/></ListItemIcon>
                           <span className='text-sm'>Dashboard</span>
                         </MenuItem>
                         <Divider/>
@@ -155,7 +155,7 @@ const MainHeader = () => {
                             router.push("/inventory");
                           }}
                         >
-                          <ListItemIcon><Inventory sx={{width: 18, height: 18, color: '#7c3aed'}}/></ListItemIcon>
+                          <ListItemIcon><Inventory sx={{width: 18, height: 18, color: '#27272a'}}/></ListItemIcon>
                           <span className='text-sm'>Inventory</span>
                         </MenuItem>
                         <Divider/>
@@ -165,7 +165,7 @@ const MainHeader = () => {
                             router.push("/notifications");
                           }}
                         >
-                          <ListItemIcon><Notifications sx={{width: 18, height: 18, color: '#7c3aed'}}/></ListItemIcon>
+                          <ListItemIcon><Notifications sx={{width: 18, height: 18, color: '#27272a'}}/></ListItemIcon>
                           <span className='text-sm'>Notifications</span>
                         </MenuItem>
                         <MenuItem
@@ -174,7 +174,7 @@ const MainHeader = () => {
                             router.push("/orders");
                           }}
                         >
-                          <ListItemIcon><FileCopy sx={{width: 18, height: 18, color: '#7c3aed'}}/></ListItemIcon>
+                          <ListItemIcon><FileCopy sx={{width: 18, height: 18, color: '#27272a'}}/></ListItemIcon>
                           <span className='text-sm'>Orders</span>
                         </MenuItem>
                         <MenuItem
@@ -183,7 +183,7 @@ const MainHeader = () => {
                             router.push("/deliveries");
                           }}
                         >
-                          <ListItemIcon><DirectionsCar sx={{width: 18, height: 18, color: '#7c3aed'}}/></ListItemIcon>
+                          <ListItemIcon><DirectionsCar sx={{width: 18, height: 18, color: '#27272a'}}/></ListItemIcon>
                           <span className='text-sm'>Deliveries</span>
                         </MenuItem>
                         <Divider />
@@ -193,7 +193,7 @@ const MainHeader = () => {
                             router.push("/profile");
                           }}
                         >
-                          <ListItemIcon><Person sx={{width: 18, height: 18, color: '#7c3aed'}}/></ListItemIcon>
+                          <ListItemIcon><Person sx={{width: 18, height: 18, color: '#27272a'}}/></ListItemIcon>
                           <span className='text-sm'>Profile</span>
                         </MenuItem>
                         <MenuItem
@@ -202,7 +202,7 @@ const MainHeader = () => {
                             router.push("/settings");
                           }}
                         >
-                          <ListItemIcon><Settings sx={{width: 18, height: 18, color: '#7c3aed'}}/></ListItemIcon>
+                          <ListItemIcon><Settings sx={{width: 18, height: 18, color: '#27272a'}}/></ListItemIcon>
                           <span className='text-sm'>Settings</span>
                         </MenuItem>
                         <Divider />
@@ -212,7 +212,7 @@ const MainHeader = () => {
                             onSignOut();
                           }}
                         >
-                          <ListItemIcon>{isLoading?<CircularProgress size={18} style={{'color': '#7c3aed'}}/>:<Logout sx={{width: 18, height: 18, color: '#7c3aed'}}/>}</ListItemIcon>
+                          <ListItemIcon>{isLoading?<CircularProgress size={18} style={{'color': '#27272a'}}/>:<Logout sx={{width: 18, height: 18, color: '#27272a'}}/>}</ListItemIcon>
                           <span className='text-sm'>Sign Out</span>
                         </MenuItem>
                       </MenuList>

@@ -1,3 +1,497 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body{
+  @apply pb-0 m-0  bg-slate-200;
+}
+
+.form_container{
+  @apply flex flex-col justify-center items-center w-full;
+}
+
+.form_container_small{
+  @apply flex flex-col justify-center items-center px-3 py-3 bg-white w-full max-w-sm shadow-md;
+}
+
+.form_container_medium{
+  @apply flex flex-col justify-start items-center px-3 py-3 bg-white shadow-md w-full max-w-2xl;
+}
+
+.form_container_large{
+  @apply flex flex-col justify-start items-center py-3 bg-white w-full max-w-4xl shadow-md pt-5;
+}
+
+
+
+
+
+.form_header{
+  @apply text-zinc-800 font-medium text-lg;
+}
+
+.form_sub_header{
+  @apply text-slate-700 text-xs;
+}
+
+.form_internal_header{
+  @apply text-zinc-800 text-sm;
+}
+
+.header_container{
+  border-bottom: 1px solid #e0e0e0;
+  @apply flex w-full flex-col sm:flex-row justify-between items-center mb-5 px-2 pb-2 gap-2 sm:gap-0;
+}
+
+.header_container_left{
+  @apply flex flex-row w-full sm:w-[50%] justify-start items-center gap-2;
+}
+
+.header_container_left_text{
+  @apply flex flex-col w-full justify-center items-start;
+}
+
+.header_container_right{
+  @apply flex flex-row w-full sm:w-[50%] justify-end items-center gap-2;
+}
+
+
+
+
+.form_info{
+  @apply text-emerald-700 font-normal mb-5;
+}
+
+.form_stepper{
+  @apply w-full flex flex-row justify-center mb-5 mt-5;
+}
+
+
+
+
+.form_fields_toolbar_container{
+  @apply flex w-full flex-col sm:flex-row justify-between items-center mb-3 px-2;
+}
+
+.form_fields_toolbar_container_left{
+  @apply flex flex-row w-full sm:flex-1 mb-3 sm:mb-0 justify-start items-start gap-2;
+}
+
+.form_fields_toolbar_container_right{
+  @apply flex flex-row justify-end items-center gap-2 w-full sm:w-[360px];
+}
+
+.form_fields_container_fixed{
+  border-bottom: 1px solid #e0e0e0;
+  @apply flex flex-col w-full justify-start items-center mb-5;
+}
+
+.form_fields_container_search{
+  @apply flex flex-col w-full max-w-xl px-2;
+}
+
+
+
+
+
+.form_fields_container{
+  @apply py-3 px-3 flex flex-col w-full;
+}
+
+.form_fields_container_right{
+  @apply flex flex-col justify-center items-end w-full;
+}
+
+.form_fields_container_search_small{
+  @apply flex flex-col justify-center items-center w-full max-w-md px-2;
+}
+
+
+
+
+
+.form_row_single{
+  @apply w-full flex flex-row justify-center items-start gap-10 mb-5;
+}
+
+.form_row_single_left{
+  @apply w-full flex flex-row justify-start items-center gap-10 mb-3;
+}
+
+.form_row_double{
+  @apply flex w-full flex-col xs:flex-row justify-between items-center gap-5 xs:gap-5 mb-5;
+}
+
+.form_row_double_fixed{
+  @apply w-full flex flex-row justify-between items-center gap-5 mb-5;
+}
+
+.form_row_double_top{
+  @apply w-full flex flex-col xs:flex-row justify-between items-center xs:items-start gap-5 sm:gap-5 mb-3;
+}
+
+
+
+
+
+.form_field_container{
+  @apply flex w-full max-w-xs relative justify-end items-center;
+}
+
+.form_field_container_left{
+  @apply flex w-full max-w-xs relative justify-start items-center;
+}
+
+.form_field_container_split{
+  @apply w-full flex flex-row max-w-xs justify-between gap-3 relative py-2;
+}
+
+.form_field_container_vertical{
+  @apply flex-col w-full max-w-xs relative justify-end items-center;
+}
+
+.form_field_container_full{
+  @apply flex w-[320px] sm:w-full relative justify-end items-center;
+}
+
+
+
+
+.form_text_field{
+  @apply bg-white w-full;
+}
+
+.form_text_field_right{
+  text-align: right;
+  @apply bg-white w-full text-right;
+}
+
+.form_text_field_small{
+  @apply bg-white w-[140px];
+}
+
+.form_text_field_xtra_small{
+  @apply bg-white w-[130px];
+}
+
+.form_text_field_xtra_xtra_small{
+  @apply bg-white w-[110px];
+}
+
+.file_input{
+  display: none;
+}
+
+.form_error_floating{
+  color: crimson;
+  border: 1px solid crimson;
+  border-radius: 5;
+  @apply absolute -top-3 -right-1 bg-white py-1 px-2 rounded-lg text-xs z-50;
+}
+
+.form_error_fixed{
+  color: crimson;
+  @apply text-xs;
+}
+
+
+
+
+.form_text_field_constructed{
+  border: 1px solid #bdbdbd;
+  @apply flex justify-between items-center w-full rounded h-[38px] px-3 relative bg-white cursor-pointer;
+}
+.form_text_field_constructed:hover{
+  border: 1px solid #424242;
+}
+
+.form_text_field_constructed_small{
+  border: 1px solid #bdbdbd;
+  @apply flex justify-between items-center w-[160px] rounded h-[38px] px-3 relative bg-white cursor-pointer;
+}
+.form_text_field_constructed_small:hover{
+  border: 1px solid #424242;
+}
+
+.form_text_field_constructed_xtra_small{
+  border: 1px solid #bdbdbd;
+  @apply flex justify-between items-center w-[125px] rounded h-[38px] px-3 relative bg-white cursor-pointer;
+}
+.form_text_field_constructed_xtra_small:hover{
+  border: 1px solid #424242;
+}
+
+.form_text_field_constructed_label{
+  @apply bg-white absolute -top-[8px] left-2 text-gray-600 text-xs px-1;
+}
+
+.form_text_field_constructed_text{
+  @apply flex flex-1 text-xs w-auto;
+}
+
+.form_text_field_constructed_actions{
+  @apply flex flex-row justify-center items-center gap-1 w-[45px];
+}
+
+.form_text_field_constructed_actions_1{
+  @apply flex flex-row justify-center items-center gap-1;
+}
+
+.form_text_field_constructed_text_with_adornment{
+  @apply flex flex-row justify-between items-center w-full;
+}
+
+.form_text_field_constructed_text_adornment{
+  @apply text-xs font-normal text-gray-600;
+}
+
+.form_text_field_constructed_text_value{
+  @apply text-xs font-normal;
+}
+
+.form_text_field_constructed_text_value_bold{
+  @apply text-xs font-semibold;
+}
+
+
+
+
+.form_profile_image{
+  @apply w-full flex flex-col justify-center items-center mb-3;
+}
+
+.form_profile_image_container{
+  width: 150px;
+  height: 150px;
+  border-radius: 75px;
+  @apply bg-slate-300 flex justify-center items-center mb-1;
+}
+
+.form_profile_image_container_small{
+  width: 100px;
+  height: 100px;
+  border-radius: 75px;
+  @apply bg-slate-300 flex justify-center items-center mb-1;
+}
+
+.form_profile_image_controls{
+  @apply flex flex-row py-1 justify-center items-center gap-2 bg-zinc-100 rounded;
+}
+
+.inventory_image_container_small{
+  width: 80px;
+  height: 80px;
+  @apply flex justify-center items-center relative;
+}
+
+.inventory_image_container{
+  @apply flex flex-col justify-center items-center;
+}
+
+.inventory_image{
+  width: 300px;
+  height: 300px;
+  @apply w-full flex flex-col justify-center items-center mb-3 relative;
+}
+
+.inventory_image_controls{
+  @apply flex flex-row py-1 justify-center items-center gap-2 bg-zinc-100 rounded;
+}
+
+
+
+
+.table_container{
+  @apply flex flex-col flex-1 w-full;
+}
+
+.table_header_container{
+  @apply flex flex-row w-full justify-center items-center bg-zinc-800;
+}
+
+.table_header_col{
+  border-right: 1px solid #ffffff;
+  @apply flex flex-col justify-center items-center flex-1 text-white text-sm py-1;
+}
+
+.table_header_col_1{
+  border-right: 1px solid #ffffff;
+  @apply hidden sm:flex flex-col justify-center items-center text-white text-sm py-1;
+}
+
+.table_header_col_2{
+  @apply hidden sm:flex flex-col justify-center items-center text-white text-sm py-1;
+}
+
+.table_body_container{
+  @apply flex flex-col flex-1 w-full justify-start items-start bg-slate-200;
+}
+
+.table_row{
+  border-bottom: 1px solid #e0e0e0;
+  @apply flex flex-row w-full justify-center items-center bg-white;
+}
+
+.table_col_start_center{
+  border-right: 1px solid #e0e0e0;
+  @apply flex flex-col justify-start items-center flex-1 py-2 px-1 overflow-hidden relative;
+}
+
+.table_col_center_start{
+  border-right: 1px solid #e0e0e0;
+  @apply flex flex-col justify-center items-start flex-1 py-2 px-1 overflow-hidden relative;
+}
+
+.table_col_1_center_center{
+  border-right: 1px solid #e0e0e0;
+  @apply hidden sm:flex flex-col justify-center items-center py-2 px-1;
+}
+
+.table_col_1_center_end{
+  border-right: 1px solid #e0e0e0;
+  @apply hidden sm:flex flex-col justify-center items-end py-2 px-1;
+}
+
+.table_col_1_image{
+  width: 80px;
+  height: 80px;
+  @apply flex justify-center items-center relative;
+}
+
+.table_col_2_end_end{
+  @apply hidden sm:flex flex-col justify-end items-end py-2 px-1;
+}
+
+.table_col_2_center_end{
+  @apply hidden sm:flex flex-col justify-center items-end py-2 px-1;
+}
+
+.table_field_double{
+  @apply flex flex-col xs:flex-row w-full xs:justify-between items-end xs:items-start mb-2 gap-2 xs:gap-5;
+}
+
+.table_field_single{
+  @apply flex flex-col w-full justify-start items-start mb-2;
+}
+
+.table_field{
+  @apply flex flex-row justify-between items-center;
+}
+
+.table_field_full{
+  @apply flex flex-row justify-between items-center w-full;
+}
+
+.table_field_label{
+  @apply text-xs w-[75px];
+}
+
+.table_field_text_center{
+  border: 1px solid #bdbdbd;
+  @apply text-xs w-[130px] text-center rounded py-1 px-2;
+}
+
+.table_field_text_right{
+  border: 1px solid #bdbdbd;
+  @apply text-xs w-[130px] text-right rounded py-1 px-2;
+}
+
+.table_field_text_with_adornment{
+  border: 1px solid #bdbdbd;
+  @apply flex flex-row justify-between items-center rounded py-1 px-2 w-[130px];
+}
+.table_field_text_adornment{
+  @apply text-xs;
+}
+.table_field_text_adornment_text{
+  @apply text-xs text-right;
+}
+
+.table_field_text_right_blue{
+  border: 1px solid #93c5fd;
+  @apply flex flex-row justify-between items-center bg-blue-100 rounded py-1 px-2 w-[160px];
+}
+.table_field_text_right_blue_text{
+  @apply text-xs text-right text-blue-900 font-bold;
+}
+.table_field_text_right_addorment{
+  @apply text-xs text-blue-900 font-semibold;
+}
+
+.table_field_text_full{
+  border: 1px solid #bdbdbd;
+  @apply flex flex-1 text-xs text-left overflow-hidden rounded py-1 px-2 w-full;
+}
+
+.table_field_active{
+  border: 1px solid #6ee7b7;
+  @apply flex flex-row justify-center items-center text-xs text-emerald-600 bg-emerald-100 rounded py-1 px-2 w-[130px];
+}
+
+.table_field_inactive{
+  border: 1px solid #fca5a5;
+  @apply flex flex-row justify-center items-center text-xs text-red-600 bg-red-100 rounded py-1 px-2 w-[130px];
+}
+
+.table_col_text{
+  @apply text-xs;
+}
+
+.table_col_text_active{
+  @apply text-xs text-emerald-600 bg-emerald-100 py-1 px-2 rounded;
+}
+
+.table_col_text_inactive{
+  @apply text-xs text-red-600 bg-red-100 py-1 px-2 rounded;
+}
+
+.table_col_text_bold{
+  @apply text-xs font-semibold;
+}
+
+.table_col_text_with_adornment{
+  @apply flex flex-row w-full justify-between items-center;
+}
+.table_col_with_adornment_text{
+  @apply text-xs font-normal text-gray-600;
+}
+
+.summary_banner{
+  border: 1px solid #f97316;
+  @apply bg-orange-100 py-1 rounded-lg flex flex-col justify-center items-center gap-2 w-[130px];
+}
+
+.summary_banner_text_container{
+  @apply flex flex-row justify-between items-center w-full px-2 pb-1;
+}
+
+.summary_banner_label{
+  border-bottom: 1px solid #f97316;
+  @apply text-xs text-orange-900 w-full px-2 pb-1 text-left;
+}
+
+.summary_banner_adornment{
+  @apply text-xs text-orange-900 font-semibold;
+}
+
+.summary_banner_text{
+  @apply text-sm text-orange-900 font-semibold w-full text-right;
+}
+
+.summary_banner_1{
+  border: 1px solid #bfdbfe;
+  @apply bg-orange-100 py-1 rounded-lg flex flex-col justify-center items-center gap-2 w-[130px];
+}
+
+.summary_banner_label_1{
+  border-bottom: 1px solid #bfdbfe;
+  @apply text-xs text-blue-700 w-full px-1 pb-1 text-left;
+}
+
+.summary_banner_adornment_1{
+  @apply text-xs text-blue-700 font-semibold;
+}
+
+.summary_banner_text_1{
+  @apply text-sm text-blue-700 font-semibold w-full text-right;
+}
