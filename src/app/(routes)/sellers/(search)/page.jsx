@@ -411,7 +411,7 @@ const SellersSearch = () => {
                 <div className='table_col_1_center_center h-[60px] w-[60px]'>
                   {val.imageUrl==="none"?<Person sx={{width: 30, height: 30, color: '#047857'}}/>:<Avatar src={val.imageUrl} sx={{width: 50, height: 50}}/>}
                 </div>
-                <div className='table_col_start_center sm:h-[80px]'>
+                <div className='table_col_start_center sm:h-[120px]'>
                   <div className='table_field_double'>
                     <div className='table_field'>
                       <span className='table_field_label'>ID:</span>
@@ -428,6 +428,12 @@ const SellersSearch = () => {
                       <span className='table_field_text_full h-[30px]'>{val.first_name+" "+val.last_name}</span>
                     </div>
                   </div>
+                  <div className='table_field_single'>
+                    <div className='table_field_full'>
+                      <span className='table_field_label'>Email:</span>
+                      <span className='table_field_text_full h-[30px]'>{val.email}</span>
+                    </div>
+                  </div>
                   <div className='table_field_double sm:form_field_single'>
                     <div className='table_field_full'></div>
                     <div className='flex sm:hidden'>
@@ -441,7 +447,7 @@ const SellersSearch = () => {
                     </div>
                   </div>
                 </div>
-                <div className='table_col_2_end_end w-[80px] h-[80px]'>
+                <div className='table_col_2_end_end w-[80px] h-[120px]'>
                   <Button 
                     variant='outlined' 
                     style={{textTransform: 'none'}} 

@@ -56,7 +56,7 @@ const View = ({params}) => {
   const loadItem = async (id) => {
     setIsLoading(true);
     try{
-      const response = await axios.post("/api/brands/find", {
+      const response = await axios.post("/api/auth/get-user", {
         id: id
       });
       let val = response.data.data;
@@ -133,7 +133,7 @@ const View = ({params}) => {
         else{
           apiDes = "edit";
         }
-        const response = await axios.post(`/api/brands/${apiDes}`, {
+        const response = await axios.post(`/api/auth/${apiDes}`, {
           id: parseInt(editId),
           status: editStatus.id,
           code: editCode,

@@ -32,14 +32,6 @@ const Profile = () => {
   const [editEmail, setEditEmail] = useState("");
   const [editEmailError, setEditEmailError] = useState(false);
   const [editDuplicateEmailError, setEditDuplicateEmailError] = useState(false);
-  const [editAddress, setEditAddress] = useState("");
-  const [editAddressError, setEditAddressError] = useState(false);
-  const [editDescription, setEditDescription] = useState("");
-  const [editDescriptionError, setEditDescriptionError] = useState(false);
-  const [editRegNumber, setEditRegNumber] = useState("");
-  const [editRegNumberError, setEditRegNumberError] = useState(false);
-  const [editWebAddress, setEditWebAddress] = useState("");
-  const [editWebAddressError, setEditWebAddressError] = useState(false);
   const [editNotifyBy, setEditNotifyBy] = useState("email");
   const [editNotifyByError, setEditNotifyByError] = useState(false);
 
@@ -59,7 +51,7 @@ const Profile = () => {
     }
     if(status==='authenticated'){
       setLoading(false);
-      getUser(session.user.email);
+      getUser(session.user.id);
     }
   }, [status]);
 
@@ -67,20 +59,11 @@ const Profile = () => {
     setIsSaving(false);
   }, []);
 
-  useEffect(() => {
-    if(session && session.user && status!=="loading"){
-      getUser(session.user.email);
-    }
-    else{
-      setLoading(false);
-    }
-  }, [status]);
-
-  const getUser = async (email) => {
+  const getUser = async (id) => {
     setIsSaving(true);
     try{
-      const response = await axios.post("/api/auth/get-user", {
-        email: email
+      const response = await axios.post("/api/profile/find", {
+        id: id
       });
       setEditId(response.data.data.id);
       setEditFirstName(response.data.data.first_name);
@@ -88,10 +71,6 @@ const Profile = () => {
       setEditEmail(response.data.data.email);
       setEditPhone(response.data.data.phone);
       setEditNotifyBy(response.data.data.notify_by);
-      setEditAddress(response.data.data.address);
-      setEditDescription(response.data.data.description);
-      setEditRegNumber(response.data.data.reg_number);
-      setEditWebAddress(response.data.data.web_address);
       if(response.data.data.image_url==="none"){
         if(session.user.image!==""){
           setPhotoURL(session.user.image);
@@ -124,12 +103,7 @@ const Profile = () => {
     setEditConfirmError(false);
     setEditDuplicateEmailError(false);
     setEditDuplicatePhoneError(false);
-    setEditNotifyByError(false);
-    setEditAddressError(false);
-    setEditDescriptionError(false);
-    setEditWebAddressError(false);
-    setEditRegNumberError(false);
-    
+    setEditNotifyByError(false);    
     setServerError(false);
   }
 
@@ -142,10 +116,6 @@ const Profile = () => {
     setEditPassword("");
     setEditConfirm("");
     setEditNotifyBy("email");
-    setEditAddress("");
-    setEditDescription("");
-    setEditWebAddress("");
-    setEditRegNumber("");
     setOpenCrop(false);
     setPhotoURL("none");
     setFile(null);
@@ -163,35 +133,15 @@ const Profile = () => {
       error = true;
       setEditLastNameError(true);
     }
-    if(editAddress.length===0 || editAddress.length>256) {
-      error = true;
-      setEditAddressError(true);
-    }
-    if(editDescription.length===0 || editDescription.length>2048) {
-      error = true;
-      setEditDescriptionError(true);
-    }
-    if(editWebAddress.length>128) {
-      error = true;
-      setEditWebAddressError(true);
-    }
-    if(editRegNumber.length>64) {
-      error = true;
-      setEditRegNumberError(true);
-    }
     if(error) {
       setIsSaving(false);
     }
     else{
       try{
-        const response = await axios.post("/api/auth/edit-user", {
+        const response = await axios.post("/api/profile/edit", {
           id: editId,
           firstName: editFirstName,
           lastName: editLastName,
-          address: editAddress,
-          description: editDescription,
-          webAddress: editWebAddress,
-          regNumber: editRegNumber,
         });
         if(response.data.status==="ok"){
           saveImage();
@@ -272,7 +222,7 @@ const Profile = () => {
     if(editId>0){
       setIsSaving(true);
       try{
-        const response = await axios.post("/api/auth/delete-image", {
+        const response = await axios.post("/api/profile/delete-image", {
           id: editId,
         });
         if(session && session.user){
@@ -318,7 +268,7 @@ const Profile = () => {
     }
     else{
       try{
-        const response = await axios.post("/api/auth/reset-password", {
+        const response = await axios.post("/api/profile/reset-password", {
           id: editId,
           password: editPassword,
         });
@@ -440,86 +390,6 @@ const Profile = () => {
               />
               {editPhoneError && <span className='form_error_floating'>Invalid Phone</span>}
               {editDuplicatePhoneError && <span className='form_error_floating'>Phone Already Exists !</span>}
-            </div>
-          </div>
-          <div className='form_row_double'>
-            <div className='form_field_container'>
-              <TextField 
-                id='reg-number'
-                label="Reg Number" 
-                variant="outlined" 
-                className='form_text_field' 
-                value={editRegNumber} 
-                error={editRegNumberError}
-                onChange={event=>setEditRegNumber(event.target.value)}
-                disabled={isSaving || isViewOnly}
-                onFocus={()=>setEditRegNumberError(false)}
-                size='small' 
-                inputProps={{style: {fontSize: 13}}}
-                SelectProps={{style: {fontSize: 13}}}
-                InputLabelProps={{style: {fontSize: 15}}}
-              />
-              {editRegNumberError && <span className='form_error_floating'>Invalid Reg Number</span>}
-            </div>
-            <div className='form_field_container'>
-              <TextField 
-                id='web-address'
-                label="WebAddress" 
-                variant="outlined" 
-                className='form_text_field' 
-                value={editWebAddress} 
-                error={editWebAddressError}
-                onChange={event=>setEditWebAddress(event.target.value)}
-                disabled={isSaving || isViewOnly}
-                onFocus={()=>setEditWebAddressError(false)}
-                size='small' 
-                inputProps={{style: {fontSize: 13}}}
-                SelectProps={{style: {fontSize: 13}}}
-                InputLabelProps={{style: {fontSize: 15}}}
-              />
-              {editWebAddressError && <span className='form_error_floating'>Invalid Web Address</span>}
-            </div>
-          </div>
-          <div className='form_row_double_top'>
-            <div className='form_field_container_vertical'>
-              <TextField 
-                id='description'
-                label="Description" 
-                variant="outlined" 
-                className='form_text_field' 
-                value={editDescription} 
-                error={editDescriptionError}
-                onChange={event=>setEditDescription(event.target.value)}
-                disabled={isSaving || isViewOnly}
-                multiline={true}
-                rows={4}
-                onFocus={()=>setEditDescriptionError(false)}
-                size='small' 
-                inputProps={{style: {fontSize: 13}}}
-                SelectProps={{style: {fontSize: 13}}}
-                InputLabelProps={{style: {fontSize: 15}}}
-              />
-              {editDescriptionError && <span className='form_error_floating'>Invalid Description</span>}
-            </div>
-            <div className='form_field_container_vertical'>
-              <TextField 
-                id='address'
-                label="Address" 
-                variant="outlined" 
-                className='form_text_field' 
-                value={editAddress} 
-                error={editAddressError}
-                onChange={event=>setEditAddress(event.target.value)}
-                disabled={isSaving || isViewOnly}
-                multiline={true}
-                rows={4}
-                onFocus={()=>setEditAddressError(false)}
-                size='small' 
-                inputProps={{style: {fontSize: 13}}}
-                SelectProps={{style: {fontSize: 13}}}
-                InputLabelProps={{style: {fontSize: 15}}}
-              />
-              {editAddressError && <span className='form_error_floating'>Invalid Address</span>}
             </div>
           </div>
           <div className='form_row_double'>

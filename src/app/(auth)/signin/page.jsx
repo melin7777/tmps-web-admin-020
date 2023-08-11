@@ -136,7 +136,7 @@ const Signin = () => {
             {editLoginError && <span className='form_error_fixed'>*Invalid Loogin Details</span>}
           </div>
           <div className='form_row_double_fixed'>
-            <Button variant="text" style={{textTransform: 'none'}} onClick={()=>router.push("/reset")}>Forgot Password?</Button>
+            <span></span>
             <Button 
               variant='contained' 
               disabled={isSaving} 

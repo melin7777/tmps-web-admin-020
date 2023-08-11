@@ -19,7 +19,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState(false);
-  const { width, height } = useWindowDimensions();
+  const { width, height=500 } = useWindowDimensions();
 
   const [chartOptions, setChartOptions] = useState({
     chart: {
