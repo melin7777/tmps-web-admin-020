@@ -404,12 +404,12 @@ body{
 
 .table_field_text_center{
   border: 1px solid #bdbdbd;
-  @apply text-xs w-[130px] text-center rounded py-1 px-2;
+  @apply text-xs w-[130px] text-center rounded py-1 px-2 h-[30px];
 }
 
 .table_field_text_right{
   border: 1px solid #bdbdbd;
-  @apply text-xs w-[130px] text-right rounded py-1 px-2;
+  @apply text-xs w-[130px] text-right rounded py-1 px-2 h-[30px];
 }
 
 .table_field_text_with_adornment{

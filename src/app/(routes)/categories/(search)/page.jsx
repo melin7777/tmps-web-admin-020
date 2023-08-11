@@ -1,16 +1,15 @@
 'use client';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React, { useState, useEffect, useRef } from 'react';
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { CircularProgress, MenuItem, InputAdornment, IconButton, Typography, Dialog, Button, TextField } from '@mui/material';
-import { Add, ArrowDropDown, CameraAlt, ClearAll, Close, Edit, FilterAlt, ImportExport, KeyboardArrowDown, KeyboardArrowLeft, KeyboardArrowRight, KeyboardArrowUp, Search } from '@mui/icons-material';
+import { CircularProgress, MenuItem, InputAdornment, IconButton, Typography, Button, TextField } from '@mui/material';
+import { Add, ClearAll, Edit, FilterAlt, ImportExport, KeyboardArrowDown, KeyboardArrowLeft, KeyboardArrowRight, KeyboardArrowUp, Search } from '@mui/icons-material';
 import useWindowDimensions from '@/hooks/useWindowDimension';
 
-const InventorySearch = () => {
+const CategoriesSearch = () => {
   const router = useRouter();
   const {data: session, status} = useSession();
   const [serverError, setServerError] = useState(false);
@@ -136,7 +135,7 @@ const InventorySearch = () => {
     if(filtersShowing!==null){
       try {
         localStorage.setItem("admin_categories_search_scroll_top", JSON.stringify(scrollTop));
-        router.push("/inventory/"+id);
+        router.push("/categories/"+id);
       } 
       catch (e) {}
     }
@@ -211,7 +210,7 @@ const InventorySearch = () => {
         }
       }
       catch(error){
-        toast.error("Inventory Search Failed !", {
+        toast.error("Categories Search Failed !", {
           position: toast.POSITION.TOP_RIGHT
         });
       }
@@ -395,10 +394,61 @@ const InventorySearch = () => {
             }
           </div>
         </div>
-
+        <div className='table_container'>
+          <div className='table_header_container'>
+            <div className='table_header_col flex-1'>Details</div>
+            <div className='table_header_col_2 w-[80px]'>Edit</div>
+          </div>
+          <div className='table_body_container'>
+            {searchData.map(val=>
+              <div key={val.id} className='table_row'>
+                <div className='table_col_start_center sm:h-[80px]'>
+                  <div className='table_field_double'>
+                    <div className='table_field'>
+                      <span className='table_field_label'>ID:</span>
+                      <span className='table_field_text_center'>{val.id}</span>
+                    </div>
+                    <div className='table_field'>
+                    <span className='table_field_label'>Code:</span>
+                      <span className='table_field_text_center'>{val.code}</span>
+                    </div>
+                  </div>
+                  <div className='table_field_single'>
+                    <div className='table_field_full'>
+                      <span className='table_field_label'>Description:</span>
+                      <span className='table_field_text_full h-[30px]'>{val.description}</span>
+                    </div>
+                  </div>
+                  <div className='table_field_double sm:form_field_single'>
+                    <div className='table_field_full'></div>
+                    <div className='flex sm:hidden'>
+                      <Button 
+                        variant='outlined' 
+                        style={{textTransform: 'none'}} 
+                        startIcon={<Edit />}
+                        onClick={()=>editClicked(val.id)}
+                        size='small'
+                      >Edit</Button>
+                    </div>
+                  </div>
+                </div>
+                <div className='table_col_2_end_end w-[80px] h-[80px]'>
+                  <Button 
+                    variant='outlined' 
+                    style={{textTransform: 'none'}} 
+                    startIcon={<Edit />}
+                    onClick={()=>editClicked(val.id)}
+                    size='small'
+                  >Edit</Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+        <ToastContainer />
       </div>
     </div>
   )
 }
 
-export default InventorySearch;
+export default CategoriesSearch;
