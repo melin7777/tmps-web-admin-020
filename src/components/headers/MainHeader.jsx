@@ -136,7 +136,7 @@ const MainHeader = () => {
                       <MenuList autoFocusItem={open} onKeyDown={handleListKeyDown} sx={{width: 220}}>
                         <div className='flex-col justify-center items-start px-4 py-2 bg-white flex md:hidden'>
                           <span className='text-sm'>{session.user.name}</span>
-                          <span className='text-xs text-emerald-600'>{"Admin"}</span>
+                          <span className='text-xs text-zinc-600'>{"Admin"}</span>
                         </div>
                         <Divider className='flex md:hidden'/>
                         <MenuItem

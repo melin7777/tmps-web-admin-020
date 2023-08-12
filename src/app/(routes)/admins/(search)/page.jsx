@@ -408,7 +408,7 @@ const AdminsSearch = () => {
           <div className='table_body_container'>
             {searchData.map(val=>
               <div key={val.id} className='table_row'>
-                <div className='table_col_1_center_center h-[60px] w-[60px]'>
+                <div className='table_col_1_start_center h-[120px] w-[60px]'>
                   {val.imageUrl==="none"?<Person sx={{width: 30, height: 30, color: '#047857'}}/>:<Avatar src={val.imageUrl} sx={{width: 50, height: 50}}/>}
                 </div>
                 <div className='table_col_start_center sm:h-[120px]'>

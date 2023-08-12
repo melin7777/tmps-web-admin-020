@@ -363,6 +363,11 @@ body{
   @apply hidden sm:flex flex-col justify-center items-center py-2 px-1;
 }
 
+.table_col_1_start_center{
+  border-right: 1px solid #e0e0e0;
+  @apply hidden sm:flex flex-col justify-start items-center py-2 px-1;
+}
+
 .table_col_1_center_end{
   border-right: 1px solid #e0e0e0;
   @apply hidden sm:flex flex-col justify-center items-end py-2 px-1;

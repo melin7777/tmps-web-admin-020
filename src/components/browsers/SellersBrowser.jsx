@@ -55,6 +55,7 @@ const SellersBrowser = ({setOpen, value, setValue}) => {
             id: val.id,
             first_name: val.first_name,
             last_name: val.last_name,
+            description: val.first_name+" "+val.last_name,
             email: val.email,
             image_url: imageUrl,
           });
@@ -93,11 +94,11 @@ const SellersBrowser = ({setOpen, value, setValue}) => {
       :
         <DialogContent dividers sx={{background: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'start', alignItems: 'start', position: 'relative', height: 600, width: 'auto', minWidth: {sm: 500}}}>
           {viewItems.map(val=>
-            <div key={val.id} onClick={()=>setSelectedItem(val)} className='flex flex-row w-full justify-between items-center' style={{borderBottom: '1px solid #e0e0e0', backgroundColor: selectedItem?.id===val.id?"#e7e5e4":"#ffffff"}}>
+            <div key={val.id} onClick={()=>setSelectedItem(val)} className='flex flex-row w-full justify-between items-center cursor-pointer' style={{borderBottom: '1px solid #e0e0e0', backgroundColor: selectedItem?.id===val.id?"#e7e5e4":"#ffffff"}}>
               <div key={val.id} className='flex flex-col justify-center items-center'>
                 {val.image_url==="none" ? 
                   <CameraAlt sx={{width: 50, height: 50, color: '#cbd5e1'}}/> : 
-                  <Avatar src={imageUrl} sx={{width: 30, height: 30}}/>
+                  <Avatar src={val.image_url} sx={{width: 30, height: 30}}/>
                 }
               </div>
               <div key={val.id} className='flex flex-col flex-1 justify-center items-start h-[60px] pl-3'>
