@@ -60,7 +60,6 @@ const View = ({params}) => {
         id: id
       });
       let val = response.data.data;
-      console.log(val);
       setEditId(val.id);
       var status = "";
       if(val.status==="active"){
@@ -138,7 +137,6 @@ const View = ({params}) => {
           status: editStatus.id,
           code: editCode,
           description: editDescription,
-          image_url: "none",
         });
         if(editId===""){
           setEditId(response.data.data.id);
@@ -263,25 +261,29 @@ const View = ({params}) => {
           </div>
         </div>
         <div className='form_fields_container_search mt-4'>
-          <div className='form_row_single_left'>
-            <span className="form_internal_header">Image</span>
-          </div>
-          <div className='form_row_single'>
-            <div className='inventory_image_container'>
-              <div className='flex justify-center items-center w-[120px] sm:w-[140px] h-[120px] sm:h-[140px] relative'>
-                {editImage==="none" ? 
-                  <CameraAlt sx={{width: 80, height: 80, color: '#cbd5e1'}}/> : 
-                  <Image src={editImage} alt="brand image" fill sizes='(max-width: 640px) 120px, 140px' priority={true} style={{objectFit: 'cover'}}/>
-                }
-                <input type='file' ref={imageRef} onChange={handleImageChange} className='file_input'/>
+          {editId!=="" &&
+            <>
+              <div className='form_row_single_left'>
+                <span className="form_internal_header">Image</span>
               </div>
-              <div className='inventory_image_controls mt-2'>
-                <IconButton disabled={isSaving} onClick={()=>imageRef.current.click()}><Folder sx={{width: 20, height: 20, color: '#7c3aed'}}/></IconButton>
-                {file && <IconButton disabled={isSaving} onClick={()=>setOpenCrop(true)}><CropRotate sx={{width: 20, height: 20, color: '#7c3aed'}}/></IconButton>}
-                <IconButton disabled={isSaving} onClick={(event)=>handleImageRemove(event)}><Delete sx={{width: 20, height: 20, color: '#7c3aed'}}/></IconButton>
+              <div className='form_row_single'>
+                <div className='inventory_image_container'>
+                  <div className='flex justify-center items-center w-[120px] sm:w-[140px] h-[120px] sm:h-[140px] relative'>
+                    {editImage==="none" ? 
+                      <CameraAlt sx={{width: 80, height: 80, color: '#cbd5e1'}}/> : 
+                      <Image src={editImage} alt="brand image" fill sizes='(max-width: 640px) 120px, 140px' priority={true} style={{objectFit: 'cover'}}/>
+                    }
+                    <input type='file' ref={imageRef} onChange={handleImageChange} className='file_input'/>
+                  </div>
+                  <div className='inventory_image_controls mt-2'>
+                    <IconButton disabled={isSaving} onClick={()=>imageRef.current.click()}><Folder sx={{width: 20, height: 20, color: '#7c3aed'}}/></IconButton>
+                    {file && <IconButton disabled={isSaving} onClick={()=>setOpenCrop(true)}><CropRotate sx={{width: 20, height: 20, color: '#7c3aed'}}/></IconButton>}
+                    <IconButton disabled={isSaving} onClick={(event)=>handleImageRemove(event)}><Delete sx={{width: 20, height: 20, color: '#7c3aed'}}/></IconButton>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            </>
+          }
           <div className='form_row_double'>
             <div className='form_field_container'>
               <TextField 

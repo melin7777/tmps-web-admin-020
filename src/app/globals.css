@@ -167,7 +167,7 @@ body{
 }
 
 .form_field_container_full{
-  @apply flex w-[320px] sm:w-full relative justify-end items-center;
+  @apply flex w-[320px] xs:w-full relative justify-end items-center;
 }
 
 
