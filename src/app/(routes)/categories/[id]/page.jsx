@@ -123,14 +123,6 @@ const View = ({params}) => {
         });
         if(editId===""){
           setEditId(response.data.data.id);
-          toast.success("Item Created !", {
-            position: toast.POSITION.TOP_RIGHT
-          });
-        }
-        else{
-          toast.success("Item Edited !", {
-            position: toast.POSITION.TOP_RIGHT
-          });
         }
       }
     }
@@ -158,17 +150,17 @@ const View = ({params}) => {
           <div className='header_container_right'>
             <Button 
               variant='outlined' 
-              disabled={isSaving} 
+              disabled={isLoading||isSaving} 
               style={{textTransform: 'none'}} 
-              startIcon={isSaving?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Add />}
+              startIcon={isLoading||isSaving?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Add />}
               onClick={()=>newItemClicked()}
               size='small'
             >Create</Button>
             <Button 
               variant='contained' 
-              disabled={isSaving} 
+              disabled={isLoading||isSaving} 
               style={{textTransform: 'none'}} 
-              startIcon={isSaving?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Save />}
+              startIcon={isLoading||isSaving?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Save />}
               onClick={()=>saveClicked()}
               size='small'
             >Save</Button>
@@ -221,7 +213,7 @@ const View = ({params}) => {
                 value={editCode} 
                 error={editCodeError}
                 onChange={event=>setEditCode(event.target.value)}
-                disabled={isSaving}
+                disabled={isLoading||isSaving}
                 size='small' 
                 onFocus={()=>setEditCodeError(false)}
                 inputProps={{style: {fontSize: 13}}}
@@ -242,7 +234,7 @@ const View = ({params}) => {
                 value={editDescription} 
                 error={editDescriptionError}
                 onChange={event=>setEditDescription(event.target.value)}
-                disabled={isSaving}
+                disabled={isLoading||isSaving}
                 size='small' 
                 onFocus={()=>setEditDescriptionError(false)}
                 inputProps={{style: {fontSize: 13}}}

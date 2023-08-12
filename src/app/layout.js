@@ -12,7 +12,7 @@ import CustomThemeProvider from '@/providers/CustomThemeProvider';
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'TechMax Admin',
+  title: 'TechMax - Admin',
   description: 'Seller app for TechMax (Pvt) Ltd.',
 }
 

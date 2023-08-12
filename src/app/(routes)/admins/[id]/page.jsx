@@ -6,7 +6,7 @@ import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from "@/components/modals/Loading";
-import { Avatar, Button, CircularProgress, Dialog, IconButton, InputAdornment, MenuItem, TextField } from "@mui/material";
+import { Avatar, Button, Checkbox, CircularProgress, Dialog, FormControlLabel, IconButton, InputAdornment, MenuItem, TextField } from "@mui/material";
 import { Add, CameraAlt, Close, CropRotate, Delete, Folder, Key, KeyboardArrowLeft, MailOutline, Phone, Save } from "@mui/icons-material";
 import useWindowDimensions from '@/hooks/useWindowDimension';
 import CropEasy from '@/components/crop/CropEasy';
@@ -39,12 +39,9 @@ const View = ({params}) => {
   const [editDuplicateEmailError, setEditDuplicateEmailError] = useState(false);
   const [editAddress, setEditAddress] = useState("");
   const [editAddressError, setEditAddressError] = useState(false);
-  const [editDescription, setEditDescription] = useState("");
-  const [editDescriptionError, setEditDescriptionError] = useState(false);
-  const [editRegNumber, setEditRegNumber] = useState("");
-  const [editRegNumberError, setEditRegNumberError] = useState(false);
-  const [editWebAddress, setEditWebAddress] = useState("");
-  const [editWebAddressError, setEditWebAddressError] = useState(false);
+  const [editDeliveryAddress, setEditDeliveryAddress] = useState("");
+  const [editDeliveryAddressError, setEditDeliveryAddressError] = useState(false);
+  const [editSameAddress, setEditSameAddress] = useState(false);
   const [editNotifyBy, setEditNotifyBy] = useState("email");
   const [editNotifyByError, setEditNotifyByError] = useState(false);
 
@@ -62,12 +59,12 @@ const View = ({params}) => {
     setIsLoading(false);
     setIsSaving(false);
     if(params.id==="create-item"){
-      setFormHeading("Create Seller");
-      setFormSubHeading("Create a new seller");
+      setFormHeading("Create Admin");
+      setFormSubHeading("Create a new admin");
     }
     else{
-      setFormHeading("Edit Seller");
-      setFormSubHeading("Edit an existing seller");
+      setFormHeading("Edit Admin");
+      setFormSubHeading("Edit an existing admin");
       loadItem(params.id);
     }
   }, []);
@@ -75,7 +72,7 @@ const View = ({params}) => {
   const loadItem = async (id) => {
     setIsLoading(true);
     try{
-      const response = await axios.post("/api/sellers/find", {
+      const response = await axios.post("/api/admins/find", {
         id: id
       });
       let val = response.data.data;
@@ -86,9 +83,7 @@ const View = ({params}) => {
       setEditPhone(val.phone);
       setEditNotifyBy(val.notify_by);
       setEditAddress(val.address);
-      setEditDescription(val.description);
-      setEditRegNumber(val.reg_number);
-      setEditWebAddress(val.web_address);
+      setEditDeliveryAddress(val.delivery_address);
       var status = "";
       if(val.status==="active"){
         status = "Active";
@@ -117,8 +112,8 @@ const View = ({params}) => {
   const newItemClicked = () => {
     clearErrors();
     clearFields();
-    setFormHeading("Create Seller");
-    setFormSubHeading("Create a new seller");
+    setFormHeading("Create Admin");
+    setFormSubHeading("Create a new admin");
   }
   
   const clearErrors = () => {
@@ -133,9 +128,7 @@ const View = ({params}) => {
     setEditDuplicatePhoneError(false);
     setEditNotifyByError(false);
     setEditAddressError(false);
-    setEditDescriptionError(false);
-    setEditWebAddressError(false);
-    setEditRegNumberError(false);
+    setEditDeliveryAddressError(false);
     setServerError(false);
   };
   
@@ -150,9 +143,7 @@ const View = ({params}) => {
     setEditConfirm("");
     setEditNotifyBy("email");
     setEditAddress("");
-    setEditDescription("");
-    setEditWebAddress("");
-    setEditRegNumber("");
+    setEditDeliveryAddress("");
     setPhotoURL("none");
   };
 
@@ -173,17 +164,9 @@ const View = ({params}) => {
         error = true;
         setEditAddressError(true);
       }
-      if(editDescription.length===0 || editDescription.length>2048) {
+      if(editDeliveryAddress.length===0 || editDeliveryAddress.length>256) {
         error = true;
-        setEditDescriptionError(true);
-      }
-      if(editWebAddress.length>128) {
-        error = true;
-        setEditWebAddressError(true);
-      }
-      if(editRegNumber.length>64) {
-        error = true;
-        setEditRegNumberError(true);
+        setEditDeliveryAddressError(true);
       }
       if(editId===""){
         if(editEmail.length===0 || editEmail.length>128) {
@@ -220,9 +203,7 @@ const View = ({params}) => {
             notifyBy: editNotifyBy,
             password: editPassword,
             address: editAddress,
-            description: editDescription,
-            webAddress: editWebAddress,
-            regNumber: editRegNumber,
+            deliveryAddress: editDeliveryAddress,
             status: editStatus.id,
           };
         }
@@ -233,13 +214,11 @@ const View = ({params}) => {
             firstName: editFirstName,
             lastName: editLastName,
             address: editAddress,
-            description: editDescription,
-            webAddress: editWebAddress,
-            regNumber: editRegNumber,
+            deliveryAddress: editDeliveryAddress,
             status: editStatus.id,
           };
         }
-        const response = await axios.post(`/api/sellers/${apiDes}`, data1);
+        const response = await axios.post(`/api/admins/${apiDes}`, data1);
         if(response.data.status==="duplicate_email"){
           setEditDuplicateEmailError(true);
         }
@@ -258,7 +237,7 @@ const View = ({params}) => {
       }
     }
     catch(error){
-      toast.error("Seller Create Failed !", {
+      toast.error("Admin Create Failed !", {
         position: toast.POSITION.TOP_RIGHT
       });
     }
@@ -277,7 +256,7 @@ const View = ({params}) => {
     if(editId!==""){
       setIsSaving(true);
       try{
-        const response = await axios.post("/api/sellers/delete-image", {
+        const response = await axios.post("/api/admins/delete-image", {
           id: parseInt(editId),
         });
         setPhotoURL("none");
@@ -353,7 +332,7 @@ const View = ({params}) => {
     }
     else{
       try{
-        const response = await axios.post("/api/sellers/save-password", {
+        const response = await axios.post("/api/admins/save-password", {
           id: editId,
           password: editPassword,
         });
@@ -375,12 +354,19 @@ const View = ({params}) => {
     }
   }
 
+  useEffect(() => {
+    if(editSameAddress){
+      setEditDeliveryAddress(editAddress);
+    }
+  }, [editSameAddress, editAddress])
+  
+
   return (
     <div className='form_container' style={{minHeight: (height-80)}}>
       <div className='form_container_medium' style={{minHeight: (height-80)}}>
         <div className='header_container'>
           <div className='header_container_left'>
-            <IconButton onClick={()=>router.push('/sellers')} sx={{backgroundColor: '#27272a', "&:hover, &.Mui-focusVisible": {backgroundColor: "#71717a"}}}><KeyboardArrowLeft sx={{width: 30, height: 30, color: '#ffffff'}}/></IconButton>
+            <IconButton onClick={()=>router.push('/admins')} sx={{backgroundColor: '#27272a', "&:hover, &.Mui-focusVisible": {backgroundColor: "#71717a"}}}><KeyboardArrowLeft sx={{width: 30, height: 30, color: '#ffffff'}}/></IconButton>
             <div className='header_container_left_text'>
               <span className="form_header">{formHeading}</span>
               <span className="form_sub_header">{formSubHeading}</span>
@@ -548,26 +534,6 @@ const View = ({params}) => {
           <div className='form_row_double_top'>
             <div className='form_field_container_vertical'>
               <TextField 
-                id='description'
-                label="Description" 
-                variant="outlined" 
-                className='form_text_field' 
-                value={editDescription} 
-                error={editDescriptionError}
-                onChange={event=>setEditDescription(event.target.value)}
-                disabled={isLoading||isSaving}
-                multiline={true}
-                rows={4}
-                onFocus={()=>setEditDescriptionError(false)}
-                size='small'
-                inputProps={{style: {fontSize: 13}}}
-                SelectProps={{style: {fontSize: 13}}}
-                InputLabelProps={{style: {fontSize: 15}}}
-              />
-              {editDescriptionError && <span className='form_error_floating'>Invalid Description</span>}
-            </div>
-            <div className='form_field_container_vertical'>
-              <TextField 
                 id='address'
                 label="Address" 
                 variant="outlined" 
@@ -586,47 +552,36 @@ const View = ({params}) => {
               />
               {editAddressError && <span className='form_error_floating'>Invalid Address</span>}
             </div>
-          </div>
-          <div className='form_row_double_top'>              
             <div className='form_field_container_vertical'>
-              <div className='form_field_container'>
-                <TextField 
-                  id='web-address'
-                  label="Web Address" 
-                  variant="outlined" 
-                  className='form_text_field' 
-                  value={editWebAddress} 
-                  error={editWebAddressError}
-                  onChange={event=>setEditWebAddress(event.target.value)}
-                  disabled={isLoading||isSaving}
-                  onFocus={()=>setEditWebAddressError(false)}
-                  size='small'
-                  inputProps={{style: {fontSize: 13}}}
-                  SelectProps={{style: {fontSize: 13}}}
-                  InputLabelProps={{style: {fontSize: 15}}}
-                />
-                {editWebAddressError && <span className='form_error_floating'>Invalid Web Address</span>}
-              </div>
-            </div>
-            <div className='form_field_container_vertical'>
-              <div className='form_field_container'>
-                <TextField 
-                  id='reg-number'
-                  label="Reg Number" 
-                  variant="outlined" 
-                  className='form_text_field' 
-                  value={editRegNumber} 
-                  error={editRegNumberError}
-                  onChange={event=>setEditRegNumber(event.target.value)}
-                  disabled={isLoading||isSaving}
-                  onFocus={()=>setEditRegNumberError(false)}
-                  size='small'
-                  inputProps={{style: {fontSize: 13}}}
-                  SelectProps={{style: {fontSize: 13}}}
-                  InputLabelProps={{style: {fontSize: 15}}}
-                />
-                {editRegNumberError && <span className='form_error_floating'>Invalid Reg Number</span>}
-              </div>
+              <TextField 
+                id='delivery-address'
+                label="Delivery Address" 
+                variant="outlined" 
+                className='form_text_field' 
+                value={editDeliveryAddress} 
+                error={editDeliveryAddressError}
+                onChange={event=>setEditDeliveryAddress(event.target.value)}
+                disabled={isLoading||isSaving}
+                multiline={true}
+                rows={4}
+                onFocus={()=>setEditDeliveryAddressError(false)}
+                size='small'
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+              />
+              <FormControlLabel 
+                control={
+                  <Checkbox 
+                    id='same-address'
+                    checked={editSameAddress} 
+                    onChange={event=>setEditSameAddress(event.target.checked)}
+                    disabled={isLoading||isSaving}
+                  />
+                } 
+                label="Same Address"
+              />
+              {editDeliveryAddressError && <span className='form_error_floating'>Invalid Delivery Address</span>}
             </div>
           </div>
           <div className='form_row_double'>

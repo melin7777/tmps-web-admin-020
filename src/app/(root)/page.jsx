@@ -12,11 +12,12 @@ import DateBrowser from '@/components/browsers/DateBrowser';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import SellersBrowser from '@/components/browsers/SellersBrowser';
+import LoadingScreen from '@/components/screens/LoadingScreen';
 
 const Dashboard = () => {
   const router = useRouter();
   const {data: session, status} = useSession();
-  const [loading, setLoading] = useState(true);
+  const [statusLoading, setStatusLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState(false);
   const { width, height=500 } = useWindowDimensions();
@@ -102,24 +103,11 @@ const Dashboard = () => {
   const [searchSeller, setSearchSeller] = useState({id: 0, first_name: "All", last_name: ""});
 
   useEffect(() => {
-    if(session && session.user && status!=="loading"){
-      if(session.user.status==="activation_pending"){
-        router.push("/signup");
-      }
-      else if(session.user.status==="incomplete"){
-        router.push("/signup");
-      }
-      else if(session.user.status==="reset_pending"){
-        router.push("/reset");
-      }
-      else{
-        setLoading(false);
-      }
+    if(status==='unauthenticated'){
+      router.push("/signin");
     }
-    else{
-      if(status==="unauthenticated"){
-        router.push("/signin");
-      }
+    else if(status==='authenticated'){  
+      setStatusLoading(false);
     }
   }, [status]);
 
@@ -492,187 +480,191 @@ const Dashboard = () => {
   }
 
   return (
-    <div className='form_container mt-10' style={{minHeight: (height-80)}}>
-      <div className='form_container_large' style={{minHeight: (height-80)}}>
-        <div className='header_container'>
-          <div className='header_container_left'>
-            <span></span>
-            <div className='header_container_left_text'>
-              <span className="form_header">Dashboard</span>
-              <span className="form_sub_header">Overview of product sales</span>
-            </div>
-          </div>
-          <div className='header_container_right'>
-            <div className='flex flex-row'>
-              <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/categories")}>Categories</Button>
-              <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/brands")}>Brands</Button>
-              <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/models")}>Models</Button>
-              <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/sellers")}>Sellers</Button>
-              <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/customers")}>Customers</Button>
-              <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/admins")}>Admins</Button>
-            </div>
-          </div>
-        </div>
-        <div className='form_fields_toolbar_container pb-4' style={{borderBottom: '1px solid #e8e8e8'}}>
-          <div className='form_fields_toolbar_container_left_col'>
-            <div className='form_fields_toolbar_container_left_col_top'>
-              <div className='form_text_field_constructed'>
-                <span className='form_text_field_constructed_label'>Seller</span>
-                <span className='form_text_field_constructed_text' onClick={()=>setOpenSeller(true)}>{searchSeller.first_name+" "+searchSeller.last_name}</span>
-                <div className='form_text_field_constructed_actions'>
-                  <Close sx={{width: 20, height: 20, color: '#6b7280'}} onClick={()=>setSearchSeller({id: 0, first_name: "All", last_name: ""})}/>
-                  <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenSeller(true)}/>
+    <>
+      {statusLoading?<LoadingScreen height={(height-80)}/>:
+        <div className='form_container mt-10' style={{minHeight: (height-80)}}>
+          <div className='form_container_large' style={{minHeight: (height-80)}}>
+            <div className='header_container'>
+              <div className='header_container_left'>
+                <span></span>
+                <div className='header_container_left_text'>
+                  <span className="form_header">Dashboard</span>
+                  <span className="form_sub_header">Overview of product sales</span>
+                </div>
+              </div>
+              <div className='header_container_right'>
+                <div className='flex flex-row'>
+                  <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/categories")}>Categories</Button>
+                  <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/brands")}>Brands</Button>
+                  <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/models")}>Models</Button>
+                  <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/sellers")}>Sellers</Button>
+                  <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/customers")}>Customers</Button>
+                  <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/admins")}>Admins</Button>
                 </div>
               </div>
             </div>
-            <div className='form_fields_toolbar_container_left_col_bottom'>
-              <div className='form_text_field_constructed_xtra_small'>
-                <span className='form_text_field_constructed_label'>From</span>
-                <span className='form_text_field_constructed_text cursor-pointer' onClick={()=>setOpenStartDate(true)}>{searchStartDateView}</span>
-                <div className='form_text_field_constructed_actions_1'>
-                  <CalendarMonth sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenStartDate(true)}/>
+            <div className='form_fields_toolbar_container pb-4' style={{borderBottom: '1px solid #e8e8e8'}}>
+              <div className='form_fields_toolbar_container_left_col'>
+                <div className='form_fields_toolbar_container_left_col_top'>
+                  <div className='form_text_field_constructed'>
+                    <span className='form_text_field_constructed_label'>Seller</span>
+                    <span className='form_text_field_constructed_text' onClick={()=>setOpenSeller(true)}>{searchSeller.first_name+" "+searchSeller.last_name}</span>
+                    <div className='form_text_field_constructed_actions'>
+                      <Close sx={{width: 20, height: 20, color: '#6b7280'}} onClick={()=>setSearchSeller({id: 0, first_name: "All", last_name: ""})}/>
+                      <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenSeller(true)}/>
+                    </div>
+                  </div>
+                </div>
+                <div className='form_fields_toolbar_container_left_col_bottom'>
+                  <div className='form_text_field_constructed_xtra_small'>
+                    <span className='form_text_field_constructed_label'>From</span>
+                    <span className='form_text_field_constructed_text cursor-pointer' onClick={()=>setOpenStartDate(true)}>{searchStartDateView}</span>
+                    <div className='form_text_field_constructed_actions_1'>
+                      <CalendarMonth sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenStartDate(true)}/>
+                    </div>
+                  </div>
+                  <div className='form_text_field_constructed_xtra_small'>
+                    <span className='form_text_field_constructed_label'>To</span>
+                    <span className='form_text_field_constructed_text cursor-pointer' onClick={()=>setOpenEndDate(true)}>{searchEndDateView}</span>
+                    <div className='form_text_field_constructed_actions_1'>
+                      <CalendarMonth sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenEndDate(true)}/>
+                    </div>
+                  </div>
+                  <Button 
+                    variant='contained' 
+                    disabled={isLoading} 
+                    style={{textTransform: 'none', height: 36}} 
+                    startIcon={isLoading?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Search />}
+                    onClick={()=>{getSearchData(); getSearchDataDeliveries()}}
+                    size='small'
+                  >Search</Button>
                 </div>
               </div>
-              <div className='form_text_field_constructed_xtra_small'>
-                <span className='form_text_field_constructed_label'>To</span>
-                <span className='form_text_field_constructed_text cursor-pointer' onClick={()=>setOpenEndDate(true)}>{searchEndDateView}</span>
-                <div className='form_text_field_constructed_actions_1'>
-                  <CalendarMonth sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenEndDate(true)}/>
+              <div className='form_fields_toolbar_container_right_end'>
+                <TextField className='form_text_field_xtra_small'
+                  id='time-frame'
+                  value={searchTimeFrame}
+                  label="Time Frame"
+                  onChange={event=>setSearchTimeFrame(event.target.value)} 
+                  variant={"outlined"}
+                  select={true}
+                  disabled={isLoading}
+                  size='small'
+                  inputProps={{style: {fontSize: 13}}}
+                  SelectProps={{style: {fontSize: 13}}}
+                  InputLabelProps={{style: {fontSize: 15}}}
+                >
+                  <MenuItem value={"this_week"}>This Week</MenuItem>
+                  <MenuItem value={"this_month"}>This Month</MenuItem>
+                  <MenuItem value={"this_year"}>This Year</MenuItem>
+                  <MenuItem value={"last_week"}>Last Week</MenuItem>
+                  <MenuItem value={"last_month"}>Last Month</MenuItem>
+                  <MenuItem value={"last_3_months"}>Last 3 Months</MenuItem>
+                  <MenuItem value={"last_6_months"}>Last 6 Months</MenuItem>
+                  <MenuItem value={"last_year"}>Last Year</MenuItem>
+                  <MenuItem value={"last_3_years"}>Last 3 Years</MenuItem>
+                </TextField>
+                <TextField className='form_text_field_xtra_xtra_small'
+                  id='time-period'
+                  value={searchTimePeriod}
+                  label="Time Period"
+                  onChange={event=>setSearchTimePeriod(event.target.value)} 
+                  variant={"outlined"}
+                  select={true}
+                  disabled={isLoading}
+                  size='small'
+                  inputProps={{style: {fontSize: 13}}}
+                  SelectProps={{style: {fontSize: 13}}}
+                  InputLabelProps={{style: {fontSize: 15}}}
+                >
+                  <MenuItem value={"daily"}>Daily</MenuItem>
+                  <MenuItem value={"weekly"}>Weekly</MenuItem>
+                  <MenuItem value={"monthly"}>Monthly</MenuItem>
+                  <MenuItem value={"yearly"}>Yearly</MenuItem>
+                </TextField>
+              </div>
+            </div>
+            <div className='w-full px-3 h-[510px]'>
+              <div className='form_row_single_left'>
+                <span className="form_internal_header">Sales Summary</span>
+              </div>
+              <div className='form_row_single'>
+                <div className='summary_banner'>
+                  <span className='summary_banner_label'>Total:</span>
+                  <div className='summary_banner_text_container'>
+                    <span className='summary_banner_adornment'>{`Rs.`}</span>
+                    <span className='summary_banner_text'>{parseFloat(searchTotal).toFixed(2)}</span>
+                  </div>
+                </div>
+                <div className='summary_banner'>
+                  <span className='summary_banner_label'>Discount:</span>
+                  <div className='summary_banner_text_container'>
+                    <span className='summary_banner_adornment'>{`Rs.`}</span>
+                    <span className='summary_banner_text'>{parseFloat(searchDiscount).toFixed(2)}</span>
+                  </div>
+                </div>
+                <div className='summary_banner'>
+                  <span className='summary_banner_label'>Net Total:</span>
+                  <div className='summary_banner_text_container'>
+                    <span className='summary_banner_adornment'>{`Rs.`}</span>
+                    <span className='summary_banner_text'>{parseFloat(searchNetTotal).toFixed(2)}</span>
+                  </div>
                 </div>
               </div>
-              <Button 
-                variant='contained' 
-                disabled={isLoading} 
-                style={{textTransform: 'none', height: 36}} 
-                startIcon={isLoading?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Search />}
-                onClick={()=>{getSearchData(); getSearchDataDeliveries()}}
-                size='small'
-              >Search</Button>
+              <div className='pt-3 w-full h-[350px]'>
+                <HighchartsReact
+                  highcharts={Highcharts}
+                  options={chartOptions}
+                />
+              </div>
             </div>
-          </div>
-          <div className='form_fields_toolbar_container_right_end'>
-            <TextField className='form_text_field_xtra_small'
-              id='time-frame'
-              value={searchTimeFrame}
-              label="Time Frame"
-              onChange={event=>setSearchTimeFrame(event.target.value)} 
-              variant={"outlined"}
-              select={true}
-              disabled={isLoading}
-              size='small'
-              inputProps={{style: {fontSize: 13}}}
-              SelectProps={{style: {fontSize: 13}}}
-              InputLabelProps={{style: {fontSize: 15}}}
-            >
-              <MenuItem value={"this_week"}>This Week</MenuItem>
-              <MenuItem value={"this_month"}>This Month</MenuItem>
-              <MenuItem value={"this_year"}>This Year</MenuItem>
-              <MenuItem value={"last_week"}>Last Week</MenuItem>
-              <MenuItem value={"last_month"}>Last Month</MenuItem>
-              <MenuItem value={"last_3_months"}>Last 3 Months</MenuItem>
-              <MenuItem value={"last_6_months"}>Last 6 Months</MenuItem>
-              <MenuItem value={"last_year"}>Last Year</MenuItem>
-              <MenuItem value={"last_3_years"}>Last 3 Years</MenuItem>
-            </TextField>
-            <TextField className='form_text_field_xtra_xtra_small'
-              id='time-period'
-              value={searchTimePeriod}
-              label="Time Period"
-              onChange={event=>setSearchTimePeriod(event.target.value)} 
-              variant={"outlined"}
-              select={true}
-              disabled={isLoading}
-              size='small'
-              inputProps={{style: {fontSize: 13}}}
-              SelectProps={{style: {fontSize: 13}}}
-              InputLabelProps={{style: {fontSize: 15}}}
-            >
-              <MenuItem value={"daily"}>Daily</MenuItem>
-              <MenuItem value={"weekly"}>Weekly</MenuItem>
-              <MenuItem value={"monthly"}>Monthly</MenuItem>
-              <MenuItem value={"yearly"}>Yearly</MenuItem>
-            </TextField>
+            <div className='w-full px-3 mt-10 h-[520px]'>
+              <div className='form_row_single_left'>
+                <span className="form_internal_header">Deliveries</span>
+              </div>
+              <div className='form_row_single'>
+                <div className='summary_banner_1'>
+                  <span className='summary_banner_label_1'>Total:</span>
+                  <div className='summary_banner_text_container'>
+                    <span className='summary_banner_adornment_1'>{`Rs.`}</span>
+                    <span className='summary_banner_text_1'>{parseFloat(searchTotalDeliveries).toFixed(2)}</span>
+                  </div>
+                </div>
+                <div className='summary_banner_1'>
+                  <span className='summary_banner_label_1'>Discount:</span>
+                  <div className='summary_banner_text_container'>
+                    <span className='summary_banner_adornment_1'>{`Rs.`}</span>
+                    <span className='summary_banner_text_1'>{parseFloat(searchDiscountDeliveries).toFixed(2)}</span>
+                  </div>
+                </div>
+                <div className='summary_banner_1'>
+                  <span className='summary_banner_label_1'>Net Total:</span>
+                  <div className='summary_banner_text_container'>
+                    <span className='summary_banner_adornment_1'>{`Rs.`}</span>
+                    <span className='summary_banner_text_1'>{parseFloat(searchNetTotalDeliveries).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+              <div className='pt-3 w-full h-[350px]'>
+                <HighchartsReact
+                  highcharts={Highcharts}
+                  options={chartOptionsDeliveries}
+                />
+              </div>
+            </div>
+            <Dialog open={openStartDate} onClose={()=>setOpenStartDate(false)}>
+              <DateBrowser {...{setOpen: setOpenStartDate, value: searchStartDate, setValue: setSearchStartDate}}/>
+            </Dialog>
+            <Dialog open={openEndDate} onClose={()=>setOpenEndDate(false)}>
+              <DateBrowser {...{setOpen: setOpenEndDate, value: searchEndDate, setValue: setSearchEndDate}}/>
+            </Dialog>
+            <Dialog open={openSeller} onClose={()=>setOpenSeller(false)} scroll='paper'>
+              <SellersBrowser {...{setOpen: setOpenSeller, value: searchSeller, setValue: setSearchSeller}}/>
+            </Dialog>
           </div>
         </div>
-        <div className='w-full px-3 h-[510px]'>
-          <div className='form_row_single_left'>
-            <span className="form_internal_header">Sales Summary</span>
-          </div>
-          <div className='form_row_single'>
-            <div className='summary_banner'>
-              <span className='summary_banner_label'>Total:</span>
-              <div className='summary_banner_text_container'>
-                <span className='summary_banner_adornment'>{`Rs.`}</span>
-                <span className='summary_banner_text'>{parseFloat(searchTotal).toFixed(2)}</span>
-              </div>
-            </div>
-            <div className='summary_banner'>
-              <span className='summary_banner_label'>Discount:</span>
-              <div className='summary_banner_text_container'>
-                <span className='summary_banner_adornment'>{`Rs.`}</span>
-                <span className='summary_banner_text'>{parseFloat(searchDiscount).toFixed(2)}</span>
-              </div>
-            </div>
-            <div className='summary_banner'>
-              <span className='summary_banner_label'>Net Total:</span>
-              <div className='summary_banner_text_container'>
-                <span className='summary_banner_adornment'>{`Rs.`}</span>
-                <span className='summary_banner_text'>{parseFloat(searchNetTotal).toFixed(2)}</span>
-              </div>
-            </div>
-          </div>
-          <div className='pt-3 w-full h-[350px]'>
-            <HighchartsReact
-              highcharts={Highcharts}
-              options={chartOptions}
-            />
-          </div>
-        </div>
-        <div className='w-full px-3 mt-10 h-[520px]'>
-          <div className='form_row_single_left'>
-            <span className="form_internal_header">Deliveries</span>
-          </div>
-          <div className='form_row_single'>
-            <div className='summary_banner_1'>
-              <span className='summary_banner_label_1'>Total:</span>
-              <div className='summary_banner_text_container'>
-                <span className='summary_banner_adornment_1'>{`Rs.`}</span>
-                <span className='summary_banner_text_1'>{parseFloat(searchTotalDeliveries).toFixed(2)}</span>
-              </div>
-            </div>
-            <div className='summary_banner_1'>
-              <span className='summary_banner_label_1'>Discount:</span>
-              <div className='summary_banner_text_container'>
-                <span className='summary_banner_adornment_1'>{`Rs.`}</span>
-                <span className='summary_banner_text_1'>{parseFloat(searchDiscountDeliveries).toFixed(2)}</span>
-              </div>
-            </div>
-            <div className='summary_banner_1'>
-              <span className='summary_banner_label_1'>Net Total:</span>
-              <div className='summary_banner_text_container'>
-                <span className='summary_banner_adornment_1'>{`Rs.`}</span>
-                <span className='summary_banner_text_1'>{parseFloat(searchNetTotalDeliveries).toFixed(2)}</span>
-              </div>
-            </div>
-          </div>
-          <div className='pt-3 w-full h-[350px]'>
-            <HighchartsReact
-              highcharts={Highcharts}
-              options={chartOptionsDeliveries}
-            />
-          </div>
-        </div>
-        <Dialog open={openStartDate} onClose={()=>setOpenStartDate(false)}>
-          <DateBrowser {...{setOpen: setOpenStartDate, value: searchStartDate, setValue: setSearchStartDate}}/>
-        </Dialog>
-        <Dialog open={openEndDate} onClose={()=>setOpenEndDate(false)}>
-          <DateBrowser {...{setOpen: setOpenEndDate, value: searchEndDate, setValue: setSearchEndDate}}/>
-        </Dialog>
-        <Dialog open={openSeller} onClose={()=>setOpenSeller(false)} scroll='paper'>
-          <SellersBrowser {...{setOpen: setOpenSeller, value: searchSeller, setValue: setSearchSeller}}/>
-        </Dialog>
-      </div>
-    </div>
+      }
+    </>
   )
 }
 

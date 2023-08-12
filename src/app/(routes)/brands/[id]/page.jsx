@@ -140,14 +140,6 @@ const View = ({params}) => {
         });
         if(editId===""){
           setEditId(response.data.data.id);
-          toast.success("Item Created !", {
-            position: toast.POSITION.TOP_RIGHT
-          });
-        }
-        else{
-          toast.success("Item Edited !", {
-            position: toast.POSITION.TOP_RIGHT
-          });
         }
       }
     }
@@ -175,9 +167,6 @@ const View = ({params}) => {
           id: parseInt(editId),
         });
         setEditImage("none");
-        toast.success("Image Deleted !", {
-          position: toast.POSITION.TOP_RIGHT
-        });
       }
       catch(error){
         toast.error("Image Delete Failed !", {
@@ -244,17 +233,17 @@ const View = ({params}) => {
           <div className='header_container_right'>
             <Button 
               variant='outlined' 
-              disabled={isSaving} 
+              disabled={isLoading||isSaving} 
               style={{textTransform: 'none'}} 
-              startIcon={isSaving?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Add />}
+              startIcon={isLoading||isSaving?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Add />}
               onClick={()=>newItemClicked()}
               size='small'
             >Create</Button>
             <Button 
               variant='contained' 
-              disabled={isSaving} 
+              disabled={isLoading||isSaving} 
               style={{textTransform: 'none'}} 
-              startIcon={isSaving?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Save />}
+              startIcon={isLoading||isSaving?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Save />}
               onClick={()=>saveClicked()}
               size='small'
             >Save</Button>
@@ -276,9 +265,9 @@ const View = ({params}) => {
                     <input type='file' ref={imageRef} onChange={handleImageChange} className='file_input'/>
                   </div>
                   <div className='inventory_image_controls mt-2'>
-                    <IconButton disabled={isSaving} onClick={()=>imageRef.current.click()}><Folder sx={{width: 20, height: 20, color: '#7c3aed'}}/></IconButton>
-                    {file && <IconButton disabled={isSaving} onClick={()=>setOpenCrop(true)}><CropRotate sx={{width: 20, height: 20, color: '#7c3aed'}}/></IconButton>}
-                    <IconButton disabled={isSaving} onClick={(event)=>handleImageRemove(event)}><Delete sx={{width: 20, height: 20, color: '#7c3aed'}}/></IconButton>
+                    <IconButton disabled={isLoading||isSaving} onClick={()=>imageRef.current.click()}><Folder sx={{width: 20, height: 20, color: '#7c3aed'}}/></IconButton>
+                    {file && <IconButton disabled={isLoading||isSaving} onClick={()=>setOpenCrop(true)}><CropRotate sx={{width: 20, height: 20, color: '#7c3aed'}}/></IconButton>}
+                    <IconButton disabled={isLoading||isSaving} onClick={(event)=>handleImageRemove(event)}><Delete sx={{width: 20, height: 20, color: '#7c3aed'}}/></IconButton>
                   </div>
                 </div>
               </div>
@@ -330,7 +319,7 @@ const View = ({params}) => {
                 value={editCode} 
                 error={editCodeError}
                 onChange={event=>setEditCode(event.target.value)}
-                disabled={isSaving}
+                disabled={isLoading||isSaving}
                 size='small' 
                 onFocus={()=>setEditCodeError(false)}
                 inputProps={{style: {fontSize: 13}}}
@@ -351,7 +340,7 @@ const View = ({params}) => {
                 value={editDescription} 
                 error={editDescriptionError}
                 onChange={event=>setEditDescription(event.target.value)}
-                disabled={isSaving}
+                disabled={isLoading||isSaving}
                 size='small' 
                 onFocus={()=>setEditDescriptionError(false)}
                 inputProps={{style: {fontSize: 13}}}
