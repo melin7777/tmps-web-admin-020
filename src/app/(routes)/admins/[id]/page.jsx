@@ -37,11 +37,6 @@ const View = ({params}) => {
   const [editEmail, setEditEmail] = useState("");
   const [editEmailError, setEditEmailError] = useState(false);
   const [editDuplicateEmailError, setEditDuplicateEmailError] = useState(false);
-  const [editAddress, setEditAddress] = useState("");
-  const [editAddressError, setEditAddressError] = useState(false);
-  const [editDeliveryAddress, setEditDeliveryAddress] = useState("");
-  const [editDeliveryAddressError, setEditDeliveryAddressError] = useState(false);
-  const [editSameAddress, setEditSameAddress] = useState(false);
   const [editNotifyBy, setEditNotifyBy] = useState("email");
   const [editNotifyByError, setEditNotifyByError] = useState(false);
 
@@ -82,8 +77,6 @@ const View = ({params}) => {
       setEditEmail(val.email);
       setEditPhone(val.phone);
       setEditNotifyBy(val.notify_by);
-      setEditAddress(val.address);
-      setEditDeliveryAddress(val.delivery_address);
       var status = "";
       if(val.status==="active"){
         status = "Active";
@@ -127,8 +120,6 @@ const View = ({params}) => {
     setEditDuplicateEmailError(false);
     setEditDuplicatePhoneError(false);
     setEditNotifyByError(false);
-    setEditAddressError(false);
-    setEditDeliveryAddressError(false);
     setServerError(false);
   };
   
@@ -142,8 +133,6 @@ const View = ({params}) => {
     setEditPassword("");
     setEditConfirm("");
     setEditNotifyBy("email");
-    setEditAddress("");
-    setEditDeliveryAddress("");
     setPhotoURL("none");
   };
 
@@ -159,14 +148,6 @@ const View = ({params}) => {
       if(editLastName.length===0 || editLastName.length>128) {
         error = true;
         setEditLastNameError(true);
-      }
-      if(editAddress.length===0 || editAddress.length>256) {
-        error = true;
-        setEditAddressError(true);
-      }
-      if(editDeliveryAddress.length===0 || editDeliveryAddress.length>256) {
-        error = true;
-        setEditDeliveryAddressError(true);
       }
       if(editId===""){
         if(editEmail.length===0 || editEmail.length>128) {
@@ -202,8 +183,6 @@ const View = ({params}) => {
             email: editEmail,
             notifyBy: editNotifyBy,
             password: editPassword,
-            address: editAddress,
-            deliveryAddress: editDeliveryAddress,
             status: editStatus.id,
           };
         }
@@ -213,8 +192,6 @@ const View = ({params}) => {
             id: parseInt(editId),
             firstName: editFirstName,
             lastName: editLastName,
-            address: editAddress,
-            deliveryAddress: editDeliveryAddress,
             status: editStatus.id,
           };
         }
@@ -228,10 +205,10 @@ const View = ({params}) => {
         else{
           if(editId===""){
             setEditId(response.data.data.id);
-            saveImage();
+            saveImage(response.data.data.id);
           }
           else{
-            saveImage();
+            saveImage(editId);
           }
         }
       }
@@ -284,11 +261,11 @@ const View = ({params}) => {
     }
   }
 
-  const saveImage = () => {
-    if(file && editId>0){
+  const saveImage = (id) => {
+    if(file && id>0){
       setIsSaving(true);
       const formData = new FormData();
-      formData.append("id", ""+editId);
+      formData.append("id", ""+id);
       formData.append('imageUrl', file);
       axios({
         method: "post",
@@ -302,6 +279,8 @@ const View = ({params}) => {
           setIsSaving(false);
         } 
         else {
+          setPhotoURL("https://tm-web.techmax.lk/"+response.data.data.image_url);
+          setFile(null);
           setIsSaving(false);
         }
       })
@@ -353,12 +332,6 @@ const View = ({params}) => {
       }
     }
   }
-
-  useEffect(() => {
-    if(editSameAddress){
-      setEditDeliveryAddress(editAddress);
-    }
-  }, [editSameAddress, editAddress])
   
 
   return (
@@ -529,59 +502,6 @@ const View = ({params}) => {
               />
               {editPhoneError && <span className='form_error_floating'>Invalid Phone</span>}
               {editDuplicatePhoneError && <span className='form_error_floating'>Phone Already Exists !</span>}
-            </div>
-          </div>
-          <div className='form_row_double_top'>
-            <div className='form_field_container_vertical'>
-              <TextField 
-                id='address'
-                label="Address" 
-                variant="outlined" 
-                className='form_text_field' 
-                value={editAddress} 
-                error={editAddressError}
-                onChange={event=>setEditAddress(event.target.value)}
-                disabled={isLoading||isSaving}
-                multiline={true}
-                rows={4}
-                onFocus={()=>setEditAddressError(false)}
-                size='small'
-                inputProps={{style: {fontSize: 13}}}
-                SelectProps={{style: {fontSize: 13}}}
-                InputLabelProps={{style: {fontSize: 15}}}
-              />
-              {editAddressError && <span className='form_error_floating'>Invalid Address</span>}
-            </div>
-            <div className='form_field_container_vertical'>
-              <TextField 
-                id='delivery-address'
-                label="Delivery Address" 
-                variant="outlined" 
-                className='form_text_field' 
-                value={editDeliveryAddress} 
-                error={editDeliveryAddressError}
-                onChange={event=>setEditDeliveryAddress(event.target.value)}
-                disabled={isLoading||isSaving}
-                multiline={true}
-                rows={4}
-                onFocus={()=>setEditDeliveryAddressError(false)}
-                size='small'
-                inputProps={{style: {fontSize: 13}}}
-                SelectProps={{style: {fontSize: 13}}}
-                InputLabelProps={{style: {fontSize: 15}}}
-              />
-              <FormControlLabel 
-                control={
-                  <Checkbox 
-                    id='same-address'
-                    checked={editSameAddress} 
-                    onChange={event=>setEditSameAddress(event.target.checked)}
-                    disabled={isLoading||isSaving}
-                  />
-                } 
-                label="Same Address"
-              />
-              {editDeliveryAddressError && <span className='form_error_floating'>Invalid Delivery Address</span>}
             </div>
           </div>
           <div className='form_row_double'>

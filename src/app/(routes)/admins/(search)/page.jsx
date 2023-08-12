@@ -244,7 +244,7 @@ const AdminsSearch = () => {
               startIcon={isSaving?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Add />}
               onClick={()=>editClicked("create-item")}
               size='small'
-            >New Customer</Button>
+            >New Admin</Button>
             <Button 
               variant='outlined' 
               style={{textTransform: 'none'}} 

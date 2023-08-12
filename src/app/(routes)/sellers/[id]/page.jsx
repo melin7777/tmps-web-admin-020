@@ -249,10 +249,10 @@ const View = ({params}) => {
         else{
           if(editId===""){
             setEditId(response.data.data.id);
-            saveImage();
+            saveImage(response.data.data.id);
           }
           else{
-            saveImage();
+            saveImage(editId);
           }
         }
       }
@@ -305,11 +305,11 @@ const View = ({params}) => {
     }
   }
 
-  const saveImage = () => {
-    if(file && editId>0){
+  const saveImage = (id) => {
+    if(file && id>0){
       setIsSaving(true);
       const formData = new FormData();
-      formData.append("id", ""+editId);
+      formData.append("id", ""+id);
       formData.append('imageUrl', file);
       axios({
         method: "post",
@@ -323,6 +323,8 @@ const View = ({params}) => {
           setIsSaving(false);
         } 
         else {
+          setPhotoURL("https://tm-web.techmax.lk/"+response.data.data.image_url);
+          setFile(null);
           setIsSaving(false);
         }
       })
