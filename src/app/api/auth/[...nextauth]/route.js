@@ -49,7 +49,7 @@ const handler = NextAuth({
       session.iat = token.iat;
       session.exp = token.exp;
       session.jti = token.jti;
-      const res = await fetch("https://tm-web.techmax.lk/online-users/get-user-web", {
+      const res = await fetch("https://tm-web.techmax.lk/online-users/find-by-email-web", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
