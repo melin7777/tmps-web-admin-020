@@ -407,12 +407,12 @@ const BrandsSearch = () => {
           <div className='table_body_container'>
             {searchData.map(val=>
               <div key={val.id} className='table_row'>
-              <div className='table_col_1_center_center h-[80px] w-[80px]'>
-                {val.imageUrl==="none" ? 
-                  <CameraAlt sx={{width: 80, height: 80, color: '#cbd5e1'}}/> : 
-                  <div className='table_col_1_image'><Image src={val.imageUrl} alt="brand image" fill sizes='80px' priority={true} style={{objectFit: 'contain'}}/></div>
-                }
-              </div>
+                <div className='table_col_1_center_center h-[80px] w-[80px]'>
+                  {val.imageUrl==="none" ? 
+                    <CameraAlt sx={{width: 80, height: 80, color: '#cbd5e1'}}/> : 
+                    <div className='table_col_1_image'><Image src={val.imageUrl} alt="brand image" fill sizes='80px' priority={true} style={{objectFit: 'contain'}}/></div>
+                  }
+                </div>
                 <div className='table_col_start_center sm:h-[80px]'>
                   <div className='table_field_double'>
                     <div className='table_field'>

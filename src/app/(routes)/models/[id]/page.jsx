@@ -202,7 +202,7 @@ const View = ({params}) => {
                 onChange={event=>setEditStatus(event.target.value)} 
                 variant={"outlined"}
                 select={true}
-                disabled={isLoading}
+                disabled={isLoading||isSaving}
                 size='small'
                 onFocus={()=>setEditStatusError(false)}
                 inputProps={{style: {fontSize: 13}}}

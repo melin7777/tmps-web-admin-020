@@ -36,7 +36,6 @@ const View = ({params}) => {
   const [editImageError, setEditImageError] = useState(false);
   const [openCrop, setOpenCrop] = useState(false);  
   const imageRef = useRef();
-  const [photoURL, setPhotoURL] = useState("none");
   const [file, setFile] = useState(null);
 
   useEffect(() => {
@@ -100,6 +99,7 @@ const View = ({params}) => {
     setEditStatusError(false);
     setEditCodeError(false);
     setEditDescriptionError(false);
+    setEditImageError(false);
     setServerError(false);
   };
   
@@ -154,7 +154,7 @@ const View = ({params}) => {
   }
 
   const handleImageRemove = (event) => {
-    setPhotoURL("none");
+    setEditImage("none");
     setFile(null);
     deleteImage();
   }
@@ -183,7 +183,7 @@ const View = ({params}) => {
     const file1 = event.target.files[0];
     if(file1){
       setFile(file1);
-      setPhotoURL(URL.createObjectURL(file1));
+      setEditImage(URL.createObjectURL(file1));
       setOpenCrop(true);
     }
   }
@@ -296,7 +296,7 @@ const View = ({params}) => {
                 onChange={event=>setEditStatus(event.target.value)} 
                 variant={"outlined"}
                 select={true}
-                disabled={isLoading}
+                disabled={isLoading||isSaving}
                 size='small'
                 onFocus={()=>setEditStatusError(false)}
                 inputProps={{style: {fontSize: 13}}}
@@ -352,7 +352,7 @@ const View = ({params}) => {
           </div>
         </div>
         <Dialog open={openCrop} onClose={()=>setOpenCrop(false)}>
-          <CropEasySingle {...{setOpenCrop: setOpenCrop, photoURL: photoURL, selectSingleImage}}/>
+          <CropEasySingle {...{setOpenCrop: setOpenCrop, photoURL: editImage, selectSingleImage}}/>
         </Dialog>
         <ToastContainer />
       </div>

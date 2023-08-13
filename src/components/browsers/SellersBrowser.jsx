@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { CameraAlt, Cancel, Done, Search } from "@mui/icons-material";
 import { DialogActions, DialogContent, TextField, InputAdornment, CircularProgress, Button, Avatar } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -20,7 +19,7 @@ const SellersBrowser = ({setOpen, value, setValue}) => {
     let temp = [];
     if(searchText.length===0){
       items.map(val=>{
-        temp.push({id: val.id, description: val.description});
+        temp.push(val);
       });
     }
     else{
@@ -94,14 +93,14 @@ const SellersBrowser = ({setOpen, value, setValue}) => {
       :
         <DialogContent dividers sx={{background: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'start', alignItems: 'start', position: 'relative', height: 600, width: 'auto', minWidth: {sm: 500}}}>
           {viewItems.map(val=>
-            <div key={val.id} onClick={()=>setSelectedItem(val)} className='flex flex-row w-full justify-between items-center cursor-pointer' style={{borderBottom: '1px solid #e0e0e0', backgroundColor: selectedItem?.id===val.id?"#e7e5e4":"#ffffff"}}>
-              <div key={val.id} className='flex flex-col justify-center items-center'>
+            <div key={val.id} onClick={()=>setSelectedItem(val)} className='flex flex-row w-full justify-between items-center px-1 cursor-pointer' style={{borderBottom: '1px solid #e0e0e0', backgroundColor: selectedItem?.id===val.id?"#e7e5e4":"#ffffff"}}>
+              <div className='flex flex-col justify-center items-center'>
                 {val.image_url==="none" ? 
-                  <CameraAlt sx={{width: 50, height: 50, color: '#cbd5e1'}}/> : 
+                  <CameraAlt sx={{width: 30, height: 30, color: '#cbd5e1'}}/> : 
                   <Avatar src={val.image_url} sx={{width: 30, height: 30}}/>
                 }
               </div>
-              <div key={val.id} className='flex flex-col flex-1 justify-center items-start h-[60px] pl-3'>
+              <div className='flex flex-col flex-1 justify-center items-start h-[60px] pl-3'>
                 <span className='text-sm'>{val.first_name+" "+val.last_name}</span>
                 <span className='text-xs font-semibold'>{val.email}</span>
               </div>

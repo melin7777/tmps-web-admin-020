@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React, { useState, useEffect, useRef } from 'react';
@@ -6,7 +7,7 @@ import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CircularProgress, MenuItem, InputAdornment, IconButton, Typography, Button, TextField } from '@mui/material';
-import { Add, ClearAll, Edit, FilterAlt, ImportExport, KeyboardArrowDown, KeyboardArrowLeft, KeyboardArrowRight, KeyboardArrowUp, Search } from '@mui/icons-material';
+import { Add, CameraAlt, ClearAll, Edit, FilterAlt, ImportExport, KeyboardArrowDown, KeyboardArrowLeft, KeyboardArrowRight, KeyboardArrowUp, Search } from '@mui/icons-material';
 import useWindowDimensions from '@/hooks/useWindowDimension';
 import SupportMenu from '@/components/headers/SupportMenu';
 
@@ -167,17 +168,25 @@ const CategoriesSearch = () => {
           const values = [];
           response.data.data.data.map(val => {
             var status = "";
+            var imageUrl = "";
             if(val.status==="active"){
               status = "Active";
             }
             else if(val.status==="inactive"){
               status = "Inactive";
             }
+            if(val.image_url==="none"){
+              imageUrl = "none";
+            }
+            else{
+              imageUrl = "https://tm-web.techmax.lk/"+val.image_url;
+            }
             const temp = {
               index: index++,
               id: val.id,
               code: val.code,
               description: val.description,
+              imageUrl: imageUrl,
               status: status,
             };
             values.push(temp);
@@ -391,12 +400,19 @@ const CategoriesSearch = () => {
         </div>
         <div className='table_container'>
           <div className='table_header_container'>
+            <div className='table_header_col_1 w-[80px]'>Image</div>
             <div className='table_header_col flex-1'>Details</div>
             <div className='table_header_col_2 w-[80px]'>Edit</div>
           </div>
           <div className='table_body_container'>
             {searchData.map(val=>
               <div key={val.id} className='table_row'>
+                <div className='table_col_1_center_center h-[80px] w-[80px]'>
+                  {val.imageUrl==="none" ? 
+                    <CameraAlt sx={{width: 80, height: 80, color: '#cbd5e1'}}/> : 
+                    <div className='table_col_1_image'><Image src={val.imageUrl} alt="brand image" fill sizes='80px' priority={true} style={{objectFit: 'contain'}}/></div>
+                  }
+                </div>
                 <div className='table_col_start_center sm:h-[80px]'>
                   <div className='table_field_double'>
                     <div className='table_field'>
