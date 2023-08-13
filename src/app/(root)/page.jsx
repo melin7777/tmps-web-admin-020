@@ -483,7 +483,7 @@ const Dashboard = () => {
     <>
       {statusLoading?<LoadingScreen height={(height-80)}/>:
         <div className='form_container mt-10' style={{minHeight: (height-80)}}>
-          <div className='form_container_large' style={{minHeight: (height-80)}}>
+          <div className='form_container_xtra_large' style={{minHeight: (height-80)}}>
             <div className='header_container'>
               <div className='header_container_left'>
                 <span></span>
@@ -652,16 +652,16 @@ const Dashboard = () => {
                 />
               </div>
             </div>
-            <Dialog open={openStartDate} onClose={()=>setOpenStartDate(false)}>
-              <DateBrowser {...{setOpen: setOpenStartDate, value: searchStartDate, setValue: setSearchStartDate}}/>
-            </Dialog>
-            <Dialog open={openEndDate} onClose={()=>setOpenEndDate(false)}>
-              <DateBrowser {...{setOpen: setOpenEndDate, value: searchEndDate, setValue: setSearchEndDate}}/>
-            </Dialog>
-            <Dialog open={openSeller} onClose={()=>setOpenSeller(false)} scroll='paper'>
-              <SellersBrowser {...{setOpen: setOpenSeller, value: searchSeller, setValue: setSearchSeller}}/>
-            </Dialog>
           </div>
+          <Dialog open={openStartDate} onClose={()=>setOpenStartDate(false)}>
+            <DateBrowser {...{setOpen: setOpenStartDate, value: searchStartDate, setValue: setSearchStartDate}}/>
+          </Dialog>
+          <Dialog open={openEndDate} onClose={()=>setOpenEndDate(false)}>
+            <DateBrowser {...{setOpen: setOpenEndDate, value: searchEndDate, setValue: setSearchEndDate}}/>
+          </Dialog>
+          <Dialog open={openSeller} onClose={()=>setOpenSeller(false)} scroll='paper'>
+            <SellersBrowser {...{setOpen: setOpenSeller, value: searchSeller, setValue: setSearchSeller}}/>
+          </Dialog>
         </div>
       }
     </>

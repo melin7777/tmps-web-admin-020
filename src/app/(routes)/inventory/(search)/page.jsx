@@ -559,20 +559,20 @@ const InventorySearch = () => {
             )}
           </div>
         </div>
-        <Dialog open={openSeller} onClose={()=>setOpenSeller(false)} scroll='paper'>
-          <SellersBrowser {...{setOpen: setOpenSeller, value: searchSeller, setValue: setSearchSeller}}/>
-        </Dialog>
-        <Dialog open={openCategory} onClose={()=>setOpenCategory(false)} scroll='paper'>
-          <CategoriesBrowser {...{setOpen: setOpenCategory, value: searchCategory, setValue: setSearchCategory}}/>
-        </Dialog>
-        <Dialog open={openBrand} onClose={()=>setOpenBrand(false)} scroll='paper'>
-          <BrandsBrowser {...{setOpen: setOpenBrand, value: searchBrand, setValue: setSearchBrand}}/>
-        </Dialog>
-        <Dialog open={openModel} onClose={()=>setOpenModel(false)} scroll='paper'>
-          <ModelsBrowser {...{setOpen: setOpenModel, value: searchModel, setValue: setSearchModel, dependedValue: searchBrand, setDependedValue: setSearchBrand}}/>
-        </Dialog>
-        <ToastContainer />
       </div>
+      <Dialog open={openSeller} onClose={()=>setOpenSeller(false)} scroll='paper'>
+        <SellersBrowser {...{setOpen: setOpenSeller, value: searchSeller, setValue: setSearchSeller}}/>
+      </Dialog>
+      <Dialog open={openCategory} onClose={()=>setOpenCategory(false)} scroll='paper'>
+        <CategoriesBrowser {...{setOpen: setOpenCategory, value: searchCategory, setValue: setSearchCategory}}/>
+      </Dialog>
+      <Dialog open={openBrand} onClose={()=>setOpenBrand(false)} scroll='paper'>
+        <BrandsBrowser {...{setOpen: setOpenBrand, value: searchBrand, setValue: setSearchBrand}}/>
+      </Dialog>
+      <Dialog open={openModel} onClose={()=>setOpenModel(false)} scroll='paper'>
+        <ModelsBrowser {...{setOpen: setOpenModel, value: searchModel, setValue: setSearchModel, dependedValue: searchBrand, setDependedValue: setSearchBrand}}/>
+      </Dialog>
+      <ToastContainer />
     </div>
   )
 }

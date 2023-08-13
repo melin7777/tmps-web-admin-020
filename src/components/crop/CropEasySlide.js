@@ -4,11 +4,11 @@ import { useState } from "react";
 import Cropper from "react-easy-crop";
 import getCroppedImg from "./utils/CropImage";
 
-const CropEasyMulti = ({setOpenCrop, photoURL, selectMultiImage}) => {
+const CropEasySlide = ({setOpenCrop, photoURL, selectSingleImage}) => {
   const [crop, setCrop] = useState({x:0, y:0});
   const [zoom, setZoom] = useState(1);
   const [rotaion, setRotation] = useState(0);
-  const [croppedAriaPixels, setCroppedAriaPixels] = useState(null);  
+  const [croppedAriaPixels, setCroppedAriaPixels] = useState(null);
 
   const cropComplete = (croppedAria, croppedAriaPixels) => {
     setCroppedAriaPixels(croppedAriaPixels);
@@ -18,7 +18,7 @@ const CropEasyMulti = ({setOpenCrop, photoURL, selectMultiImage}) => {
     try{
       const {file, url} = await getCroppedImg(photoURL, croppedAriaPixels, rotaion);
       setOpenCrop(false);
-      selectMultiImage(file, url);
+      selectSingleImage(file, url);
     }
     catch(error){
 
@@ -44,7 +44,7 @@ const CropEasyMulti = ({setOpenCrop, photoURL, selectMultiImage}) => {
           zoom={zoom} 
           zoomWithScroll={true}
           rotation={rotaion} 
-          aspect={1} 
+          aspect={4 / 2} 
           cropShape="rect"
           showGrid={true}
           onCropChange={setCrop}
@@ -87,7 +87,7 @@ const CropEasyMulti = ({setOpenCrop, photoURL, selectMultiImage}) => {
   )
 }
 
-export default CropEasyMulti;
+export default CropEasySlide;
 
 const zoomPercent = (value) => {
   return `${Math.round(value * 100)}%`;

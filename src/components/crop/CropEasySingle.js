@@ -46,7 +46,6 @@ const CropEasySingle = ({setOpenCrop, photoURL, selectSingleImage}) => {
           rotation={rotaion} 
           aspect={1} 
           cropShape="rect"
-          cropSize={{width: 400, height: 400}}
           showGrid={true}
           onCropChange={setCrop}
           onZoomChange={setZoom}

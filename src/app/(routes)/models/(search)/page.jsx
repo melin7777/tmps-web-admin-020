@@ -469,11 +469,11 @@ const ModelsSearch = () => {
             )}
           </div>
         </div>
-        <Dialog open={openBrand} onClose={()=>setOpenBrand(false)} scroll='paper'>
-          <BrandsBrowser {...{setOpen: setOpenBrand, value: searchBrand, setValue: setSearchBrand}}/>
-        </Dialog>
-        <ToastContainer />
       </div>
+      <Dialog open={openBrand} onClose={()=>setOpenBrand(false)} scroll='paper'>
+        <BrandsBrowser {...{setOpen: setOpenBrand, value: searchBrand, setValue: setSearchBrand}}/>
+      </Dialog>
+      <ToastContainer />
     </div>
   )
 }

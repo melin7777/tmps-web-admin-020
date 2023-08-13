@@ -13,7 +13,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'TechMax - Admin',
-  description: 'Seller app for TechMax (Pvt) Ltd.',
+  description: 'Admin app for TechMax (Pvt) Ltd.',
 }
 
 export default function RootLayout({ children }) {

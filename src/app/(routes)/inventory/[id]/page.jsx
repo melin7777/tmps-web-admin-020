@@ -30,7 +30,7 @@ const View = ({params}) => {
   const [tabIndex, setTabIndex] = useState(0);
 
   const [editId, setEditId] = useState("");
-  const [editStatus, setEditStatus] = useState({id: 'active', description: "Active"});
+  const [editStatus, setEditStatus] = useState('active');
   const [editStatusError, setEditStatusError] = useState(false);
   const [editPartNumber, setEditPartNumber] = useState("");
   const [editPartNumberError, setEditPartNumberError] = useState(false);
@@ -128,14 +128,7 @@ const View = ({params}) => {
       });
       let val = response.data.data;
       setEditId(val.id);
-      var status = "";
-      if(val.status==="active"){
-        status = "Active";
-      }
-      else if(val.status==="inactive"){
-        status = "Inactive";
-      }
-      setEditStatus({id: val.status, description: status});
+      setEditStatus(val.status);
       setEditPartNumber(val.part_number);
       setEditBarcode(val.barcode);
       setEditCode(val.code);
@@ -213,7 +206,7 @@ const View = ({params}) => {
 
   const clearFields = () => {
     setEditId('');
-    setEditStatus({id: 'active', description: 'Active'});
+    setEditStatus('active');
     setEditPartNumber('');
     setEditBarcode('');
     setEditCode('');
@@ -295,7 +288,7 @@ const View = ({params}) => {
         const response = await axios.post(`/api/inventory/${apiDes}`, {
           id: parseInt(editId),
           vendor_id: editSeller.id,
-          status: editStatus.id,
+          status: editStatus,
           part_number: editPartNumber,
           barcode: editBarcode,
           code: editCode,
@@ -543,7 +536,7 @@ const View = ({params}) => {
               <div className='form_field_container'>
                 <TextField className='form_text_field'
                   id='status'
-                  value={editStatus.id}
+                  value={editStatus}
                   label="Status"
                   onChange={event=>setEditStatus(event.target.value)} 
                   variant={"outlined"}
@@ -994,26 +987,26 @@ const View = ({params}) => {
             </div>
           </>
         }
-        <Dialog open={openSeller} onClose={()=>setOpenSeller(false)} scroll='paper'>
-          <SellersBrowser {...{setOpen: setOpenSeller, value: editSeller, setValue: setEditSeller}}/>
-        </Dialog>
-        <Dialog open={openCategory} onClose={()=>setOpenCategory(false)} scroll='paper'>
-          <CategoriesBrowser {...{setOpen: setOpenCategory, value: editCategory, setValue: setEditCategory}}/>
-        </Dialog>
-        <Dialog open={openBrand} onClose={()=>setOpenBrand(false)} scroll='paper'>
-          <BrandsBrowser {...{setOpen: setOpenBrand, value: editBrand, setValue: setEditBrand}}/>
-        </Dialog>
-        <Dialog open={openModel} onClose={()=>setOpenModel(false)} scroll='paper'>
-          <ModelsBrowser {...{setOpen: setOpenModel, value: editModel, setValue: setEditModel, dependedValue: editBrand, setDependedValue: setEditBrand}}/>
-        </Dialog>
-        <Dialog open={openCrop} onClose={()=>setOpenCrop(false)}>
-          <CropEasySingle {...{setOpenCrop: setOpenCrop, photoURL: photoURL, selectSingleImage}}/>
-        </Dialog>
-        <Dialog open={openOtherCrop} onClose={()=>setOpenOtherCrop(false)}>
-          <CropEasyMulti {...{setOpenCrop: setOpenOtherCrop, photoURL: otherPhotoURL, selectMultiImage}}/>
-        </Dialog>
-        <ToastContainer />
       </div>
+      <Dialog open={openSeller} onClose={()=>setOpenSeller(false)} scroll='paper'>
+        <SellersBrowser {...{setOpen: setOpenSeller, value: editSeller, setValue: setEditSeller}}/>
+      </Dialog>
+      <Dialog open={openCategory} onClose={()=>setOpenCategory(false)} scroll='paper'>
+        <CategoriesBrowser {...{setOpen: setOpenCategory, value: editCategory, setValue: setEditCategory}}/>
+      </Dialog>
+      <Dialog open={openBrand} onClose={()=>setOpenBrand(false)} scroll='paper'>
+        <BrandsBrowser {...{setOpen: setOpenBrand, value: editBrand, setValue: setEditBrand}}/>
+      </Dialog>
+      <Dialog open={openModel} onClose={()=>setOpenModel(false)} scroll='paper'>
+        <ModelsBrowser {...{setOpen: setOpenModel, value: editModel, setValue: setEditModel, dependedValue: editBrand, setDependedValue: setEditBrand}}/>
+      </Dialog>
+      <Dialog open={openCrop} onClose={()=>setOpenCrop(false)}>
+        <CropEasySingle {...{setOpenCrop: setOpenCrop, photoURL: photoURL, selectSingleImage}}/>
+      </Dialog>
+      <Dialog open={openOtherCrop} onClose={()=>setOpenOtherCrop(false)}>
+        <CropEasyMulti {...{setOpenCrop: setOpenOtherCrop, photoURL: otherPhotoURL, selectMultiImage}}/>
+      </Dialog>
+      <ToastContainer />
       {isLoading && <Loading height={(height-70)}/>}
     </div>
   )

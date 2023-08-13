@@ -7,7 +7,7 @@ body{
 }
 
 .form_container{
-  @apply flex flex-col justify-center items-center w-full;
+  @apply flex flex-col justify-center items-center w-full max-w-6xl bg-white;
 }
 
 .form_container_small{
@@ -15,11 +15,15 @@ body{
 }
 
 .form_container_medium{
-  @apply flex flex-col justify-start items-center px-3 py-3 bg-white shadow-md w-full max-w-3xl;
+  @apply flex flex-col justify-start items-center px-3 pt-5 bg-white shadow-md w-full max-w-3xl;
 }
 
 .form_container_large{
-  @apply flex flex-col justify-start items-center py-3 bg-white w-full max-w-4xl shadow-md pt-5;
+  @apply flex flex-col justify-start items-center pt-5 bg-white w-full max-w-4xl shadow-md;
+}
+
+.form_container_xtra_large{
+  @apply flex flex-col justify-start items-center pt-5 bg-white w-full max-w-6xl shadow-md;
 }
 
 
@@ -375,6 +379,12 @@ body{
 
 .table_col_1_image{
   width: 80px;
+  height: 80px;
+  @apply flex justify-center items-center relative;
+}
+
+.table_col_1_wide_image{
+  width: 120px;
   height: 80px;
   @apply flex justify-center items-center relative;
 }

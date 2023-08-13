@@ -409,7 +409,7 @@ const CategoriesSearch = () => {
               <div key={val.id} className='table_row'>
                 <div className='table_col_1_center_center h-[80px] w-[80px]'>
                   {val.imageUrl==="none" ? 
-                    <CameraAlt sx={{width: 80, height: 80, color: '#cbd5e1'}}/> : 
+                    <CameraAlt sx={{width: 40, height: 40, color: '#cbd5e1'}}/> : 
                     <div className='table_col_1_image'><Image src={val.imageUrl} alt="brand image" fill sizes='80px' priority={true} style={{objectFit: 'contain'}}/></div>
                   }
                 </div>
@@ -456,8 +456,8 @@ const CategoriesSearch = () => {
             )}
           </div>
         </div>
-        <ToastContainer />
       </div>
+      <ToastContainer />
     </div>
   )
 }

@@ -21,10 +21,9 @@ const View = ({params}) => {
 
   const [formHeading, setFormHeading] = useState("");
   const [formSubHeading, setFormSubHeading] = useState("");
-  const [tabIndex, setTabIndex] = useState(0);
 
   const [editId, setEditId] = useState("");
-  const [editStatus, setEditStatus] = useState({id: 'active', description: "Active"});
+  const [editStatus, setEditStatus] = useState('active');
   const [editStatusError, setEditStatusError] = useState(false);
   const [editCode, setEditCode] = useState("");
   const [editCodeError, setEditCodeError] = useState(false);
@@ -56,14 +55,7 @@ const View = ({params}) => {
       });
       let val = response.data.data;
       setEditId(val.id);
-      var status = "";
-      if(val.status==="active"){
-        status = "Active";
-      }
-      else if(val.status==="inactive"){
-        status = "Inactive";
-      }
-      setEditStatus({id: val.status, description: status});
+      setEditStatus(val.status);
       setEditCode(val.code);
       setEditDescription(val.description);
       setEditBrand({id: val.brand_id, description: val.brand.description});
@@ -95,7 +87,7 @@ const View = ({params}) => {
   
   const clearFields = () => {
     setEditId('');
-    setEditStatus({id: 'active', description: 'Active'});
+    setEditStatus('active');
     setEditCode('');
     setEditDescription('');
     setEditBrand({id: 0, description: "Please Select"});
@@ -128,7 +120,7 @@ const View = ({params}) => {
         }
         const response = await axios.post(`/api/models/${apiDes}`, {
           id: parseInt(editId),
-          status: editStatus.id,
+          status: editStatus,
           code: editCode,
           description: editDescription,
           brandId: editBrand.id,
@@ -197,7 +189,7 @@ const View = ({params}) => {
             <div className='form_field_container'>
               <TextField className='form_text_field'
                 id='status'
-                value={editStatus.id}
+                value={editStatus}
                 label="Status"
                 onChange={event=>setEditStatus(event.target.value)} 
                 variant={"outlined"}

@@ -460,8 +460,8 @@ const CustomersSearch = () => {
             )}
           </div>
         </div>
-        <ToastContainer />
       </div>
+      <ToastContainer />
     </div>
   )
 }

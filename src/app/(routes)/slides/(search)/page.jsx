@@ -6,12 +6,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { CircularProgress, MenuItem, InputAdornment, IconButton, Typography, Button, TextField, Avatar } from '@mui/material';
-import { Add, CameraAlt, ClearAll, Edit, FilterAlt, ImportExport, KeyboardArrowDown, KeyboardArrowLeft, KeyboardArrowRight, KeyboardArrowUp, Person, Search } from '@mui/icons-material';
+import { CircularProgress, MenuItem, InputAdornment, IconButton, Typography, Button, TextField } from '@mui/material';
+import { Add, CameraAlt, ClearAll, Edit, FilterAlt, ImportExport, KeyboardArrowDown, KeyboardArrowLeft, KeyboardArrowRight, KeyboardArrowUp, Search } from '@mui/icons-material';
 import useWindowDimensions from '@/hooks/useWindowDimension';
 import SupportMenu from '@/components/headers/SupportMenu';
 
-const SellersSearch = () => {
+const SlidesSearch = () => {
   const router = useRouter();
   const {data: session, status} = useSession();
   const [serverError, setServerError] = useState(false);
@@ -38,53 +38,53 @@ const SellersSearch = () => {
     setIsSaving(false);
     setIsLoading(false);(async () => {
       try {
-        const search_data = localStorage.getItem('admin_sellers_search_data');
+        const search_data = localStorage.getItem('admin_slides_search_data');
         if(search_data!==null){
           setSearchData(JSON.parse(search_data));
         }
-        const search_nop = localStorage.getItem('admin_sellers_search_nop');
+        const search_nop = localStorage.getItem('admin_slides_search_nop');
         if(search_nop!==null) {
           setSearchNop(JSON.parse(search_nop));
         }
-        const search_page = localStorage.getItem('admin_sellers_search_page');
+        const search_page = localStorage.getItem('admin_slides_search_page');
         if(search_page!==null) {
           setSearchPage(JSON.parse(search_page));
         }
-        const sort_by = localStorage.getItem('admin_sellers_search_sort_by');
+        const sort_by = localStorage.getItem('admin_slides_search_sort_by');
         if(sort_by!==null) {
           setSearchSortBy(JSON.parse(sort_by));
         }
-        const order = localStorage.getItem('admin_sellers_search_order');
+        const order = localStorage.getItem('admin_slides_search_order');
         if(order!==null) {
           setSearchOrder(JSON.parse(order));
         }
-        const search_description = localStorage.getItem('admin_sellers_search_description');
+        const search_description = localStorage.getItem('admin_slides_search_description');
         if(search_description!==null) {
           setSearchDescription(search_description);
         }
-        const search_status = localStorage.getItem('admin_sellers_search_status');
+        const search_status = localStorage.getItem('admin_slides_search_status');
         if(search_status!==null) {
           setSearchStatus(JSON.parse(search_status));
         }
-        const search_rpp = localStorage.getItem('admin_sellers_search_rpp');
+        const search_rpp = localStorage.getItem('admin_slides_search_rpp');
         if(search_rpp!==null) {
           setSearchRpp(JSON.parse(search_rpp));
         }
-        const search_controls_showing = localStorage.getItem('admin_sellers_search_filters_showing');
+        const search_controls_showing = localStorage.getItem('admin_slides_search_filters_showing');
         if(search_controls_showing!==null) {
           setFiltersShowing(JSON.parse(search_controls_showing));
         }
         else{
           setFiltersShowing(false);
         }
-        const search_selected_row = localStorage.getItem('admin_sellers_search_selected_row');
+        const search_selected_row = localStorage.getItem('admin_slides_search_selected_row');
         if(search_selected_row && search_selected_row!==null) {
           setSelectedRow(JSON.parse(search_selected_row));
         }
         else{
           setSelectedRow(0);
         }
-        const search_scroll_top = localStorage.getItem('admin_sellers_search_scroll_top');
+        const search_scroll_top = localStorage.getItem('admin_slides_search_scroll_top');
         if(search_scroll_top && search_scroll_top!==null) {
           setScrollTop(JSON.parse(search_scroll_top));
           setTimeout(() => window.scrollTo(0, search_scroll_top), 100);
@@ -103,7 +103,7 @@ const SellersSearch = () => {
     const change = () => {
       if(filtersShowing!==null){
         try {
-          localStorage.setItem("admin_sellers_search_filters_showing", JSON.stringify(filtersShowing));
+          localStorage.setItem("admin_slides_search_filters_showing", JSON.stringify(filtersShowing));
         } 
         catch (e) {}
       }
@@ -115,7 +115,7 @@ const SellersSearch = () => {
     const change = () => {
       if(selectedRow!==null){
         try {
-          localStorage.setItem("admin_sellers_search_selected_row", JSON.stringify(selectedRow));
+          localStorage.setItem("admin_slides_search_selected_row", JSON.stringify(selectedRow));
         } 
         catch (e) {}
       }      
@@ -136,8 +136,8 @@ const SellersSearch = () => {
   const editClicked = (id) => {
     if(filtersShowing!==null){
       try {
-        localStorage.setItem("admin_sellers_search_scroll_top", JSON.stringify(scrollTop));
-        router.push("/sellers/"+id);
+        localStorage.setItem("admin_slides_search_scroll_top", JSON.stringify(scrollTop));
+        router.push("/slides/"+id);
       } 
       catch (e) {}
     }
@@ -159,7 +159,7 @@ const SellersSearch = () => {
         search_data["sortBy"] = searchSortBy;
         search_data["order"] = searchOrder;
         if(!error){
-          const response = await axios.post("/api/sellers/search", {
+          const response = await axios.post("/api/slides/search", {
             search_data: search_data,
             rpp: parseInt(searchRpp),
             page: page,
@@ -184,9 +184,8 @@ const SellersSearch = () => {
             const temp = {
               index: index++,
               id: val.id,
-              first_name: val.first_name,
-              last_name: val.last_name,
-              email: val.email,
+              sort_index: val.sort_index,
+              description: val.description,
               imageUrl: imageUrl,
               status: status,
             };
@@ -198,15 +197,15 @@ const SellersSearch = () => {
           setSearchPage(page);
   
           try {
-            localStorage.setItem('admin_sellers_search_data', JSON.stringify(values));
-            localStorage.setItem('admin_sellers_search_rpp', JSON.stringify(searchRpp));
-            localStorage.setItem('admin_sellers_search_nop', JSON.stringify(response.data.data.nop));
-            localStorage.setItem('admin_sellers_search_page', JSON.stringify(page));
-            localStorage.setItem('admin_sellers_search_sort_by', JSON.stringify(searchSortBy));
-            localStorage.setItem('admin_sellers_search_order', JSON.stringify(searchOrder));
+            localStorage.setItem('admin_slides_search_data', JSON.stringify(values));
+            localStorage.setItem('admin_slides_search_rpp', JSON.stringify(searchRpp));
+            localStorage.setItem('admin_slides_search_nop', JSON.stringify(response.data.data.nop));
+            localStorage.setItem('admin_slides_search_page', JSON.stringify(page));
+            localStorage.setItem('admin_slides_search_sort_by', JSON.stringify(searchSortBy));
+            localStorage.setItem('admin_slides_search_order', JSON.stringify(searchOrder));
   
-            localStorage.setItem('admin_sellers_search_description', searchDescription);
-            localStorage.setItem('admin_sellers_search_status', JSON.stringify(searchStatus));
+            localStorage.setItem('admin_slides_search_description', searchDescription);
+            localStorage.setItem('admin_slides_search_status', JSON.stringify(searchStatus));
           } 
           catch (e) {
             console.log("put storage error");
@@ -214,7 +213,7 @@ const SellersSearch = () => {
         }
       }
       catch(error){
-        toast.error("Sellers Search Failed !", {
+        toast.error("Slides Search Failed !", {
           position: toast.POSITION.TOP_RIGHT
         });
       }
@@ -227,13 +226,13 @@ const SellersSearch = () => {
   return (
     <div className='form_container' style={{minHeight: (height-80)}} ref={scrollRef} onScroll={onScroll}>
       <div className='form_container_medium' style={{minHeight: (height-80)}}>
-        <SupportMenu selected_root='sellers'/>
+        <SupportMenu selected_root='slides'/>
         <div className='header_container'>
           <div className='header_container_left'>
             <span></span>
             <div className='header_container_left_text'>
-              <span className="form_header">Sellers</span>
-              <span className="form_sub_header">Add or remove sellers</span>
+              <span className="form_header">Slides</span>
+              <span className="form_sub_header">Add or remove slides</span>
             </div>
           </div>
           <div className='header_container_right'>
@@ -244,7 +243,7 @@ const SellersSearch = () => {
               startIcon={isSaving?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Add />}
               onClick={()=>editClicked("create-item")}
               size='small'
-            >New Seller</Button>
+            >New Item</Button>
             <Button 
               variant='outlined' 
               style={{textTransform: 'none'}} 
@@ -336,8 +335,8 @@ const SellersSearch = () => {
               InputLabelProps={{style: {fontSize: 15}}}
             >
               <MenuItem value={"id"}>ID</MenuItem>
-              <MenuItem value={"first_name"}>First Name</MenuItem>
-              <MenuItem value={"last_name"}>Last Name</MenuItem>
+              <MenuItem value={"index"}>Index</MenuItem>
+              <MenuItem value={"description"}>Description</MenuItem>
               <MenuItem value={"status"}>Status</MenuItem>
             </TextField>
             <TextField
@@ -401,37 +400,34 @@ const SellersSearch = () => {
         </div>
         <div className='table_container'>
           <div className='table_header_container'>
-            <div className='table_header_col_1 w-[80px]'>Image</div>
+            <div className='table_header_col_1 w-[120px]'>Image</div>
             <div className='table_header_col flex-1'>Details</div>
             <div className='table_header_col_2 w-[80px]'>Edit</div>
           </div>
           <div className='table_body_container'>
             {searchData.map(val=>
               <div key={val.id} className='table_row'>
-                <div className='table_col_1_start_center h-[120px] w-[60px]'>
-                  {val.imageUrl==="none"?<Person sx={{width: 30, height: 30, color: '#047857'}}/>:<Avatar src={val.imageUrl} sx={{width: 50, height: 50}}/>}
+                <div className='table_col_1_center_center h-[80px] w-[120px]'>
+                  {val.imageUrl==="none" ? 
+                    <CameraAlt sx={{width: 40, height: 40, color: '#cbd5e1'}}/> : 
+                    <div className='table_col_1_wide_image'><Image src={val.imageUrl} alt="brand image" fill sizes='110px' priority={true} style={{objectFit: 'contain'}}/></div>
+                  }
                 </div>
-                <div className='table_col_start_center sm:h-[120px]'>
+                <div className='table_col_start_center sm:h-[80px]'>
                   <div className='table_field_double'>
                     <div className='table_field'>
                       <span className='table_field_label'>ID:</span>
                       <span className='table_field_text_center'>{val.id}</span>
                     </div>
                     <div className='table_field'>
-                      <span className='table_field_label'>Status:</span>
-                      {val.status==="Active"?<span className='table_field_active'>{"Active"}</span>:<span className='table_field_inactive'>{"Inactive"}</span>}
+                    <span className='table_field_label'>Index:</span>
+                      <span className='table_field_text_center'>{val.sort_index}</span>
                     </div>
                   </div>
                   <div className='table_field_single'>
                     <div className='table_field_full'>
-                      <span className='table_field_label'>Name:</span>
-                      <span className='table_field_text_full h-[30px]'>{val.first_name+" "+val.last_name}</span>
-                    </div>
-                  </div>
-                  <div className='table_field_single'>
-                    <div className='table_field_full'>
-                      <span className='table_field_label'>Email:</span>
-                      <span className='table_field_text_full h-[30px]'>{val.email}</span>
+                      <span className='table_field_label'>Description:</span>
+                      <span className='table_field_text_full h-[30px]'>{val.description}</span>
                     </div>
                   </div>
                   <div className='table_field_double sm:form_field_single'>
@@ -447,7 +443,7 @@ const SellersSearch = () => {
                     </div>
                   </div>
                 </div>
-                <div className='table_col_2_end_end w-[80px] h-[120px]'>
+                <div className='table_col_2_end_end w-[80px] h-[80px]'>
                   <Button 
                     variant='outlined' 
                     style={{textTransform: 'none'}} 
@@ -466,4 +462,4 @@ const SellersSearch = () => {
   )
 }
 
-export default SellersSearch;
+export default SlidesSearch;

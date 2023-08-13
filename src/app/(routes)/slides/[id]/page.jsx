@@ -10,7 +10,7 @@ import Loading from "@/components/modals/Loading";
 import { Button, CircularProgress, Dialog, IconButton, MenuItem, TextField } from "@mui/material";
 import { Add, CameraAlt, CropRotate, Delete, Folder, KeyboardArrowLeft, Save } from "@mui/icons-material";
 import useWindowDimensions from '@/hooks/useWindowDimension';
-import CropEasySmall from '@/components/crop/CropEasySmall';
+import CropEasySlide from '@/components/crop/CropEasySlide';
 
 const View = ({params}) => {
   const router = useRouter();
@@ -24,12 +24,22 @@ const View = ({params}) => {
   const [formSubHeading, setFormSubHeading] = useState("");
 
   const [editId, setEditId] = useState("");
-  const [editStatus, setEditStatus] = useState('active');
+  const [editStatus, setEditStatus] = useState("active");
   const [editStatusError, setEditStatusError] = useState(false);
-  const [editCode, setEditCode] = useState("");
-  const [editCodeError, setEditCodeError] = useState(false);
+  const [editSortIndex, setEditSortIndex] = useState("");
+  const [editSortIndexError, setEditSortIndexError] = useState(false);
   const [editDescription, setEditDescription] = useState("");
   const [editDescriptionError, setEditDescriptionError] = useState(false);
+  const [editHeading, setEditHeading] = useState("");
+  const [editHeadingError, setEditHeadingError] = useState(false);
+  const [editSubHeading, setEditSubHeading] = useState("");
+  const [editSubHeadingError, setEditSubHeadingError] = useState(false);
+  const [editContent, setEditContent] = useState("");
+  const [editContentError, setEditContentError] = useState(false);
+  const [editVPosition, setEditVPosition] = useState("start");
+  const [editVPositionError, setEditVPositionError] = useState(false);
+  const [editHPosition, setEditHPosition] = useState("end");
+  const [editHPositionError, setEditHPositionError] = useState(false);
 
   const [editImage, setEditImage] = useState("none");
   const [editImageError, setEditImageError] = useState(false);
@@ -41,12 +51,12 @@ const View = ({params}) => {
     setIsLoading(false);
     setIsSaving(false);
     if(params.id==="create-item"){
-      setFormHeading("Create Category");
-      setFormSubHeading("Create a new category");
+      setFormHeading("Create Slide");
+      setFormSubHeading("Create a new slide");
     }
     else{
-      setFormHeading("Edit Category");
-      setFormSubHeading("Edit an existing category");
+      setFormHeading("Edit Slide");
+      setFormSubHeading("Edit an existing slide");
       loadItem(params.id);
     }
   }, []);
@@ -54,14 +64,19 @@ const View = ({params}) => {
   const loadItem = async (id) => {
     setIsLoading(true);
     try{
-      const response = await axios.post("/api/categories/find", {
+      const response = await axios.post("/api/slides/find", {
         id: id
       });
       let val = response.data.data;
       setEditId(val.id);
       setEditStatus(val.status);
-      setEditCode(val.code);
+      setEditSortIndex(val.sort_index);
       setEditDescription(val.description);
+      setEditHeading(val.heading);
+      setEditSubHeading(val.sub_heading);
+      setEditContent(val.content);
+      setEditVPosition(val.v_position);
+      setEditHPosition(val.h_position);
 
       if(val.image_url==="none"){
         setEditImage("none");
@@ -83,23 +98,33 @@ const View = ({params}) => {
   const newItemClicked = () => {
     clearErrors();
     clearFields();
-    setFormHeading("Create Category");
-    setFormSubHeading("Create a new category");
+    setFormHeading("Create Slide");
+    setFormSubHeading("Create a new slide");
   }
   
   const clearErrors = () => {
     setEditStatusError(false);
-    setEditCodeError(false);
+    setEditSortIndexError(false);
     setEditDescriptionError(false);
+    setEditHeadingError(false);
+    setEditSubHeadingError(false);
+    setEditContentError(false);
+    setEditVPositionError(false);
+    setEditHPositionError(false);
     setEditImageError(false);
     setServerError(false);
   };
   
   const clearFields = () => {
     setEditId('');
-    setEditStatus('active');
-    setEditCode('');
+    setEditStatus("active");
+    setEditSortIndex('');
     setEditDescription('');
+    setEditHeading("");
+    setEditSubHeading("");
+    setEditContent("");
+    setEditVPosition({id: 'start', description: "Start"});
+    setEditHPosition({id: 'start', description: "Start"});
     setEditImage('none');
   };
 
@@ -108,13 +133,25 @@ const View = ({params}) => {
       setIsSaving(true);
       clearErrors();
       var error = false;
-      if (editCode.length>32) {
+      if (editSortIndex.length>16) {
         error = true;
-        setEditCodeError(true);
+        setEditSortIndexError(true);
       }
       if (editDescription.length>128) {
         error = true;
         setEditDescriptionError(true);
+      }
+      if (editHeading.length>128) {
+        error = true;
+        setEditHeadingError(true);
+      }
+      if (editSubHeading.length>256) {
+        error = true;
+        setEditSubHeadingError(true);
+      }
+      if (editContent.length>1024) {
+        error = true;
+        setEditContentError(true);
       }
       if(!error){
         var apiDes = "";
@@ -124,11 +161,16 @@ const View = ({params}) => {
         else{
           apiDes = "edit";
         }
-        const response = await axios.post(`/api/categories/${apiDes}`, {
+        const response = await axios.post(`/api/slides/${apiDes}`, {
           id: parseInt(editId),
           status: editStatus,
-          code: editCode,
+          sort_index: editSortIndex,
           description: editDescription,
+          heading: editHeading,
+          sub_heading: editSubHeading,
+          content: editContent,
+          v_position: editVPosition,
+          h_position: editHPosition,
         });
         if(editId===""){
           setEditId(response.data.data.id);
@@ -155,7 +197,7 @@ const View = ({params}) => {
     if(editId!==""){
       setIsSaving(true);
       try{
-        const response = await axios.post("/api/categories/delete-image", {
+        const response = await axios.post("/api/slides/delete-image", {
           id: parseInt(editId),
         });
         setEditImage("none");
@@ -188,7 +230,7 @@ const View = ({params}) => {
       formData.append('imageUrl', fileIn);
       axios({
         method: "post",
-        url: "https://tm-web.techmax.lk/part-categories/edit-image",
+        url: "https://tm-web.techmax.lk/slides/edit-image",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       })
@@ -216,7 +258,7 @@ const View = ({params}) => {
       <div className='form_container_medium' style={{minHeight: (height-80)}}>
         <div className='header_container'>
           <div className='header_container_left'>
-            <IconButton onClick={()=>router.push('/categories')} sx={{backgroundColor: '#27272a', "&:hover, &.Mui-focusVisible": {backgroundColor: "#71717a"}}}><KeyboardArrowLeft sx={{width: 30, height: 30, color: '#ffffff'}}/></IconButton>
+            <IconButton onClick={()=>router.push('/slides')} sx={{backgroundColor: '#27272a', "&:hover, &.Mui-focusVisible": {backgroundColor: "#71717a"}}}><KeyboardArrowLeft sx={{width: 30, height: 30, color: '#ffffff'}}/></IconButton>
             <div className='header_container_left_text'>
               <span className="form_header">{formHeading}</span>
               <span className="form_sub_header">{formSubHeading}</span>
@@ -249,10 +291,10 @@ const View = ({params}) => {
               </div>
               <div className='form_row_single'>
                 <div className='inventory_image_container'>
-                  <div className='flex justify-center items-center w-[120px] sm:w-[140px] h-[120px] sm:h-[140px] relative'>
+                  <div className='flex justify-center items-center w-[200px] xs:w-[300px] sm:w-[400px] h-[80px] xs:h-[120px] sm:h-[160px] relative'>
                     {editImage==="none" ? 
-                      <CameraAlt sx={{width: 80, height: 80, color: '#cbd5e1'}}/> : 
-                      <Image src={editImage} alt="brand image" fill sizes='(max-width: 640px) 120px, 140px' priority={true} style={{objectFit: 'cover'}}/>
+                      <CameraAlt sx={{width: 60, height: 60, color: '#cbd5e1'}}/> : 
+                      <Image src={editImage} alt="slide image" fill sizes='(max-width: 640px) 400px, (max-width: 440px) 300px, 200px' priority={true} style={{objectFit: 'contain'}}/>
                     }
                     <input type='file' ref={imageRef} onChange={handleImageChange} className='file_input'/>
                   </div>
@@ -304,21 +346,22 @@ const View = ({params}) => {
           <div className='form_row_double'>
             <div className='form_field_container'>              
               <TextField 
-                id='code'
-                label="Code" 
+                id='sort-index'
+                label="Index" 
                 variant="outlined" 
                 className='form_text_field' 
-                value={editCode} 
-                error={editCodeError}
-                onChange={event=>setEditCode(event.target.value)}
+                value={editSortIndex} 
+                error={editSortIndexError}
+                onChange={event=>setEditSortIndex(event.target.value)}
                 disabled={isLoading||isSaving}
                 size='small' 
-                onFocus={()=>setEditCodeError(false)}
+                onFocus={()=>setEditSortIndexError(false)}
                 inputProps={{style: {fontSize: 13}}}
                 SelectProps={{style: {fontSize: 13}}}
                 InputLabelProps={{style: {fontSize: 15}}}
+                sx={{textAlign: 'right'}}
               />
-              {editCodeError && <span className='form_error_floating'>Invalid Code</span>}
+              {editSortIndexError && <span className='form_error_floating'>Invalid Index</span>}
             </div>
             <div className='form_field_container'></div>
           </div>
@@ -342,12 +385,118 @@ const View = ({params}) => {
               {editDescriptionError && <span className='form_error_floating'>Invalid Description</span>}
             </div>
           </div>
+          <div className='form_row_single'>
+            <div className='form_field_container_full'>
+              <TextField 
+                id='heading'
+                label="Heading" 
+                variant="outlined" 
+                className='form_text_field' 
+                value={editHeading} 
+                error={editHeadingError}
+                onChange={event=>setEditHeading(event.target.value)}
+                disabled={isSaving||isLoading}
+                size='small' 
+                onFocus={()=>setEditHeadingError(false)}
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+              />
+              {editHeadingError && <span className='form_error_floating'>Invalid Heading</span>}
+            </div>
+          </div>
+          <div className='form_row_single'>
+            <div className='form_field_container_full'>
+              <TextField 
+                id='sub-heading'
+                label="SubHeading" 
+                variant="outlined" 
+                className='form_text_field' 
+                value={editSubHeading} 
+                error={editSubHeadingError}
+                onChange={event=>setEditSubHeading(event.target.value)}
+                disabled={isSaving||isLoading}
+                size='small' 
+                onFocus={()=>setEditSubHeadingError(false)}
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+              />
+              {editSubHeadingError && <span className='form_error_floating'>Invalid Sub Heading</span>}
+            </div>
+          </div>
+          <div className='form_row_single'>
+            <div className='form_field_container_full'>
+              <TextField 
+                id='content'
+                label="Content" 
+                variant="outlined" 
+                className='form_text_field' 
+                value={editContent} 
+                error={editContentError}
+                onChange={event=>setEditContent(event.target.value)}
+                disabled={isSaving||isLoading}
+                size='small' 
+                multiline={true}
+                rows={8}
+                onFocus={()=>setEditContentError(false)}
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+              />
+              {editContentError && <span className='form_error_floating'>Invalid Content</span>}
+            </div>
+          </div>
+          <div className='form_row_double'>
+            <div className='form_field_container'>
+              <TextField className='form_text_field'
+                id='v-position'
+                value={editVPosition}
+                label="V Position"
+                onChange={event=>setEditVPosition(event.target.value)} 
+                variant={"outlined"}
+                select={true}
+                disabled={isLoading||isSaving}
+                size='small'
+                onFocus={()=>setEditVPositionError(false)}
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+              >
+                <MenuItem value={"start"}>Start</MenuItem>
+                <MenuItem value={"center"}>Center</MenuItem>
+                <MenuItem value={"end"}>End</MenuItem>
+              </TextField>
+              {editVPositionError && <span className='form_error_floating'>Invalid V Position</span>}
+            </div>
+            <div className='form_field_container'>
+              <TextField className='form_text_field'
+                id='h-position'
+                value={editHPosition}
+                label="H Position"
+                onChange={event=>setEditHPosition(event.target.value)} 
+                variant={"outlined"}
+                select={true}
+                disabled={isLoading||isSaving}
+                size='small'
+                onFocus={()=>setEditHPositionError(false)}
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+              >
+                <MenuItem value={"start"}>Start</MenuItem>
+                <MenuItem value={"center"}>Center</MenuItem>
+                <MenuItem value={"end"}>End</MenuItem>
+              </TextField>
+              {editHPositionError && <span className='form_error_floating'>Invalid H Position</span>}
+            </div>
+          </div>
         </div>
-        <ToastContainer />
       </div>
       <Dialog open={openCrop} onClose={()=>setOpenCrop(false)}>
-        <CropEasySmall {...{setOpenCrop: setOpenCrop, photoURL: editImage, selectSingleImage}}/>
+        <CropEasySlide {...{setOpenCrop: setOpenCrop, photoURL: editImage, selectSingleImage}}/>
       </Dialog>
+      <ToastContainer />
       {isLoading && <Loading height={(height-70)}/>}
     </div>
   )

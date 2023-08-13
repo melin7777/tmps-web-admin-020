@@ -21,11 +21,10 @@ const View = ({params}) => {
 
   const [formHeading, setFormHeading] = useState("");
   const [formSubHeading, setFormSubHeading] = useState("");
-  const [tabIndex, setTabIndex] = useState(0);
 
   const [isPasswordShowing, setIsPasswordShowing] = useState(false);
   const [editId, setEditId] = useState("");
-  const [editStatus, setEditStatus] = useState({id: 'active', description: "Active"});
+  const [editStatus, setEditStatus] = useState('active');
   const [editStatusError, setEditStatusError] = useState(false);
   const [editFirstName, setEditFirstName] = useState("");
   const [editFirstNameError, setEditFirstNameError] = useState(false);
@@ -84,14 +83,7 @@ const View = ({params}) => {
       setEditNotifyBy(val.notify_by);
       setEditAddress(val.address);
       setEditDeliveryAddress(val.delivery_address);
-      var status = "";
-      if(val.status==="active"){
-        status = "Active";
-      }
-      else if(val.status==="inactive"){
-        status = "Inactive";
-      }
-      setEditStatus({id: val.status, description: status});
+      setEditStatus(val.status);
       if(val.image_url==="none"){
         setPhotoURL("none");
       }
@@ -134,7 +126,7 @@ const View = ({params}) => {
   
   const clearFields = () => {
     setEditId("");
-    setEditStatus({id: 'active', description: "Active"});
+    setEditStatus('active');
     setEditFirstName("");
     setEditLastName("");
     setEditPhone("");
@@ -204,7 +196,7 @@ const View = ({params}) => {
             password: editPassword,
             address: editAddress,
             deliveryAddress: editDeliveryAddress,
-            status: editStatus.id,
+            status: editStatus,
           };
         }
         else{
@@ -215,7 +207,7 @@ const View = ({params}) => {
             lastName: editLastName,
             address: editAddress,
             deliveryAddress: editDeliveryAddress,
-            status: editStatus.id,
+            status: editStatus,
           };
         }
         const response = await axios.post(`/api/customers/${apiDes}`, data1);
@@ -360,7 +352,7 @@ const View = ({params}) => {
     if(editSameAddress){
       setEditDeliveryAddress(editAddress);
     }
-  }, [editSameAddress, editAddress])
+  }, [editSameAddress, editAddress]);
   
 
   return (
@@ -431,7 +423,7 @@ const View = ({params}) => {
             <div className='form_field_container'>
               <TextField className='form_text_field'
                 id='status'
-                value={editStatus.id}
+                value={editStatus}
                 label="Status"
                 onChange={event=>setEditStatus(event.target.value)} 
                 variant={"outlined"}
@@ -743,11 +735,11 @@ const View = ({params}) => {
             </div>
           }
         </div>
-        <Dialog open={openCrop} onClose={()=>setOpenCrop(false)}>
-          <CropEasy {...{setOpenCrop, photoURL, setPhotoURL, setFile}}/>
-        </Dialog>
-        <ToastContainer />
       </div>
+      <Dialog open={openCrop} onClose={()=>setOpenCrop(false)}>
+        <CropEasy {...{setOpenCrop, photoURL, setPhotoURL, setFile}}/>
+      </Dialog>
+      <ToastContainer />
       {isLoading && <Loading height={(height-70)}/>}
     </div>
   )
