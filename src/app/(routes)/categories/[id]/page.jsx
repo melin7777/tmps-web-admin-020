@@ -1,20 +1,18 @@
 'use client';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from "@/components/modals/Loading";
-import { Button, CircularProgress, Dialog, IconButton, MenuItem, TextField } from "@mui/material";
+import { Button, CircularProgress, Dialog, FormControlLabel, IconButton, MenuItem, Radio, TextField } from "@mui/material";
 import { Add, CameraAlt, CropRotate, Delete, Folder, KeyboardArrowLeft, Save } from "@mui/icons-material";
 import useWindowDimensions from '@/hooks/useWindowDimension';
 import CropEasySmall from '@/components/crop/CropEasySmall';
 
 const View = ({params}) => {
   const router = useRouter();
-  const {data: session, status} = useSession();
   const [serverError, setServerError] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,6 +28,10 @@ const View = ({params}) => {
   const [editCodeError, setEditCodeError] = useState(false);
   const [editDescription, setEditDescription] = useState("");
   const [editDescriptionError, setEditDescriptionError] = useState(false);
+  const [editFeatured, setEditFeatured] = useState("no");
+  const [editFeaturedError, setEditFeaturedError] = useState(false);
+  const [editShowOnFilters, setEditShowOnFilters] = useState("no");
+  const [editShowOnFiltersError, setEditShowOnFiltersError] = useState(false);
 
   const [editImage, setEditImage] = useState("none");
   const [editImageError, setEditImageError] = useState(false);
@@ -62,6 +64,8 @@ const View = ({params}) => {
       setEditStatus(val.status);
       setEditCode(val.code);
       setEditDescription(val.description);
+      setEditFeatured(val.featured);
+      setEditShowOnFilters(val.show_on_filters);
 
       if(val.image_url==="none"){
         setEditImage("none");
@@ -91,6 +95,8 @@ const View = ({params}) => {
     setEditStatusError(false);
     setEditCodeError(false);
     setEditDescriptionError(false);
+    setEditFeaturedError(false);
+    setEditShowOnFiltersError(false);
     setEditImageError(false);
     setServerError(false);
   };
@@ -100,6 +106,8 @@ const View = ({params}) => {
     setEditStatus('active');
     setEditCode('');
     setEditDescription('');
+    setEditFeatured("no");
+    setEditShowOnFilters("no");
     setEditImage('none');
   };
 
@@ -129,6 +137,8 @@ const View = ({params}) => {
           status: editStatus,
           code: editCode,
           description: editDescription,
+          featured: editFeatured,
+          show_on_filters: editShowOnFilters,
         });
         if(editId===""){
           setEditId(response.data.data.id);
@@ -320,7 +330,16 @@ const View = ({params}) => {
               />
               {editCodeError && <span className='form_error_floating'>Invalid Code</span>}
             </div>
-            <div className='form_field_container'></div>
+            <div className='form_field_container'>
+              <div className='form_text_field_constructed'>
+                <span className='form_text_field_constructed_label'>Featured</span>
+                <div className='w-full flex flex-row justify-end items-center'>
+                  <FormControlLabel sx={{fontSize: 12}} value="yes" checked={editFeatured==="yes"} onChange={(e)=>setEditFeatured(e.target.value)} control={<Radio />} label={<span className='text-xs'>{"Yes"}</span>} />
+                  <FormControlLabel value="no" checked={editFeatured==="no"} onChange={(e)=>setEditFeatured(e.target.value)} control={<Radio />} label={<span className='text-xs'>{"No"}</span>} />
+                </div>
+                {editFeaturedError && <span className='form_error_floating'>Invalid Featured</span>}
+              </div>
+            </div>
           </div>
           <div className='form_row_single'>
             <div className='form_field_container_full'>
@@ -341,6 +360,19 @@ const View = ({params}) => {
               />
               {editDescriptionError && <span className='form_error_floating'>Invalid Description</span>}
             </div>
+          </div>
+          <div className='form_row_double'>
+            <div className='form_field_container'>
+              <div className='form_text_field_constructed'>
+                <span className='form_text_field_constructed_label'>Show On Filters</span>
+                <div className='w-full flex flex-row justify-end items-center'>
+                  <FormControlLabel sx={{fontSize: 12}} value="yes" checked={editShowOnFilters==="yes"} onChange={(e)=>setEditShowOnFilters(e.target.value)} control={<Radio />} label={<span className='text-xs'>{"Yes"}</span>} />
+                  <FormControlLabel value="no" checked={editShowOnFilters==="no"} onChange={(e)=>setEditShowOnFilters(e.target.value)} control={<Radio />} label={<span className='text-xs'>{"No"}</span>} />
+                </div>
+                {editShowOnFiltersError && <span className='form_error_floating'>Invalid Show On Filters</span>}
+              </div>
+            </div>
+            <div className='form_field_container'></div>
           </div>
         </div>
         <ToastContainer />

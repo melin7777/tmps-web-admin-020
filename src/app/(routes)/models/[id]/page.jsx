@@ -6,7 +6,7 @@ import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from "@/components/modals/Loading";
-import { Button, CircularProgress, Dialog, IconButton, MenuItem, TextField } from "@mui/material";
+import { Button, CircularProgress, Dialog, FormControlLabel, IconButton, MenuItem, Radio, TextField } from "@mui/material";
 import { Add, ArrowDropDown, KeyboardArrowLeft, Save } from "@mui/icons-material";
 import useWindowDimensions from '@/hooks/useWindowDimension';
 import BrandsBrowser from '@/components/browsers/BrandsBrowser';
@@ -32,6 +32,8 @@ const View = ({params}) => {
   const [editBrand, setEditBrand] = useState({id: 0, description: "Please Select"});
   const [editBrandError, setEditBrandError] = useState(false);
   const [openBrand, setOpenBrand] = useState(false);
+  const [editShowOnFilters, setEditShowOnFilters] = useState("no");
+  const [editShowOnFiltersError, setEditShowOnFiltersError] = useState(false);
 
   useEffect(() => {
     setIsLoading(false);
@@ -59,6 +61,7 @@ const View = ({params}) => {
       setEditCode(val.code);
       setEditDescription(val.description);
       setEditBrand({id: val.brand_id, description: val.brand.description});
+      setEditShowOnFilters(val.show_on_filters);
     }
     catch(error){
       toast.error("Find Item Failed !", {
@@ -82,6 +85,7 @@ const View = ({params}) => {
     setEditCodeError(false);
     setEditDescriptionError(false);
     setEditBrandError(false);
+    setEditShowOnFiltersError(false);
     setServerError(false);
   };
   
@@ -90,6 +94,7 @@ const View = ({params}) => {
     setEditStatus('active');
     setEditCode('');
     setEditDescription('');
+    setEditShowOnFilters("no");
     setEditBrand({id: 0, description: "Please Select"});
   };
 
@@ -124,6 +129,7 @@ const View = ({params}) => {
           code: editCode,
           description: editDescription,
           brandId: editBrand.id,
+          show_on_filters: editShowOnFilters,
         });
         if(editId===""){
           setEditId(response.data.data.id);
@@ -256,6 +262,19 @@ const View = ({params}) => {
               />
               {editDescriptionError && <span className='form_error_floating'>Invalid Description</span>}
             </div>
+          </div>
+          <div className='form_row_double'>
+            <div className='form_field_container'>
+              <div className='form_text_field_constructed'>
+                <span className='form_text_field_constructed_label'>Show On Filters</span>
+                <div className='w-full flex flex-row justify-end items-center'>
+                  <FormControlLabel sx={{fontSize: 12}} value="yes" checked={editShowOnFilters==="yes"} onChange={(e)=>setEditShowOnFilters(e.target.value)} control={<Radio />} label={<span className='text-xs'>{"Yes"}</span>} />
+                  <FormControlLabel value="no" checked={editShowOnFilters==="no"} onChange={(e)=>setEditShowOnFilters(e.target.value)} control={<Radio />} label={<span className='text-xs'>{"No"}</span>} />
+                </div>
+                {editShowOnFiltersError && <span className='form_error_floating'>Invalid Show On Filters</span>}
+              </div>
+            </div>
+            <div className='form_field_container'></div>
           </div>
         </div>
         <Dialog open={openBrand} onClose={()=>setOpenBrand(false)} scroll='paper'>

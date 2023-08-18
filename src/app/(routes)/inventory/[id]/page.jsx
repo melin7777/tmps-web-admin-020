@@ -136,12 +136,22 @@ const View = ({params}) => {
       setEditShortDescription(val.short_description);
       setEditDescription(val.description);
 
+      setEditPrice(val.price);
+      setEditDiscount(val.discount);
+      setEditQuantityDiscountAmount(val.quantity_discount_amount);
+      setEditQuantityDiscount(val.quantity_discount);
+      setEditQuantityFreeIssueAmount(val.quantity_free_issue_amount);
+      setEditQuantityFreeIssue(val.quantity_free_issue);
+      setEditOrderTotalDiscountAmount(val.order_total_discount_amount);
+      setEditOrderTotalDiscount(val.order_total_discount);
+      setEditFeatured(val.featured);
+      setEditFreeShipping(val.free_shipping);
+
       setEditSeller({id: val.vendor_id, description: val.online_user.first_name+" "+val.online_user.last_name});
       setEditCategory({id: val.part_category_id, description: val.part_category.description});
       setEditBrand({id: val.brand_id, description: val.brand.description});
       setEditModel({id: val.model_id, description: val.model.description, brand_id: val.brand_id, brand_description: val.brand.description});
 
-      setEditPrice(val.price);
       setEditInhand(val.inhand);
 
       if(val.image_url==="none"){

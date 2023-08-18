@@ -44,7 +44,7 @@ const CropEasySlide = ({setOpenCrop, photoURL, selectSingleImage}) => {
           zoom={zoom} 
           zoomWithScroll={true}
           rotation={rotaion} 
-          aspect={4 / 2} 
+          aspect={4 / 1} 
           cropShape="rect"
           showGrid={true}
           onCropChange={setCrop}

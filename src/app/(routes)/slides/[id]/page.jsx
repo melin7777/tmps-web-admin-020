@@ -1,20 +1,18 @@
 'use client';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from "@/components/modals/Loading";
-import { Button, CircularProgress, Dialog, IconButton, MenuItem, TextField } from "@mui/material";
+import { Button, CircularProgress, Dialog, FormControlLabel, IconButton, InputAdornment, MenuItem, Radio, TextField } from "@mui/material";
 import { Add, CameraAlt, CropRotate, Delete, Folder, KeyboardArrowLeft, Save } from "@mui/icons-material";
 import useWindowDimensions from '@/hooks/useWindowDimension';
 import CropEasySlide from '@/components/crop/CropEasySlide';
 
 const View = ({params}) => {
   const router = useRouter();
-  const {data: session, status} = useSession();
   const [serverError, setServerError] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +26,8 @@ const View = ({params}) => {
   const [editStatusError, setEditStatusError] = useState(false);
   const [editSortIndex, setEditSortIndex] = useState("");
   const [editSortIndexError, setEditSortIndexError] = useState(false);
+  const [editPosition, setEditPosition] = useState("bottom_end");
+  const [editPositionError, setEditPositionError] = useState(false);
   const [editDescription, setEditDescription] = useState("");
   const [editDescriptionError, setEditDescriptionError] = useState(false);
   const [editHeading, setEditHeading] = useState("");
@@ -36,10 +36,24 @@ const View = ({params}) => {
   const [editSubHeadingError, setEditSubHeadingError] = useState(false);
   const [editContent, setEditContent] = useState("");
   const [editContentError, setEditContentError] = useState(false);
-  const [editVPosition, setEditVPosition] = useState("start");
+  const [editVPosition, setEditVPosition] = useState(0);
   const [editVPositionError, setEditVPositionError] = useState(false);
-  const [editHPosition, setEditHPosition] = useState("end");
+  const [editHPosition, setEditHPosition] = useState(0);
   const [editHPositionError, setEditHPositionError] = useState(false);
+  const [editLink, setEditLink] = useState("");
+  const [editLinkError, setEditLinkError] = useState(false);
+  const [editBackgroundColor, setEditBackgroundColor] = useState("white");
+  const [editBackgroundColorError, setEditBackgroundColorError] = useState(false);
+  const [editBackgroundOpacity, setEditBackgroundOpacity] = useState("0.9");
+  const [editBackgroundOpacityError, setEditBackgroundOpacityError] = useState(false);
+  const [editHeadingColor, setEditHeadingColor] = useState("#666666");
+  const [editHeadingColorError, setEditHeadingColorError] = useState(false);
+  const [editSubHeadingColor, setEditSubHeadingColor] = useState("#666666");
+  const [editSubHeadingColorError, setEditSubHeadingColorError] = useState(false);
+  const [editContentColor, setEditContentColor] = useState("#666666");
+  const [editContentColorError, setEditContentColorError] = useState(false);
+  const [editShowCaption, setEditShowCaption] = useState("no");
+  const [editShowCaptionError, setEditShowCaptionError] = useState(false);
 
   const [editImage, setEditImage] = useState("none");
   const [editImageError, setEditImageError] = useState(false);
@@ -75,8 +89,16 @@ const View = ({params}) => {
       setEditHeading(val.heading);
       setEditSubHeading(val.sub_heading);
       setEditContent(val.content);
+      setEditPosition(val.position);
       setEditVPosition(val.v_position);
       setEditHPosition(val.h_position);
+      setEditLink(val.link);
+      setEditBackgroundOpacity(val.background_opacity);
+      setEditBackgroundColor(val.background_color);
+      setEditHeadingColor(val.heading_color);
+      setEditSubHeadingColor(val.sub_heading_color);
+      setEditContentColor(val.content_color);
+      setEditShowCaption(val.show_caption);
 
       if(val.image_url==="none"){
         setEditImage("none");
@@ -105,13 +127,21 @@ const View = ({params}) => {
   const clearErrors = () => {
     setEditStatusError(false);
     setEditSortIndexError(false);
+    setEditPositionError(false);
     setEditDescriptionError(false);
     setEditHeadingError(false);
     setEditSubHeadingError(false);
     setEditContentError(false);
     setEditVPositionError(false);
     setEditHPositionError(false);
+    setEditLinkError(false);
+    setEditBackgroundOpacityError(false);
+    setEditBackgroundColorError(false);
+    setEditHeadingColorError(false);
+    setEditSubHeadingColorError(false);
+    setEditContentColorError(false);
     setEditImageError(false);
+    setEditShowCaptionError(false);
     setServerError(false);
   };
   
@@ -119,12 +149,20 @@ const View = ({params}) => {
     setEditId('');
     setEditStatus("active");
     setEditSortIndex('');
+    setEditPosition('bottom_end');
     setEditDescription('');
     setEditHeading("");
     setEditSubHeading("");
     setEditContent("");
-    setEditVPosition({id: 'start', description: "Start"});
-    setEditHPosition({id: 'start', description: "Start"});
+    setEditVPosition(0);
+    setEditHPosition(0);
+    setEditLink("");
+    setEditShowCaption("no");
+    setEditBackgroundOpacity("");
+    setEditBackgroundColor("");
+    setEditHeadingColor("");
+    setEditSubHeadingColor("");
+    setEditContentColor("");
     setEditImage('none');
   };
 
@@ -153,6 +191,30 @@ const View = ({params}) => {
         error = true;
         setEditContentError(true);
       }
+      if (editLink.length>128) {
+        error = true;
+        setEditLinkError(true);
+      }
+      if (editBackgroundColor.length===0 && editBackgroundColor.length>16) {
+        error = true;
+        setEditBackgroundColor(true);
+      }
+      if (editBackgroundOpacity.length===0 && editBackgroundOpacity.length>8) {
+        error = true;
+        setEditBackgroundOpacity(true);
+      }
+      if (editHeadingColor.length===0 && editHeadingColor.length>8) {
+        error = true;
+        setEditHeadingColor(true);
+      }
+      if (editSubHeadingColor.length===0 && editSubHeadingColor.length>8) {
+        error = true;
+        setEditSubHeadingColor(true);
+      }
+      if (editContentColor.length===0 && editContentColor.length>8) {
+        error = true;
+        setEditContentColor(true);
+      }
       if(!error){
         var apiDes = "";
         if(editId===""){
@@ -169,6 +231,14 @@ const View = ({params}) => {
           heading: editHeading,
           sub_heading: editSubHeading,
           content: editContent,
+          link: editLink,
+          background_opacity: editBackgroundOpacity,
+          background_color: editBackgroundColor,
+          heading_color: editHeadingColor,
+          sub_heading_color: editSubHeadingColor,
+          content_color: editContentColor,
+          show_caption: editShowCaption,
+          position: editPosition,
           v_position: editVPosition,
           h_position: editHPosition,
         });
@@ -363,6 +433,164 @@ const View = ({params}) => {
               />
               {editSortIndexError && <span className='form_error_floating'>Invalid Index</span>}
             </div>
+            <div className='form_field_container'>
+              <TextField className='form_text_field'
+                id='position'
+                value={editPosition}
+                label="Position"
+                onChange={event=>setEditPosition(event.target.value)} 
+                variant={"outlined"}
+                select={true}
+                disabled={isLoading||isSaving}
+                size='small'
+                onFocus={()=>setEditPositionError(false)}
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+              >
+                <MenuItem value={"top_start"}>Top Start</MenuItem>
+                <MenuItem value={"top_end"}>Top End</MenuItem>
+                <MenuItem value={"bottom_start"}>Bottom Start</MenuItem>
+                <MenuItem value={"bottom_end"}>Bottom End</MenuItem>
+              </TextField>
+              {editPositionError && <span className='form_error_floating'>Invalid Position</span>}
+            </div>
+          </div>
+          <div className='form_row_double'>
+            <div className='form_field_container'>
+              <TextField className='form_text_field'
+                id='v-position'
+                type='number'
+                value={editVPosition}
+                label="V Position"
+                onChange={event=>setEditVPosition(event.target.value)} 
+                variant={"outlined"}
+                disabled={isLoading||isSaving}
+                size='small'
+                sx={{input: {textAlign: "right"}}}
+                onFocus={()=>setEditVPositionError(false)}
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+                InputProps={{
+                  endAdornment: <InputAdornment position="start"><span style={{fontSize: 13}}>px</span></InputAdornment>,
+                }}
+              />
+              {editVPositionError && <span className='form_error_floating'>Invalid V Position</span>}
+            </div>
+            <div className='form_field_container'>
+              <TextField className='form_text_field'
+                id='h-position'
+                type='number'
+                value={editHPosition}
+                label="H Position"
+                onChange={event=>setEditHPosition(event.target.value)} 
+                variant={"outlined"}
+                disabled={isLoading||isSaving}
+                size='small'
+                sx={{input: {textAlign: "right"}}}
+                onFocus={()=>setEditHPositionError(false)}
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+                InputProps={{
+                  endAdornment: <InputAdornment position="start"><span style={{fontSize: 13}}>px</span></InputAdornment>,
+                }}
+              />
+              {editHPositionError && <span className='form_error_floating'>Invalid H Position</span>}
+            </div>
+          </div>
+          <div className='form_row_double'>
+            <div className='form_field_container'>
+              <TextField className='form_text_field'
+                id='background-color'
+                value={editBackgroundColor}
+                label="Background Color"
+                onChange={event=>setEditBackgroundColor(event.target.value)} 
+                variant={"outlined"}
+                disabled={isLoading||isSaving}
+                size='small'
+                sx={{input: {textAlign: "right"}}}
+                onFocus={()=>setEditBackgroundColorError(false)}
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+              />
+              {editBackgroundColorError && <span className='form_error_floating'>Invalid Background Color</span>}
+            </div>
+            <div className='form_field_container'>
+              <TextField className='form_text_field'
+                id='background-opacity'
+                type='number'
+                value={editBackgroundOpacity}
+                label="Background Opacity"
+                onChange={event=>setEditBackgroundOpacity(event.target.value)} 
+                variant={"outlined"}
+                disabled={isLoading||isSaving}
+                size='small'
+                sx={{input: {textAlign: "right"}}}
+                onFocus={()=>setEditBackgroundOpacityError(false)}
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+              />
+              {editBackgroundOpacityError && <span className='form_error_floating'>Invalid Background Opacity</span>}
+            </div>
+          </div>
+          <div className='form_row_double'>
+            <div className='form_field_container'>
+              <TextField className='form_text_field'
+                id='heading-color'
+                value={editHeadingColor}
+                label="Heading Color"
+                onChange={event=>setEditHeadingColor(event.target.value)} 
+                variant={"outlined"}
+                disabled={isLoading||isSaving}
+                size='small'
+                sx={{input: {textAlign: "right"}}}
+                onFocus={()=>setEditHeadingColorError(false)}
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+              />
+              {editHeadingColorError && <span className='form_error_floating'>Invalid Heading Color</span>}
+            </div>
+            <div className='form_field_container'>
+              <TextField className='form_text_field'
+                id='sub-heading-color'
+                value={editSubHeadingColor}
+                label="Sub Heading Color"
+                onChange={event=>setEditSubHeadingColor(event.target.value)} 
+                variant={"outlined"}
+                disabled={isLoading||isSaving}
+                size='small'
+                sx={{input: {textAlign: "right"}}}
+                onFocus={()=>setEditSubHeadingColorError(false)}
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+              />
+              {editSubHeadingColorError && <span className='form_error_floating'>Invalid Sub Heading Color</span>}
+            </div>
+          </div>
+          <div className='form_row_double'>
+            <div className='form_field_container'>
+              <TextField className='form_text_field'
+                id='content-color'
+                value={editContentColor}
+                label="Content Color"
+                onChange={event=>setEditContentColor(event.target.value)} 
+                variant={"outlined"}
+                disabled={isLoading||isSaving}
+                size='small'
+                sx={{input: {textAlign: "right"}}}
+                onFocus={()=>setEditContentColorError(false)}
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+              />
+              {editContentColorError && <span className='form_error_floating'>Invalid Content Color</span>}
+            </div>
             <div className='form_field_container'></div>
           </div>
           <div className='form_row_single'>
@@ -409,7 +637,7 @@ const View = ({params}) => {
             <div className='form_field_container_full'>
               <TextField 
                 id='sub-heading'
-                label="SubHeading" 
+                label="Sub Heading" 
                 variant="outlined" 
                 className='form_text_field' 
                 value={editSubHeading} 
@@ -447,49 +675,38 @@ const View = ({params}) => {
               {editContentError && <span className='form_error_floating'>Invalid Content</span>}
             </div>
           </div>
+          <div className='form_row_single'>
+            <div className='form_field_container_full'>
+              <TextField 
+                id='link'
+                label="Link" 
+                variant="outlined" 
+                className='form_text_field' 
+                value={editLink} 
+                error={editLinkError}
+                onChange={event=>setEditLink(event.target.value)}
+                disabled={isSaving||isLoading}
+                size='small' 
+                onFocus={()=>setEditLinkError(false)}
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+              />
+              {editLinkError && <span className='form_error_floating'>Invalid Link</span>}
+            </div>
+          </div>
           <div className='form_row_double'>
             <div className='form_field_container'>
-              <TextField className='form_text_field'
-                id='v-position'
-                value={editVPosition}
-                label="V Position"
-                onChange={event=>setEditVPosition(event.target.value)} 
-                variant={"outlined"}
-                select={true}
-                disabled={isLoading||isSaving}
-                size='small'
-                onFocus={()=>setEditVPositionError(false)}
-                inputProps={{style: {fontSize: 13}}}
-                SelectProps={{style: {fontSize: 13}}}
-                InputLabelProps={{style: {fontSize: 15}}}
-              >
-                <MenuItem value={"start"}>Start</MenuItem>
-                <MenuItem value={"center"}>Center</MenuItem>
-                <MenuItem value={"end"}>End</MenuItem>
-              </TextField>
-              {editVPositionError && <span className='form_error_floating'>Invalid V Position</span>}
+              <div className='form_text_field_constructed'>
+                <span className='form_text_field_constructed_label'>Show Caption</span>
+                <div className='w-full flex flex-row justify-end items-center'>
+                  <FormControlLabel sx={{fontSize: 12}} value="yes" checked={editShowCaption==="yes"} onChange={(e)=>setEditShowCaption(e.target.value)} control={<Radio />} label={<span className='text-xs'>{"Yes"}</span>} />
+                  <FormControlLabel value="no" checked={editShowCaption==="no"} onChange={(e)=>setEditShowCaption(e.target.value)} control={<Radio />} label={<span className='text-xs'>{"No"}</span>} />
+                </div>
+                {editShowCaptionError && <span className='form_error_floating'>Invalid Show Caption</span>}
+              </div>
             </div>
-            <div className='form_field_container'>
-              <TextField className='form_text_field'
-                id='h-position'
-                value={editHPosition}
-                label="H Position"
-                onChange={event=>setEditHPosition(event.target.value)} 
-                variant={"outlined"}
-                select={true}
-                disabled={isLoading||isSaving}
-                size='small'
-                onFocus={()=>setEditHPositionError(false)}
-                inputProps={{style: {fontSize: 13}}}
-                SelectProps={{style: {fontSize: 13}}}
-                InputLabelProps={{style: {fontSize: 15}}}
-              >
-                <MenuItem value={"start"}>Start</MenuItem>
-                <MenuItem value={"center"}>Center</MenuItem>
-                <MenuItem value={"end"}>End</MenuItem>
-              </TextField>
-              {editHPositionError && <span className='form_error_floating'>Invalid H Position</span>}
-            </div>
+            <div className='form_field_container'></div>
           </div>
         </div>
       </div>

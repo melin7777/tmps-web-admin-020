@@ -164,6 +164,7 @@ const CategoriesSearch = () => {
             rpp: parseInt(searchRpp),
             page: page,
           });
+          console.log(response.data.data);
           var index = 1;
           const values = [];
           response.data.data.data.map(val => {
