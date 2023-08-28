@@ -497,6 +497,7 @@ const Dashboard = () => {
                   <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/categories")}>Categories</Button>
                   <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/brands")}>Brands</Button>
                   <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/models")}>Models</Button>
+                  <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/features")}>Features</Button>
                   <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/sellers")}>Sellers</Button>
                   <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/customers")}>Customers</Button>
                   <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/admins")}>Admins</Button>

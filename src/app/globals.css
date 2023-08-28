@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body{
-  @apply pb-0 m-0  bg-zinc-100;
+  @apply flex flex-col justify-center items-center w-full pb-0 m-0  bg-zinc-100;
 }
 
 .form_container{
