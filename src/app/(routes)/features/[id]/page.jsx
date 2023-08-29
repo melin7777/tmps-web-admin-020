@@ -583,6 +583,14 @@ const View = ({params}) => {
                   <span className="form_internal_header">{editSubFeatureId===""?"Add Sub Feature":"Edit Sub Feature"}</span>
                   <div className='header_container_right'>
                     <Button 
+                      variant='outlined' 
+                      disabled={isLoading||isSaving} 
+                      style={{textTransform: 'none'}} 
+                      startIcon={isLoading||isSaving?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Add />}
+                      onClick={()=>createSubFeatureClicked(true)}
+                      size='small'
+                    >New</Button>
+                    <Button 
                       variant='contained' 
                       disabled={isLoading||isSaving} 
                       style={{textTransform: 'none'}} 
@@ -696,7 +704,7 @@ const View = ({params}) => {
             :
               <div className='form_fields_container_search mt-4 relative'>
                 <div className='form_row_double'>              
-                  <span className="form_internal_header">Add / Remove Sub Features</span>
+                  <span className="form_internal_header">Add / Edit Sub Features</span>
                   <Button 
                     variant='contained' 
                     disabled={isLoading||isSaving} 
@@ -726,9 +734,7 @@ const View = ({params}) => {
                               <span className='table_field_label'>ID:</span>
                               <span className='table_field_text_center'>{val.id}</span>
                             </div>
-                            <div className='table_field'>
-                              
-                            </div>
+                            <div className='table_field'></div>
                           </div>
                           <div className='table_field_single'>
                             <div className='table_field_full'>
