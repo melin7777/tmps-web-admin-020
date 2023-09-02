@@ -138,6 +138,10 @@ body{
   @apply w-full flex flex-row justify-start items-center gap-10 mb-3;
 }
 
+.form_row_single_left_col{
+  @apply w-full flex flex-col justify-start items-center gap-10 mb-3;
+}
+
 .form_row_double{
   @apply flex w-full flex-col xs:flex-row justify-between items-center gap-5 xs:gap-5 mb-5;
 }

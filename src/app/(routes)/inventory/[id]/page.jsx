@@ -7,7 +7,7 @@ import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from "@/components/modals/Loading";
-import { Button, CircularProgress, Dialog, FormControlLabel, IconButton, InputAdornment, MenuItem, Radio, Tab, Tabs, TextField } from "@mui/material";
+import { Button, Checkbox, CircularProgress, Dialog, FormControlLabel, IconButton, InputAdornment, MenuItem, Radio, Tab, Tabs, TextField } from "@mui/material";
 import { Add, AddAPhoto, ArrowDropDown, CameraAlt, CropRotate, Delete, Folder, KeyboardArrowLeft, Save } from "@mui/icons-material";
 import useWindowDimensions from '@/hooks/useWindowDimension';
 import CategoriesBrowser from '@/components/browsers/CategoriesBrowser';
@@ -86,7 +86,6 @@ const View = ({params}) => {
   const [openCrop, setOpenCrop] = useState(false);  
   const imageRef = useRef();
   const [photoURL, setPhotoURL] = useState("none");
-  const [file, setFile] = useState(null);
 
   const [editImages, setEditImages] = useState([]);
   const [editImagesError, setEditImagesError] = useState(false);
@@ -94,7 +93,9 @@ const View = ({params}) => {
   const [openOtherCrop, setOpenOtherCrop] = useState(false);
   const otherImageRef = useRef();
   const [otherPhotoURL, setOtherPhotoURL] = useState("none");
-  const [otherFile, setOtherFile] = useState(null);
+
+  const [editFeatures, setEditFeatures] = useState([]);
+  const [editItemFeatures, setEditItemFeatures] = useState([]);
 
   useEffect(() => {
     if(status==='unauthenticated'){
@@ -167,6 +168,10 @@ const View = ({params}) => {
         val2.push({id: val3.id, inventoryId: val.id, imageUrl: "https://tm-web.techmax.lk/"+val3.image_url});
       });
       setEditImages(val2);
+
+      setEditItemFeatures(val.parts_web_inventory_features);
+      setIsSaving(false);
+      getFeaturesForCategory(val.part_category_id);
     }
     catch(error){
       toast.error("Find Item Failed !", {
@@ -175,6 +180,27 @@ const View = ({params}) => {
     }
     finally{
       setIsLoading(false);
+    }
+  }
+
+  const getFeaturesForCategory = async (id) => {
+    try{
+      setIsSaving(true);
+      clearErrors();
+      const response = await axios.post(`/api/features/find-for-category`, {
+        category_id: parseInt(id),
+      });
+      if (!response.data.error) {
+        setEditFeatures(response.data.data);
+      } 
+    }
+    catch(error){
+      toast.error("Get Features Failed !", {
+        position: toast.POSITION.TOP_RIGHT
+      });
+    }
+    finally{
+      setIsSaving(false);
     }
   }
 
@@ -240,6 +266,7 @@ const View = ({params}) => {
     setEditOrderTotalDiscount(0);
     setEditImage('none');
     setEditImages([]);
+    setEditItemFeatures([]);
   };
 
   const saveClicked = async () => {
@@ -342,7 +369,6 @@ const View = ({params}) => {
 
   const handleImageRemove = (event) => {
     setPhotoURL("none");
-    setFile(null);
     deleteImage();
   }
 
@@ -367,7 +393,6 @@ const View = ({params}) => {
   const handleImageChange = (event) => {
     const file1 = event.target.files[0];
     if(file1){
-      setFile(file1);
       setPhotoURL(URL.createObjectURL(file1));
       setOpenCrop(true);
     }
@@ -437,7 +462,6 @@ const View = ({params}) => {
     const file1 = event.target.files[0];
     if(file1){
       setEditEditingImage(id);
-      setOtherFile(file1);
       setOtherPhotoURL(URL.createObjectURL(file1));
       setOpenOtherCrop(true);
     }
@@ -468,7 +492,6 @@ const View = ({params}) => {
           val.push({id: response.data.data.data.id, inventoryId: parseInt(editId), imageUrl: "https://tm-web.techmax.lk/"+response.data.data.data.image_url});
           setEditImages(val);
           setOtherPhotoURL("none");
-          setOtherFile(null);
           setIsSaving(false);
         }
       })
@@ -477,6 +500,77 @@ const View = ({params}) => {
       });
     }
   }
+
+  const subFeatureAdded = async (value, type, featureId) => {
+    try{
+      setIsSaving(true);
+      clearErrors();
+      if(type==="single"){
+        const response = await axios.post(`/api/inventory/add-single-feature`, {
+          inventory_id: parseInt(editId),
+          feature_id: featureId,
+          sub_feature_id: parseInt(value),
+        });
+        if (response.data.error) {
+          setServerError(true);
+          toast.error("Add Feature Failed !", {
+            position: toast.POSITION.TOP_RIGHT
+          });
+        } 
+        else{
+          let filteredArray = editItemFeatures.filter(val2=>val2.feature_id!==parseInt(featureId));
+          filteredArray.push({feature_id: featureId, sub_feature_id: parseInt(value)});
+          setEditItemFeatures(filteredArray);
+        }
+      }
+      else if(type==="multiple"){
+        const index = editItemFeatures.findIndex(val2=>val2.sub_feature_id===parseInt(value));
+        if(index>-1){
+          const response = await axios.post(`/api/inventory/remove-multiple-feature`, {
+            inventory_id: parseInt(editId),
+            feature_id: featureId,
+            sub_feature_id: parseInt(value),
+          });
+          if (response.data.error) {
+            setServerError(true);
+            toast.error("Add Feature Failed !", {
+              position: toast.POSITION.TOP_RIGHT
+            });
+          } 
+          else{
+            let filteredArray = editItemFeatures.filter(val2=>val2.sub_feature_id!==parseInt(value));
+            setEditItemFeatures(filteredArray);
+          }
+        }
+        else{
+          const response = await axios.post(`/api/inventory/add-multiple-feature`, {
+            inventory_id: parseInt(editId),
+            feature_id: featureId,
+            sub_feature_id: parseInt(value),
+          });
+          if (response.data.error) {
+            setServerError(true);
+            toast.error("Add Feature Failed !", {
+              position: toast.POSITION.TOP_RIGHT
+            });
+          } 
+          else{
+            let val1 = [...editItemFeatures];
+            val1.push({feature_id: featureId, sub_feature_id: parseInt(value)});
+            setEditItemFeatures(val1);
+          }
+        }
+      }
+    }
+    catch(error){
+      toast.error("Add Feature Failed !", {
+        position: toast.POSITION.TOP_RIGHT
+      });
+    }
+    finally{
+      setIsSaving(false);
+    }
+  }  
 
   return (
     <div className='form_container' style={{minHeight: (height-80)}}>
@@ -512,6 +606,7 @@ const View = ({params}) => {
           <Tab label="Details" />
           <Tab label="Price" />
           <Tab label="Images" disabled={editId===""} />
+          <Tab label="Features" disabled={editId===""} />
         </Tabs>
         {tabIndex===0 &&
           <div className='form_fields_container_search mt-4'>
@@ -770,8 +865,8 @@ const View = ({params}) => {
                 <div className='form_text_field_constructed'>
                   <span className='form_text_field_constructed_label'>Featured</span>
                   <div className='w-full flex flex-row justify-end items-center'>
-                    <FormControlLabel sx={{fontSize: 12}} value="yes" checked={editFeatured==="yes"} onChange={(e)=>setEditFeatured(e.target.value)} control={<Radio />} label={<span className='text-xs'>{"Yes"}</span>} />
-                    <FormControlLabel value="no" checked={editFeatured==="no"} onChange={(e)=>setEditFeatured(e.target.value)} control={<Radio />} label={<span className='text-xs'>{"No"}</span>} />
+                    <FormControlLabel disabled={isSaving||isLoading} sx={{fontSize: 12}} value="yes" checked={editFeatured==="yes"} onChange={(e)=>setEditFeatured(e.target.value)} control={<Radio />} label={<span className='text-xs'>{"Yes"}</span>} />
+                    <FormControlLabel disabled={isSaving||isLoading} value="no" checked={editFeatured==="no"} onChange={(e)=>setEditFeatured(e.target.value)} control={<Radio />} label={<span className='text-xs'>{"No"}</span>} />
                   </div>
                   {editFeaturedError && <span className='form_error_floating'>Invalid Featured</span>}
                 </div>
@@ -780,8 +875,8 @@ const View = ({params}) => {
                 <div className='form_text_field_constructed'>
                   <span className='form_text_field_constructed_label'>Free Shipping</span>
                   <div className='w-full flex flex-row justify-end items-center'>
-                    <FormControlLabel value="yes" checked={editFreeShipping==="yes"} onChange={(e)=>setEditFreeShipping(e.target.value)} control={<Radio />} label={<span className='text-xs'>{"Yes"}</span>} />
-                    <FormControlLabel value="no" checked={editFreeShipping==="no"} onChange={(e)=>setEditFreeShipping(e.target.value)} control={<Radio />} label={<span className='text-xs'>{"No"}</span>} />
+                    <FormControlLabel disabled={isSaving||isLoading} value="yes" checked={editFreeShipping==="yes"} onChange={(e)=>setEditFreeShipping(e.target.value)} control={<Radio />} label={<span className='text-xs'>{"Yes"}</span>} />
+                    <FormControlLabel disabled={isSaving||isLoading} value="no" checked={editFreeShipping==="no"} onChange={(e)=>setEditFreeShipping(e.target.value)} control={<Radio />} label={<span className='text-xs'>{"No"}</span>} />
                   </div>
                   {editFreeShippingError && <span className='form_error_floating'>Invalid Free Shipping</span>}
                 </div>
@@ -968,7 +1063,6 @@ const View = ({params}) => {
                 </div>
                 <div className='inventory_image_controls mt-2'>
                   <IconButton disabled={isSaving||isLoading} onClick={()=>imageRef.current.click()}><Folder sx={{width: 20, height: 20, color: '#7c3aed'}}/></IconButton>
-                  {file && <IconButton disabled={isSaving||isLoading} onClick={()=>setOpenCrop(true)}><CropRotate sx={{width: 20, height: 20, color: '#7c3aed'}}/></IconButton>}
                   <IconButton disabled={isSaving||isLoading} onClick={(event)=>handleImageRemove(event)}><Delete sx={{width: 20, height: 20, color: '#7c3aed'}}/></IconButton>
                 </div>
               </div>
@@ -996,6 +1090,68 @@ const View = ({params}) => {
               </div>
             </div>
           </>
+        }
+        {tabIndex===3 &&
+          <div className='form_fields_container_search mt-4'>
+            <div className='flex flex-col mb-7'>
+              <span className="form_internal_header">Add / Remove Features</span>
+            </div>
+            {editFeatures.map(val=>
+              <div key={val.feature.id} className='flex flex-col w-full mb-5'>
+                <div className='flex flex-row justify-start items-center'>
+                  <div className='flex justify-center items-center w-[26px] h-[26px] rounded-[13px] relative overflow-hidden'>
+                    {val.feature.image_url==="none" ? 
+                      <CameraAlt sx={{width: 26, height: 26, color: '#cbd5e1'}}/> : 
+                      <Image src={"https://tm-web.techmax.lk/"+val.feature.image_url} alt="feature image" fill sizes='26px' priority={true} style={{objectFit: 'cover'}}/>
+                    }
+                  </div>
+                  <span className="text-sm mb-1 ml-3">{val.feature.description}</span>
+                </div>
+                <div className='flex flex-row justify-start items-center w-full flex-wrap gap-2 px-5'>
+                  {val.feature.type==="single" && 
+                    val.feature.sub_features.map(val1=>
+                      <FormControlLabel key={val1.id} id={'sub-feature-'+val1.id} disabled={isSaving||isLoading}
+                        value={val1.id} checked={editItemFeatures.findIndex(val2=>val2.sub_feature_id===val1.id)>-1}
+                        onChange={(event)=>subFeatureAdded(event.target.value, val.feature.type, val.feature.id)}
+                        control={<Radio/>} 
+                        label={
+                          <div className='flex flex-row justify-start items-center w-[160px] overflow-hidden'>
+                            <div className='flex justify-center items-center w-[26px] h-[26px] rounded-[13px] relative overflow-hidden'>
+                              {val1.image_url==="none" ? 
+                                <CameraAlt sx={{width: 26, height: 26, color: '#cbd5e1'}}/> : 
+                                <Image src={"https://tm-web.techmax.lk/"+val1.image_url} alt="feature image" fill sizes='26px' priority={true} style={{objectFit: 'cover'}}/>
+                              }
+                            </div>
+                            <span className="text-sm mb-1 ml-3">{val1.description}</span>
+                          </div>
+                        }
+                      />
+                    )
+                  }
+                  {val.feature.type==="multiple" && 
+                    val.feature.sub_features.map(val1=>
+                      <FormControlLabel key={val1.id} id={'sub-feature-'+val1.id} disabled={isSaving||isLoading}
+                        value={val1.id} checked={editItemFeatures.findIndex(val2=>val2.sub_feature_id===val1.id)>-1}
+                        onChange={(event)=>subFeatureAdded(event.target.value, val.feature.type, val.feature.id)}
+                        control={<Checkbox/>} 
+                        label={
+                          <div className='flex flex-row justify-start items-center w-[160px] overflow-hidden'>
+                            <div className='flex justify-center items-center w-[26px] h-[26px] rounded-[13px] relative overflow-hidden'>
+                              {val1.image_url==="none" ? 
+                                <CameraAlt sx={{width: 26, height: 26, color: '#cbd5e1'}}/> : 
+                                <Image src={"https://tm-web.techmax.lk/"+val1.image_url} alt="feature image" fill sizes='26px' priority={true} style={{objectFit: 'cover'}}/>
+                              }
+                            </div>
+                            <span className="text-sm mb-1 ml-3">{val1.description}</span>
+                          </div>
+                        }
+                      />
+                    )
+                  }
+                </div>
+              </div>
+            )}
+          </div>
         }
       </div>
       <Dialog open={openSeller} onClose={()=>setOpenSeller(false)} scroll='paper'>

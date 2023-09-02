@@ -68,7 +68,6 @@ const View = ({params}) => {
         id: id
       });
       let val = response.data.data;
-      console.log(val);
       setEditId(val.id);
       setEditStatus(val.status);
       setEditCode(val.code);
@@ -349,7 +348,7 @@ const View = ({params}) => {
                     <div className='flex justify-center items-center w-[120px] sm:w-[140px] h-[120px] sm:h-[140px] relative'>
                       {editImage==="none" ? 
                         <CameraAlt sx={{width: 80, height: 80, color: '#cbd5e1'}}/> : 
-                        <Image src={editImage} alt="brand image" fill sizes='(max-width: 640px) 120px, 140px' priority={true} style={{objectFit: 'cover'}}/>
+                        <Image src={editImage} alt="feature image" fill sizes='(max-width: 640px) 120px, 140px' priority={true} style={{objectFit: 'cover'}}/>
                       }
                       <input type='file' ref={imageRef} onChange={handleImageChange} className='file_input'/>
                     </div>
