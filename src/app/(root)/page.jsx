@@ -502,6 +502,7 @@ const Dashboard = () => {
                   <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/customers")}>Customers</Button>
                   <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/admins")}>Admins</Button>
                   <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/slides")}>Slides</Button>
+                  <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/banners")}>Banners</Button>
                 </div>
               </div>
             </div>

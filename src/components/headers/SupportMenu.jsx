@@ -16,6 +16,7 @@ const SupportMenu = ({selected_root}) => {
       <Button variant='text' style={{textTransform: 'none', color: selected_root==='customers'?'#ffffff':'#27272a', backgroundColor: selected_root==='customers'?'#27272a':'#f4f4f5'}} size='small' onClick={()=>router.push("/customers")}>Customers</Button>
       <Button variant='text' style={{textTransform: 'none', color: selected_root==='admins'?'#ffffff':'#27272a', backgroundColor: selected_root==='admins'?'#27272a':'#f4f4f5'}} size='small' onClick={()=>router.push("/admins")}>Admins</Button>
       <Button variant='text' style={{textTransform: 'none', color: selected_root==='slides'?'#ffffff':'#27272a', backgroundColor: selected_root==='slides'?'#27272a':'#f4f4f5'}} size='small' onClick={()=>router.push("/slides")}>Slides</Button>
+      <Button variant='text' style={{textTransform: 'none', color: selected_root==='banners'?'#ffffff':'#27272a', backgroundColor: selected_root==='banners'?'#27272a':'#f4f4f5'}} size='small' onClick={()=>router.push("/banners")}>Banners</Button>
     </div>
   )
 }

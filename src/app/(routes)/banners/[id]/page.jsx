@@ -9,7 +9,7 @@ import Loading from "@/components/modals/Loading";
 import { Button, CircularProgress, Dialog, FormControlLabel, IconButton, InputAdornment, MenuItem, Radio, TextField } from "@mui/material";
 import { Add, CameraAlt, CropRotate, Delete, Folder, KeyboardArrowLeft, Save } from "@mui/icons-material";
 import useWindowDimensions from '@/hooks/useWindowDimension';
-import CropEasySlide from '@/components/crop/CropEasySlide';
+import CropEasyBanner from '@/components/crop/CropEasyBanner';
 
 const View = ({params}) => {
   const router = useRouter();
@@ -24,9 +24,7 @@ const View = ({params}) => {
   const [editId, setEditId] = useState("");
   const [editStatus, setEditStatus] = useState("active");
   const [editStatusError, setEditStatusError] = useState(false);
-  const [editSortIndex, setEditSortIndex] = useState("");
-  const [editSortIndexError, setEditSortIndexError] = useState(false);
-  const [editPosition, setEditPosition] = useState("bottom_end");
+  const [editPosition, setEditPosition] = useState("center");
   const [editPositionError, setEditPositionError] = useState(false);
   const [editDescription, setEditDescription] = useState("");
   const [editDescriptionError, setEditDescriptionError] = useState(false);
@@ -50,10 +48,16 @@ const View = ({params}) => {
   const [editHeadingColorError, setEditHeadingColorError] = useState(false);
   const [editSubHeadingColor, setEditSubHeadingColor] = useState("#666666");
   const [editSubHeadingColorError, setEditSubHeadingColorError] = useState(false);
+  const [editLinkBackgroundColor, setEditLinkBackgroundColor] = useState("green");
+  const [editLinkBackgroundColorError, setEditLinkBackgroundColorError] = useState(false);
+  const [editLinkTextColor, setEditLinkTextColor] = useState("#ffffff");
+  const [editLinkTextColorError, setEditLinkTextColorError] = useState(false);
   const [editContentColor, setEditContentColor] = useState("#666666");
   const [editContentColorError, setEditContentColorError] = useState(false);
   const [editShowCaption, setEditShowCaption] = useState("no");
   const [editShowCaptionError, setEditShowCaptionError] = useState(false);
+  const [editLinkOnly, setEditLinkOnly] = useState("no");
+  const [editLinkOnlyError, setEditLinkOnlyError] = useState(false);
 
   const [editImage, setEditImage] = useState("none");
   const [editImageError, setEditImageError] = useState(false);
@@ -65,12 +69,12 @@ const View = ({params}) => {
     setIsLoading(false);
     setIsSaving(false);
     if(params.id==="create-item"){
-      setFormHeading("Create Slide");
-      setFormSubHeading("Create a new slide");
+      setFormHeading("Create Banner");
+      setFormSubHeading("Create a new banner");
     }
     else{
-      setFormHeading("Edit Slide");
-      setFormSubHeading("Edit an existing slide");
+      setFormHeading("Edit Banner");
+      setFormSubHeading("Edit an existing banner");
       loadItem(params.id);
     }
   }, []);
@@ -78,13 +82,12 @@ const View = ({params}) => {
   const loadItem = async (id) => {
     setIsLoading(true);
     try{
-      const response = await axios.post("/api/slides/find", {
+      const response = await axios.post("/api/banners/find", {
         id: id
       });
       let val = response.data.data;
       setEditId(val.id);
       setEditStatus(val.status);
-      setEditSortIndex(val.sort_index);
       setEditDescription(val.description);
       setEditHeading(val.heading);
       setEditSubHeading(val.sub_heading);
@@ -99,6 +102,9 @@ const View = ({params}) => {
       setEditSubHeadingColor(val.sub_heading_color);
       setEditContentColor(val.content_color);
       setEditShowCaption(val.show_caption);
+      setEditLinkOnly(val.link_only);
+      setEditLinkBackgroundColor(val.link_background_color);
+      setEditLinkTextColor(val.link_text_color);
 
       if(val.image_url==="none"){
         setEditImage("none");
@@ -120,13 +126,12 @@ const View = ({params}) => {
   const newItemClicked = () => {
     clearErrors();
     clearFields();
-    setFormHeading("Create Slide");
-    setFormSubHeading("Create a new slide");
+    setFormHeading("Create Banner");
+    setFormSubHeading("Create a new banner");
   }
   
   const clearErrors = () => {
     setEditStatusError(false);
-    setEditSortIndexError(false);
     setEditPositionError(false);
     setEditDescriptionError(false);
     setEditHeadingError(false);
@@ -142,14 +147,16 @@ const View = ({params}) => {
     setEditContentColorError(false);
     setEditImageError(false);
     setEditShowCaptionError(false);
+    setEditLinkOnlyError(false);
+    setEditLinkBackgroundColorError(false);
+    setEditLinkTextColorError(false);
     setServerError(false);
   };
   
   const clearFields = () => {
     setEditId('');
     setEditStatus("active");
-    setEditSortIndex('');
-    setEditPosition('bottom_end');
+    setEditPosition('center');
     setEditDescription('');
     setEditHeading("");
     setEditSubHeading("");
@@ -158,11 +165,14 @@ const View = ({params}) => {
     setEditHPosition(0);
     setEditLink("");
     setEditShowCaption("no");
-    setEditBackgroundOpacity("");
-    setEditBackgroundColor("");
-    setEditHeadingColor("");
-    setEditSubHeadingColor("");
-    setEditContentColor("");
+    setEditLinkOnly("no");
+    setEditLinkBackgroundColor("green");
+    setEditLinkTextColor("#ffffff");
+    setEditBackgroundOpacity(0.9);
+    setEditBackgroundColor("#ffffff");
+    setEditHeadingColor("#666666");
+    setEditSubHeadingColor("#666666");
+    setEditContentColor("#666666");
     setEditImage('none');
   };
 
@@ -171,10 +181,6 @@ const View = ({params}) => {
       setIsSaving(true);
       clearErrors();
       var error = false;
-      if (editSortIndex.length>16) {
-        error = true;
-        setEditSortIndexError(true);
-      }
       if (editDescription.length>128) {
         error = true;
         setEditDescriptionError(true);
@@ -194,6 +200,14 @@ const View = ({params}) => {
       if (editLink.length>128) {
         error = true;
         setEditLinkError(true);
+      }
+      if (editLinkBackgroundColor.length===0 && editLinkBackgroundColor.length>16) {
+        error = true;
+        setEditLinkBackgroundColor(true);
+      }
+      if (editLinkTextColor.length===0 && editLinkTextColor.length>16) {
+        error = true;
+        setEditLinkTextColor(true);
       }
       if (editBackgroundColor.length===0 && editBackgroundColor.length>16) {
         error = true;
@@ -223,10 +237,9 @@ const View = ({params}) => {
         else{
           apiDes = "edit";
         }
-        const response = await axios.post(`/api/slides/${apiDes}`, {
+        const response = await axios.post(`/api/banners/${apiDes}`, {
           id: parseInt(editId),
           status: editStatus,
-          sort_index: editSortIndex,
           description: editDescription,
           heading: editHeading,
           sub_heading: editSubHeading,
@@ -238,6 +251,9 @@ const View = ({params}) => {
           sub_heading_color: editSubHeadingColor,
           content_color: editContentColor,
           show_caption: editShowCaption,
+          link_only: editLinkOnly,
+          link_background_color: editLinkBackgroundColor,
+          link_text_color: editLinkTextColor,
           position: editPosition,
           v_position: editVPosition,
           h_position: editHPosition,
@@ -267,7 +283,7 @@ const View = ({params}) => {
     if(editId!==""){
       setIsSaving(true);
       try{
-        const response = await axios.post("/api/slides/delete-image", {
+        const response = await axios.post("/api/banners/delete-image", {
           id: parseInt(editId),
         });
         setEditImage("none");
@@ -300,7 +316,7 @@ const View = ({params}) => {
       formData.append('imageUrl', fileIn);
       axios({
         method: "post",
-        url: "https://tm-web.techmax.lk/slides/edit-image",
+        url: "https://tm-web.techmax.lk/banners/edit-image",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       })
@@ -328,7 +344,7 @@ const View = ({params}) => {
       <div className='form_container_medium' style={{minHeight: (height-80)}}>
         <div className='header_container'>
           <div className='header_container_left'>
-            <IconButton onClick={()=>router.push('/slides')} sx={{backgroundColor: '#27272a', "&:hover, &.Mui-focusVisible": {backgroundColor: "#71717a"}}}><KeyboardArrowLeft sx={{width: 30, height: 30, color: '#ffffff'}}/></IconButton>
+            <IconButton onClick={()=>router.push('/banners')} sx={{backgroundColor: '#27272a', "&:hover, &.Mui-focusVisible": {backgroundColor: "#71717a"}}}><KeyboardArrowLeft sx={{width: 30, height: 30, color: '#ffffff'}}/></IconButton>
             <div className='header_container_left_text'>
               <span className="form_header">{formHeading}</span>
               <span className="form_sub_header">{formSubHeading}</span>
@@ -361,10 +377,10 @@ const View = ({params}) => {
               </div>
               <div className='form_row_single'>
                 <div className='inventory_image_container'>
-                  <div className='flex justify-center items-center w-[200px] xs:w-[300px] sm:w-[400px] h-[80px] xs:h-[120px] sm:h-[160px] relative'>
+                  <div className='flex justify-center items-center w-[200px] xs:w-[300px] sm:w-[400px] h-[130px] xs:h-[200px] sm:h-[270px] relative'>
                     {editImage==="none" ? 
                       <CameraAlt sx={{width: 60, height: 60, color: '#cbd5e1'}}/> : 
-                      <Image src={editImage} alt="slide image" fill sizes='(max-width: 640px) 400px, (max-width: 440px) 300px, 200px' priority={true} style={{objectFit: 'contain'}}/>
+                      <Image src={editImage} alt="banner image" fill sizes='(max-width: 640px) 400px, (max-width: 440px) 300px, 200px' priority={true} style={{objectFit: 'contain'}}/>
                     }
                     <input type='file' ref={imageRef} onChange={handleImageChange} className='file_input'/>
                   </div>
@@ -414,7 +430,7 @@ const View = ({params}) => {
             </div>
           </div>
           <div className='form_row_double'>
-            <div className='form_field_container'>
+            <div className='form_field_container'>              
               <div className='form_text_field_constructed'>
                 <span className='form_text_field_constructed_label'>Show Caption</span>
                 <div className='w-full flex flex-row justify-end items-center'>
@@ -443,6 +459,7 @@ const View = ({params}) => {
                 <MenuItem value={"top_end"}>Top End</MenuItem>
                 <MenuItem value={"bottom_start"}>Bottom Start</MenuItem>
                 <MenuItem value={"bottom_end"}>Bottom End</MenuItem>
+                <MenuItem value={"center"}>Center</MenuItem>
               </TextField>
               {editPositionError && <span className='form_error_floating'>Invalid Position</span>}
             </div>
@@ -583,23 +600,50 @@ const View = ({params}) => {
               {editContentColorError && <span className='form_error_floating'>Invalid Content Color</span>}
             </div>
             <div className='form_field_container'>
-              <TextField 
-                id='sort-index'
-                label="Index" 
-                variant="outlined" 
-                className='form_text_field' 
-                value={editSortIndex} 
-                error={editSortIndexError}
-                onChange={event=>setEditSortIndex(event.target.value)}
+              <div className='form_text_field_constructed'>
+                <span className='form_text_field_constructed_label'>Link Only</span>
+                <div className='w-full flex flex-row justify-end items-center'>
+                  <FormControlLabel sx={{fontSize: 12}} value="yes" checked={editLinkOnly==="yes"} onChange={(e)=>setEditLinkOnly(e.target.value)} control={<Radio />} label={<span className='text-xs'>{"Yes"}</span>} />
+                  <FormControlLabel value="no" checked={editLinkOnly==="no"} onChange={(e)=>setEditLinkOnly(e.target.value)} control={<Radio />} label={<span className='text-xs'>{"No"}</span>} />
+                </div>
+                {editLinkOnlyError && <span className='form_error_floating'>Invalid Link Only</span>}
+              </div>
+            </div>
+          </div>
+          <div className='form_row_double'>
+            <div className='form_field_container'>
+              <TextField className='form_text_field'
+                id='link-background-color'
+                value={editLinkBackgroundColor}
+                label="Link Background Color"
+                onChange={event=>setEditLinkBackgroundColor(event.target.value)} 
+                variant={"outlined"}
                 disabled={isLoading||isSaving}
-                size='small' 
-                onFocus={()=>setEditSortIndexError(false)}
+                size='small'
+                sx={{input: {textAlign: "right"}}}
+                onFocus={()=>setEditLinkBackgroundColorError(false)}
                 inputProps={{style: {fontSize: 13}}}
                 SelectProps={{style: {fontSize: 13}}}
                 InputLabelProps={{style: {fontSize: 15}}}
-                sx={{textAlign: 'right'}}
               />
-              {editSortIndexError && <span className='form_error_floating'>Invalid Index</span>}
+              {editLinkBackgroundColorError && <span className='form_error_floating'>Invalid Link Background Color</span>}
+            </div>
+            <div className='form_field_container'>
+              <TextField className='form_text_field'
+                id='link-text-color'
+                value={editLinkTextColor}
+                label="Link Text Color"
+                onChange={event=>setEditLinkTextColor(event.target.value)} 
+                variant={"outlined"}
+                disabled={isLoading||isSaving}
+                size='small'
+                sx={{input: {textAlign: "right"}}}
+                onFocus={()=>setEditLinkTextColorError(false)}
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+              />
+              {editLinkTextColorError && <span className='form_error_floating'>Invalid Link Text Color</span>}
             </div>
           </div>
           <div className='form_row_single'>
@@ -707,7 +751,7 @@ const View = ({params}) => {
         </div>
       </div>
       <Dialog open={openCrop} onClose={()=>setOpenCrop(false)}>
-        <CropEasySlide {...{setOpenCrop: setOpenCrop, photoURL: editImage, selectSingleImage}}/>
+        <CropEasyBanner {...{setOpenCrop: setOpenCrop, photoURL: editImage, selectSingleImage}}/>
       </Dialog>
       <ToastContainer />
       {isLoading && <Loading height={(height-70)}/>}
