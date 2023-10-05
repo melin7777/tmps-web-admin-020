@@ -13,6 +13,8 @@ import ModelsBrowser from '@/components/browsers/ModelsBrowser';
 import CategoriesBrowser from '@/components/browsers/CategoriesBrowser';
 import BrandsBrowser from '@/components/browsers/BrandsBrowser';
 import SellersBrowser from '@/components/browsers/SellersBrowser';
+import SubCategoriesBrowser from '@/components/browsers/SubCategoriesBrowser';
+import SupportMenu from '@/components/headers/SupportMenu';
 
 const InventorySearch = () => {
   const router = useRouter();
@@ -38,17 +40,21 @@ const InventorySearch = () => {
   const [searchData, setSearchData] = useState([]);
 
   const [searchBrand, setSearchBrand] = useState({id: 0, description: "All"});
+  const [searchBrandError, setSearchBrandError] = useState(false);
   const [searchModel, setSearchModel] = useState({id: 0, description: "All", brandId: 0, brandDescription: "All"});
   const [searchCategory, setSearchCategory] = useState({id: 0, description: "All"});
+  const [searchSubCategory, setSearchSubCategory] = useState({id: 0, description: "All"});
   const [searchSeller, setSearchSeller] = useState({id: 0, description: "All"});
   const [openBrand, setOpenBrand] = useState(false);
   const [openModel, setOpenModel] = useState(false);
   const [openCategory, setOpenCategory] = useState(false);
+  const [openSubCategory, setOpenSubCategory] = useState(false);
   const [openSeller, setOpenSeller] = useState(false);
 
   useEffect(() => {
     setIsSaving(false);
-    setIsLoading(false);(async () => {
+    setIsLoading(false);
+    (async () => {
       try {
         const search_data = localStorage.getItem('seller_inventory_search_data');
         if(search_data!==null){
@@ -81,6 +87,10 @@ const InventorySearch = () => {
         const search_category = localStorage.getItem('seller_inventory_search_category');
         if(search_category!==null) {
           setSearchCategory(JSON.parse(search_category));
+        }
+        const search_sub_category = localStorage.getItem('seller_inventory_search_sub_category');
+        if(search_sub_category!==null) {
+          setSearchSubCategory(JSON.parse(search_sub_category));
         }
         const search_seller = localStorage.getItem('seller_inventory_search_seller');
         if(search_seller!==null) {
@@ -161,6 +171,7 @@ const InventorySearch = () => {
     setSearchStatus("all");
     setSearchSeller({id: 0, description: "All"});
     setSearchCategory({id: 0, description: "All"});
+    setSearchSubCategory({id: 0, description: "All"});
     setSearchBrand({id: 0, description: "All"});
     setSearchModel({id: 0, description: "All", brandId: 0, brandDescription: "All"});
   }
@@ -189,10 +200,13 @@ const InventorySearch = () => {
           search_data["modelId"] = (searchModel.id);
         }
         if (searchCategory.id !== 0) {
-          search_data["partCategoryId"] = (searchCategory.id);
+          search_data["categoryId"] = (searchCategory.id);
+        }
+        if (searchSubCategory.id !== 0) {
+          search_data["subCategoryId"] = (searchSubCategory.id);
         }
         if (searchSeller.id !== 0) {
-          search_data["vendorId"] = (searchSeller.id);
+          search_data["sellerId"] = (searchSeller.id);
         }
         if (searchDescription.length>0) {
           search_data["description"] = searchDescription;
@@ -205,7 +219,7 @@ const InventorySearch = () => {
         if(!error){
           const response = await axios.post("/api/inventory/search", {
             search_data: search_data,
-            rpp: parseInt(searchRpp),
+            rpp: (searchRpp),
             page: page,
           });
           var index = 1;
@@ -261,6 +275,7 @@ const InventorySearch = () => {
             localStorage.setItem('seller_inventory_search_brand', JSON.stringify(searchBrand));
             localStorage.setItem('seller_inventory_search_model', JSON.stringify(searchModel));
             localStorage.setItem('seller_inventory_search_category', JSON.stringify(searchCategory));
+            localStorage.setItem('seller_inventory_search_sub_category', JSON.stringify(searchSubCategory));
             localStorage.setItem('seller_inventory_search_seller', JSON.stringify(searchSeller));
             localStorage.setItem('seller_inventory_search_status', JSON.stringify(searchStatus));
           } 
@@ -280,9 +295,24 @@ const InventorySearch = () => {
     }
   }
 
+  const openModelClicked = () => {
+    setSearchBrandError(false);
+    if(searchBrand.id>0){
+      setOpenModel(true);
+    }
+    else{
+      setSearchBrandError(true);
+    }
+  }
+
+  useEffect(() => {
+    setSearchBrandError(false);
+  }, [searchBrand]);
+
   return (
     <div className='form_container' style={{minHeight: (height-80)}} ref={scrollRef} onScroll={onScroll}>
       <div className='form_container_medium' style={{minHeight: (height-80)}}>
+        <SupportMenu selected_root='inventory'/>
         <div className='header_container'>
           <div className='header_container_left'>
             <span></span>
@@ -352,21 +382,21 @@ const InventorySearch = () => {
               <div className='form_row_double'>
                 <div className='form_field_container'>
                   <div className='form_text_field_constructed'>
-                    <span className='form_text_field_constructed_label'>Brand</span>
-                    <span className='form_text_field_constructed_text' onClick={()=>setOpenBrand(true)}>{searchBrand.description}</span>
+                    <span className='form_text_field_constructed_label'>Category</span>
+                    <span className='form_text_field_constructed_text' onClick={()=>setOpenCategory(true)}>{searchCategory.description}</span>
                     <div className='form_text_field_constructed_actions'>
-                      <Close sx={{width: 20, height: 20, color: '#6b7280'}} onClick={()=>setSearchBrand({id: 0, description: "All"})}/>
-                      <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenBrand(true)}/>
+                      <Close sx={{width: 20, height: 20, color: '#6b7280'}} onClick={()=>{setSearchCategory({id: 0, description: "All"}); setSearchSubCategory({id: 0, description: "All", categoryId: 0, categoryDescription: ""});}}/>
+                      <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenCategory(true)}/>
                     </div>
                   </div>
                 </div>
                 <div className='form_field_container'>
-                  <div className='form_text_field_constructed cursor-pointer'>
-                    <span className='form_text_field_constructed_label'>Model</span>
-                    <span className='form_text_field_constructed_text' onClick={()=>setOpenModel(true)}>{searchModel.description}</span>
+                  <div className='form_text_field_constructed'>
+                    <span className='form_text_field_constructed_label'>Sub Category</span>
+                    <span className='form_text_field_constructed_text' onClick={()=>setOpenSubCategory(true)}>{searchSubCategory.description}</span>
                     <div className='form_text_field_constructed_actions'>
-                      <Close sx={{width: 20, height: 20, color: '#6b7280'}} onClick={()=>setSearchModel({id: 0, description: "All", brandId: 0, brandDescription: "All"})}/>
-                      <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenModel(true)}/>
+                      <Close sx={{width: 20, height: 20, color: '#6b7280'}} onClick={()=>setSearchSubCategory({id: 0, description: "All"})}/>
+                      <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenSubCategory(true)}/>
                     </div>
                   </div>
                 </div>
@@ -374,14 +404,27 @@ const InventorySearch = () => {
               <div className='form_row_double'>
                 <div className='form_field_container'>
                   <div className='form_text_field_constructed'>
-                    <span className='form_text_field_constructed_label'>Category</span>
-                    <span className='form_text_field_constructed_text' onClick={()=>setOpenCategory(true)}>{searchCategory.description}</span>
+                    <span className='form_text_field_constructed_label'>Brand</span>
+                    <span className='form_text_field_constructed_text' onClick={()=>setOpenBrand(true)}>{searchBrand.description}</span>
                     <div className='form_text_field_constructed_actions'>
-                      <Close sx={{width: 20, height: 20, color: '#6b7280'}} onClick={()=>setSearchCategory({id: 0, description: "All"})}/>
-                      <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenCategory(true)}/>
+                      <Close sx={{width: 20, height: 20, color: '#6b7280'}} onClick={()=>{setSearchBrand({id: 0, description: "All"}); setSearchModel({id: 0, description: "All", brandId: 0, brandDescription: "All"});}}/>
+                      <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenBrand(true)}/>
+                    </div>
+                  </div>
+                  {searchBrandError && <span className='form_error_floating'>Invalid Brand</span>}
+                </div>
+                <div className='form_field_container'>
+                  <div className='form_text_field_constructed cursor-pointer'>
+                    <span className='form_text_field_constructed_label'>Model</span>
+                    <span className='form_text_field_constructed_text' onClick={openModelClicked}>{searchModel.description}</span>
+                    <div className='form_text_field_constructed_actions'>
+                      <Close sx={{width: 20, height: 20, color: '#6b7280'}} onClick={()=>setSearchModel({id: 0, description: "All", brandId: 0, brandDescription: "All"})}/>
+                      <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={openModelClicked}/>
                     </div>
                   </div>
                 </div>
+              </div>
+              <div className='form_row_double'>
                 <div className='form_field_container'>
                   <div className='form_text_field_constructed'>
                     <span className='form_text_field_constructed_label'>Seller</span>
@@ -392,9 +435,6 @@ const InventorySearch = () => {
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className='form_row_double'>
-                <div className='form_field_container'></div>
                 <div className='form_field_container gap-2'>
                   <Button 
                     variant='contained' 
@@ -566,8 +606,11 @@ const InventorySearch = () => {
       <Dialog open={openCategory} onClose={()=>setOpenCategory(false)} scroll='paper'>
         <CategoriesBrowser {...{setOpen: setOpenCategory, value: searchCategory, setValue: setSearchCategory}}/>
       </Dialog>
+      <Dialog open={openSubCategory} onClose={()=>setOpenSubCategory(false)} scroll='paper'>
+        <SubCategoriesBrowser {...{setOpen: setOpenSubCategory, value: searchSubCategory, setValue: setSearchSubCategory, dependedValue: searchCategory, setDependedValue: setSearchCategory}}/>
+      </Dialog>
       <Dialog open={openBrand} onClose={()=>setOpenBrand(false)} scroll='paper'>
-        <BrandsBrowser {...{setOpen: setOpenBrand, value: searchBrand, setValue: setSearchBrand}}/>
+        <BrandsBrowser {...{setOpen: setOpenBrand, value: searchBrand, setValue: setSearchBrand, category: searchCategory, subCategory: searchSubCategory}}/>
       </Dialog>
       <Dialog open={openModel} onClose={()=>setOpenModel(false)} scroll='paper'>
         <ModelsBrowser {...{setOpen: setOpenModel, value: searchModel, setValue: setSearchModel, dependedValue: searchBrand, setDependedValue: setSearchBrand}}/>

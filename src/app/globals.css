@@ -387,12 +387,6 @@ body{
   @apply flex justify-center items-center relative;
 }
 
-.table_col_1_wide_image{
-  width: 120px;
-  height: 80px;
-  @apply flex justify-center items-center relative;
-}
-
 .table_col_2_end_end{
   @apply hidden sm:flex flex-col justify-end items-end py-2 px-1;
 }

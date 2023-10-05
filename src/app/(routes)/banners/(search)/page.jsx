@@ -184,6 +184,7 @@ const BannersSearch = () => {
             const temp = {
               index: index++,
               id: val.id,
+              size: val.size,
               sort_index: val.sort_index,
               description: val.description,
               imageUrl: imageUrl,
@@ -407,10 +408,10 @@ const BannersSearch = () => {
           <div className='table_body_container'>
             {searchData.map(val=>
               <div key={val.id} className='table_row'>
-                <div className='table_col_1_center_center h-[80px] w-[120px]'>
+                <div className='table_col_1_center_center w-[120px] relative' style={{height: val.size==="large"?80:30}}>
                   {val.imageUrl==="none" ? 
                     <CameraAlt sx={{width: 40, height: 40, color: '#cbd5e1'}}/> : 
-                    <div className='table_col_1_wide_image'><Image src={val.imageUrl} alt="brand image" fill sizes='110px' priority={true} style={{objectFit: 'contain'}}/></div>
+                    <Image src={val.imageUrl} alt="brand image" fill sizes='110px' priority={true} style={{objectFit: 'contain'}}/>
                   }
                 </div>
                 <div className='table_col_start_center sm:h-[80px]'>

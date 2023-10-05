@@ -4,7 +4,7 @@ import { useState } from "react";
 import Cropper from "react-easy-crop";
 import getCroppedImg from "./utils/CropImage";
 
-const CropEasyBanner = ({setOpenCrop, photoURL, selectSingleImage}) => {
+const CropEasyBanner = ({setOpenCrop, photoURL, selectSingleImage, imageSize}) => {
   const [crop, setCrop] = useState({x:0, y:0});
   const [zoom, setZoom] = useState(1);
   const [rotaion, setRotation] = useState(0);
@@ -44,7 +44,7 @@ const CropEasyBanner = ({setOpenCrop, photoURL, selectSingleImage}) => {
           zoom={zoom} 
           zoomWithScroll={true}
           rotation={rotaion} 
-          aspect={3 / 2} 
+          aspect={imageSize==="large"?16/9:4/1} 
           cropShape="rect"
           showGrid={true}
           onCropChange={setCrop}

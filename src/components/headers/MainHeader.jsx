@@ -152,16 +152,6 @@ const MainHeader = () => {
                         <MenuItem
                           onClick={()=>{
                             setOpen(false);
-                            router.push("/inventory");
-                          }}
-                        >
-                          <ListItemIcon><Inventory sx={{width: 18, height: 18, color: '#27272a'}}/></ListItemIcon>
-                          <span className='text-sm'>Inventory</span>
-                        </MenuItem>
-                        <Divider/>
-                        <MenuItem
-                          onClick={()=>{
-                            setOpen(false);
                             router.push("/notifications");
                           }}
                         >

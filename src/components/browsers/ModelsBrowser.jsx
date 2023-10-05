@@ -20,19 +20,33 @@ const ModelsBrowser = ({setOpen, value, setValue, dependedValue, setDependedValu
     let temp = [];
     if(searchText.length===0){
       items.map(val=>{
-        temp.push({id: val.id, description: val.description});
+        if(selectedDependedItem.id>0){
+          if(selectedDependedItem.id===val.brandId){
+            temp.push({id: val.id, description: val.description, brandId: val.brandId, brandDescription: val.brandDescription});
+          }
+        }
+        else{
+          temp.push({id: val.id, description: val.description, brandId: val.brandId, brandDescription: val.brandDescription});
+        }
       });
     }
     else{
       items.map(val=>{
         if((""+val.id).indexOf(searchText)>-1 || 
           (val.description.toLowerCase()).indexOf(searchText.toLowerCase())>-1){
-          temp.push({id: val.id, description: val.description, brandId: val.brandId, brandDescription: val.brandDescription});
+          if(selectedDependedItem.id>0){
+            if(selectedDependedItem.id===val.brandId){
+              temp.push({id: val.id, description: val.description, brandId: val.brandId, brandDescription: val.brandDescription});
+            }
+          }
+          else{
+            temp.push({id: val.id, description: val.description, brandId: val.brandId, brandDescription: val.brandDescription});
+          }
         }
       });
     }
     setViewItems(temp);
-  }, [searchText]);
+  }, [searchText, items, selectedDependedItem]);
 
   async function getData(){
     setIsLoading(true);
@@ -50,7 +64,6 @@ const ModelsBrowser = ({setOpen, value, setValue, dependedValue, setDependedValu
           });
         });
         setItems(values);
-        setViewItems(values);
       }
     }
     catch(error){
@@ -67,9 +80,8 @@ const ModelsBrowser = ({setOpen, value, setValue, dependedValue, setDependedValu
         <div className="flex flex-col">
           <span className="text-zinc-800 font-medium text-lg">Select Model</span>          
           {selectedDependedItem.id>0 &&
-            <div className="flex flex-row justify-center items-center gap-2 bg-zinc-800 rounded-xl px-2 py-1">
+            <div className="flex flex-row justify-between items-center bg-zinc-800 rounded-xl px-3 py-1">
               <span className="flex flex-row text-white text-xs">{selectedDependedItem.description}</span>
-              <Cancel sx={{width: 18, height: 18, color: '#fff', cursor: 'pointer'}} onClick={()=>setSelectedDependedItem({id: 0, description: "All"})}/>
             </div>
           }
         </div>
@@ -114,7 +126,7 @@ const ModelsBrowser = ({setOpen, value, setValue, dependedValue, setDependedValu
           disabled={isLoading} 
           style={{textTransform: 'none'}} 
           startIcon={isLoading?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Done />}
-          onClick={()=>{setValue(selectedItem); setDependedValue({id: selectedItem.brandId, description: selectedItem.brandDescription}); setOpen(false)}}
+          onClick={()=>{setValue(selectedItem); setOpen(false)}}
           size='small'
         >Select</Button>
       </DialogActions>

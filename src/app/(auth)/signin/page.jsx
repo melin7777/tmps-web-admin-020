@@ -133,7 +133,7 @@ const Signin = () => {
             </div>
           </div>
           <div className='form_row_single'>
-            {editLoginError && <span className='form_error_fixed'>*Invalid Loogin Details</span>}
+            {editLoginError && <span className='form_error_fixed'>*Invalid Login Details</span>}
           </div>
           <div className='form_row_double_fixed'>
             <span></span>

@@ -20,8 +20,11 @@ const View = ({params}) => {
 
   const [formHeading, setFormHeading] = useState("");
   const [formSubHeading, setFormSubHeading] = useState("");
+  const [size, setSize] = useState("large");
 
   const [editId, setEditId] = useState("");
+  const [editSize, setEditSize] = useState("large");
+  const [editSizeError, setEditSizeError] = useState(false);
   const [editStatus, setEditStatus] = useState("active");
   const [editStatusError, setEditStatusError] = useState(false);
   const [editPosition, setEditPosition] = useState("center");
@@ -87,6 +90,7 @@ const View = ({params}) => {
       });
       let val = response.data.data;
       setEditId(val.id);
+      setEditSize(val.size);
       setEditStatus(val.status);
       setEditDescription(val.description);
       setEditHeading(val.heading);
@@ -131,6 +135,7 @@ const View = ({params}) => {
   }
   
   const clearErrors = () => {
+    setEditSizeError(false);
     setEditStatusError(false);
     setEditPositionError(false);
     setEditDescriptionError(false);
@@ -155,6 +160,7 @@ const View = ({params}) => {
   
   const clearFields = () => {
     setEditId('');
+    setEditSize("large");
     setEditStatus("active");
     setEditPosition('center');
     setEditDescription('');
@@ -240,6 +246,7 @@ const View = ({params}) => {
         const response = await axios.post(`/api/banners/${apiDes}`, {
           id: parseInt(editId),
           status: editStatus,
+          size: editSize,
           description: editDescription,
           heading: editHeading,
           sub_heading: editSubHeading,
@@ -377,14 +384,22 @@ const View = ({params}) => {
               </div>
               <div className='form_row_single'>
                 <div className='inventory_image_container'>
-                  <div className='flex justify-center items-center w-[200px] xs:w-[300px] sm:w-[400px] h-[130px] xs:h-[200px] sm:h-[270px] relative'>
-                    {editImage==="none" ? 
-                      <CameraAlt sx={{width: 60, height: 60, color: '#cbd5e1'}}/> : 
-                      <Image src={editImage} alt="banner image" fill sizes='(max-width: 640px) 400px, (max-width: 440px) 300px, 200px' priority={true} style={{objectFit: 'contain'}}/>
-                    }
-                    <input type='file' ref={imageRef} onChange={handleImageChange} className='file_input'/>
-                  </div>
+                  {size==="large"?
+                    <div className='flex justify-center items-center w-[200px] xs:w-[300px] sm:w-[400px] h-[130px] xs:h-[200px] sm:h-[270px] relative'>
+                      {editImage==="none" ? 
+                        <CameraAlt sx={{width: 60, height: 60, color: '#cbd5e1'}}/> : 
+                        <Image src={editImage} alt="banner image" fill sizes='(max-width: 640px) 400px, (max-width: 440px) 300px, 200px' priority={true} style={{objectFit: 'contain'}}/>
+                      }
+                    </div>:
+                    <div className='flex justify-center items-center w-[200px] xs:w-[300px] sm:w-[400px] h-[50px] xs:h-[75px] sm:h-[100px] relative'>
+                      {editImage==="none" ? 
+                        <CameraAlt sx={{width: 60, height: 60, color: '#cbd5e1'}}/> : 
+                        <Image src={editImage} alt="banner image" fill sizes='(max-width: 640px) 400px, (max-width: 440px) 300px, 200px' priority={true} style={{objectFit: 'contain'}}/>
+                      }                      
+                    </div>
+                  }                  
                   <div className='inventory_image_controls mt-2'>
+                    <input type='file' ref={imageRef} onChange={handleImageChange} className='file_input'/>
                     <IconButton disabled={isLoading||isSaving} onClick={()=>imageRef.current.click()}><Folder sx={{width: 20, height: 20, color: '#7c3aed'}}/></IconButton>
                     {file && <IconButton disabled={isLoading||isSaving} onClick={()=>setOpenCrop(true)}><CropRotate sx={{width: 20, height: 20, color: '#7c3aed'}}/></IconButton>}
                     <IconButton disabled={isLoading||isSaving} onClick={(event)=>handleImageRemove(event)}><Delete sx={{width: 20, height: 20, color: '#7c3aed'}}/></IconButton>
@@ -442,6 +457,28 @@ const View = ({params}) => {
             </div>
             <div className='form_field_container'>
               <TextField className='form_text_field'
+                id='size'
+                value={editSize}
+                label="Size"
+                onChange={event=>setEditSize(event.target.value)} 
+                variant={"outlined"}
+                select={true}
+                disabled={isLoading||isSaving}
+                size='small'
+                onFocus={()=>setEditSizeError(false)}
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+              >
+                <MenuItem value={"large"}>Large</MenuItem>
+                <MenuItem value={"small"}>Small</MenuItem>
+              </TextField>
+              {editSizeError && <span className='form_error_floating'>Invalid Size</span>}
+            </div>
+          </div>
+          <div className='form_row_double'>
+            <div className='form_field_container'>
+              <TextField className='form_text_field'
                 id='position'
                 value={editPosition}
                 label="Position"
@@ -462,6 +499,9 @@ const View = ({params}) => {
                 <MenuItem value={"center"}>Center</MenuItem>
               </TextField>
               {editPositionError && <span className='form_error_floating'>Invalid Position</span>}
+            </div>
+            <div className='form_field_container'>              
+              
             </div>
           </div>
           <div className='form_row_double'>
@@ -751,7 +791,7 @@ const View = ({params}) => {
         </div>
       </div>
       <Dialog open={openCrop} onClose={()=>setOpenCrop(false)}>
-        <CropEasyBanner {...{setOpenCrop: setOpenCrop, photoURL: editImage, selectSingleImage}}/>
+        <CropEasyBanner {...{setOpenCrop: setOpenCrop, photoURL: editImage, selectSingleImage, imageSize: editSize}}/>
       </Dialog>
       <ToastContainer />
       {isLoading && <Loading height={(height-70)}/>}

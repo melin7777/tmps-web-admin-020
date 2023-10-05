@@ -169,7 +169,7 @@ const Dashboard = () => {
   }, [searchTimeFrame]);
 
   async function getSearchData(){
-    setIsLoading(true);
+    /* setIsLoading(true);
     setServerError(false);
     try{
       var error = false;
@@ -221,11 +221,11 @@ const Dashboard = () => {
     }
     finally{
       setIsLoading(false);
-    }
+    } */
   }
 
   async function getSearchDataDeliveries(){
-    setIsLoading(true);
+    /* setIsLoading(true);
     setServerError(false);
     try{
       var error = false;
@@ -272,7 +272,7 @@ const Dashboard = () => {
     }
     finally{
       setIsLoading(false);
-    }
+    } */
   }
 
   useEffect(() => {
@@ -495,9 +495,11 @@ const Dashboard = () => {
               <div className='header_container_right'>
                 <div className='flex flex-row'>
                   <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/categories")}>Categories</Button>
+                  <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/sub-categories")}>Sub Categories</Button>
                   <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/brands")}>Brands</Button>
                   <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/models")}>Models</Button>
                   <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/features")}>Features</Button>
+                  <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/inventory")}>Inventory</Button>
                   <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/sellers")}>Sellers</Button>
                   <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/customers")}>Customers</Button>
                   <Button variant='text' style={{textTransform: 'none'}} size='small' onClick={()=>router.push("/admins")}>Admins</Button>

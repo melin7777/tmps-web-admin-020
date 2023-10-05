@@ -16,6 +16,7 @@ import ModelsBrowser from '@/components/browsers/ModelsBrowser';
 import CropEasyMulti from '@/components/crop/CropEasyMulti';
 import CropEasySingle from '@/components/crop/CropEasySingle';
 import SellersBrowser from '@/components/browsers/SellersBrowser';
+import SubCategoriesBrowser from '@/components/browsers/SubCategoriesBrowser';
 
 const View = ({params}) => {
   const router = useRouter();
@@ -70,6 +71,8 @@ const View = ({params}) => {
 
   const [editCategory, setEditCategory] = useState({id: 0, description: "Please Select"});
   const [editCategoryError, setEditCategoryError] = useState(false);
+  const [editSubCategory, setEditSubCategory] = useState({id: 0, description: "Please Select"});
+  const [editSubCategoryError, setEditSubCategoryError] = useState(false);
   const [editSeller, setEditSeller] = useState({id: 0, description: "Please Select"});
   const [editSellerError, setEditSellerError] = useState(false);
   const [editBrand, setEditBrand] = useState({id: 0, description: "Please Select"});
@@ -79,6 +82,7 @@ const View = ({params}) => {
   const [openBrand, setOpenBrand] = useState(false);
   const [openModel, setOpenModel] = useState(false);
   const [openCategory, setOpenCategory] = useState(false);
+  const [openSubCategory, setOpenSubCategory] = useState(false);
   const [openSeller, setOpenSeller] = useState(false);
 
   const [editImage, setEditImage] = useState("none");
@@ -148,8 +152,9 @@ const View = ({params}) => {
       setEditFeatured(val.featured);
       setEditFreeShipping(val.free_shipping);
 
-      setEditSeller({id: val.vendor_id, description: val.online_user.first_name+" "+val.online_user.last_name});
-      setEditCategory({id: val.part_category_id, description: val.part_category.description});
+      setEditSeller({id: val.seller_id, description: val.online_user.first_name+" "+val.online_user.last_name});
+      setEditCategory({id: val.category_id, description: val.category.description});
+      setEditSubCategory({id: val.sub_category_id, description: val.sub_category.description, category_id: val.category_id, category_description: val.category.description});
       setEditBrand({id: val.brand_id, description: val.brand.description});
       setEditModel({id: val.model_id, description: val.model.description, brand_id: val.brand_id, brand_description: val.brand.description});
 
@@ -162,18 +167,19 @@ const View = ({params}) => {
         setEditImage("https://tm-web.techmax.lk/"+val.image_url);
       }
 
-      var val1 = val.parts_web_inventory_images;
+      var val1 = val.inventory_images;
       var val2 = [];
       val1.map(val3=>{
         val2.push({id: val3.id, inventoryId: val.id, imageUrl: "https://tm-web.techmax.lk/"+val3.image_url});
       });
       setEditImages(val2);
 
-      setEditItemFeatures(val.parts_web_inventory_features);
+      setEditItemFeatures(val.inventory_features);
       setIsSaving(false);
-      getFeaturesForCategory(val.part_category_id);
+      getFeaturesForSubCategory(val.sub_category_id);
     }
     catch(error){
+      console.log(error);
       toast.error("Find Item Failed !", {
         position: toast.POSITION.TOP_RIGHT
       });
@@ -183,12 +189,12 @@ const View = ({params}) => {
     }
   }
 
-  const getFeaturesForCategory = async (id) => {
+  const getFeaturesForSubCategory = async (id) => {
     try{
       setIsSaving(true);
       clearErrors();
-      const response = await axios.post(`/api/features/find-for-category`, {
-        category_id: parseInt(id),
+      const response = await axios.post(`/api/features/find-for-sub-category`, {
+        sub_category_id: parseInt(id),
       });
       if (!response.data.error) {
         setEditFeatures(response.data.data);
@@ -218,6 +224,7 @@ const View = ({params}) => {
     setEditBarcodeError(false);
     setEditCodeError(false);
     setEditCategoryError(false);
+    setEditSubCategoryError(false);
     setEditSellerError(false);
     setEditBrandError(false);
     setEditModelError(false);
@@ -246,16 +253,18 @@ const View = ({params}) => {
     setEditPartNumber('');
     setEditBarcode('');
     setEditCode('');
-    setEditSeller({id: 0, description: "Please Select"});
-    setEditCategory({id: 0, description: "Please Select"});
-    setEditBrand({id: 0, description: "Please Select"});
-    setEditModel({id: 0, description: "Please Select", brand_id: 0, brand_description: "Please Select"});
+    //setEditSeller({id: 0, description: "Please Select"});
+    //setEditCategory({id: 0, description: "Please Select"});
+    //setEditSubCategory({id: 0, description: "Please Select"});
+    //setEditBrand({id: 0, description: "Please Select"});
+    //setEditModel({id: 0, description: "Please Select", brand_id: 0, brand_description: "Please Select"});
     setEditHeading('');
     setEditShortDescription('');
     setEditDescription('');
     setEditPrice(0);
     setEditDiscount(0);
-    setEditFeatured("no");
+    //setEditFeatured("no");
+    setEditFeatured("yes");
     setEditFreeShipping("no");
     setEditInhand(0);
     setEditQuantityDiscountAmount(0);
@@ -289,6 +298,10 @@ const View = ({params}) => {
       if (editCategory.id===0) {
         error = true;
         setEditCategoryError(true);
+      }
+      if (editSubCategory.id===0) {
+        error = true;
+        setEditSubCategoryError(true);
       }
       if (editSeller.id===0) {
         error = true;
@@ -324,12 +337,13 @@ const View = ({params}) => {
         }
         const response = await axios.post(`/api/inventory/${apiDes}`, {
           id: parseInt(editId),
-          vendor_id: editSeller.id,
+          seller_id: editSeller.id,
           status: editStatus,
           part_number: editPartNumber,
           barcode: editBarcode,
           code: editCode,
           category_id: editCategory.id,
+          sub_category_id: editSubCategory.id,
           brand_id: editBrand.id,
           model_id: editModel.id,
           heading: editHeading,
@@ -352,6 +366,11 @@ const View = ({params}) => {
         if(editId===""){
           setEditId(response.data.data.id);
           toast.success("Item Created !", {
+            position: toast.POSITION.TOP_RIGHT
+          });
+        }
+        else{
+          toast.success("Item Edited !", {
             position: toast.POSITION.TOP_RIGHT
           });
         }
@@ -406,7 +425,7 @@ const View = ({params}) => {
       formData.append('imageUrl', fileIn);
       axios({
         method: "post",
-        url: "https://tm-web.techmax.lk/parts-web-inventory/edit-main-image-web",
+        url: "https://tm-web.techmax.lk/inventory/edit-main-image-web",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       })
@@ -475,7 +494,7 @@ const View = ({params}) => {
       formData.append('imageUrl', fileIn);
       axios({
         method: "post",
-        url: "https://tm-web.techmax.lk/parts-web-inventory/edit-other-image-web",
+        url: "https://tm-web.techmax.lk/inventory/edit-other-image-web",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       })
@@ -570,7 +589,95 @@ const View = ({params}) => {
     finally{
       setIsSaving(false);
     }
-  }  
+  }
+
+  const removeAllFeatures = async () => {
+    if(editId!==""){
+      try {
+        setIsSaving(true);
+        const response = await axios.post(`/api/inventory/remove-all-features`, {
+          inventory_id: parseInt(editId),
+        });
+        if (response.data.error) {
+          setServerError(true);
+          toast.error("Remove All Features Failed !", {
+            position: toast.POSITION.TOP_RIGHT
+          });
+        } 
+        else{
+          setEditItemFeatures([]);
+          if(editSubCategory.id>0){
+            getFeaturesForSubCategory(editSubCategory.id);
+          }
+          else{
+            setEditFeatures([]);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsSaving(false);
+      }
+    }
+    else{
+      setEditItemFeatures([]);
+    }
+  }
+
+  const openSubCategoryClicked = () => {
+    setEditCategoryError(false);
+    if(editCategory.id>0){
+      setOpenSubCategory(true);
+    }
+    else{
+      setEditCategoryError(true);
+    }
+  }
+
+  const openBrandClicked = () => {
+    setEditSubCategoryError(false);
+    if(editSubCategory.id>0){
+      setOpenBrand(true);
+    }
+    else{
+      setEditSubCategoryError(true);
+    }
+  }
+
+  const openModelClicked = () => {
+    setEditBrandError(false);
+    if(editBrand.id>0){
+      setOpenModel(true);
+    }
+    else{
+      setEditBrandError(true);
+    }
+  }
+
+  useEffect(() => {
+    setEditCategoryError(false);
+    if(!isSaving){
+      setEditSubCategory({id: 0, description: "Please Select"});
+      setEditBrand({id: 0, description: "Please Select"});
+    }
+  }, [editCategory]);
+
+  useEffect(() => {
+    setEditSubCategoryError(false);
+    setEditBrand({id: 0, description: "Please Select"});
+    removeAllFeatures();
+  }, [editSubCategory]);
+
+  useEffect(() => {
+    if(!isSaving){
+      setEditModel({id: 0, description: "Please Select"});
+    }    
+  }, [editBrand]);
+
+  useEffect(() => {
+    setEditModelError(false);
+  }, [editModel]);
+  
 
   return (
     <div className='form_container' style={{minHeight: (height-80)}}>
@@ -611,19 +718,6 @@ const View = ({params}) => {
         {tabIndex===0 &&
           <div className='form_fields_container_search mt-4'>
             <div className='form_row_double'>
-              <div className='form_field_container'></div>
-              <div className='form_field_container'>
-                <div className='form_text_field_constructed'>
-                  <span className='form_text_field_constructed_label'>Seller</span>
-                  <span className='form_text_field_constructed_text' onClick={()=>setOpenSeller(true)}>{editSeller.description}</span>
-                  <div className='form_text_field_constructed_actions_1'>
-                    <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenSeller(true)}/>
-                  </div>
-                </div>
-                {editSellerError && <span className='form_error_floating'>Invalid Seller</span>}
-              </div>
-            </div>
-            <div className='form_row_double'>
               <div className='form_field_container'>
                 <TextField 
                   id='id'
@@ -637,6 +731,36 @@ const View = ({params}) => {
                   SelectProps={{style: {fontSize: 13}}}
                   InputLabelProps={{style: {fontSize: 15}}}
                 />
+              </div>
+              <div className='form_field_container'>
+                <div className='form_text_field_constructed'>
+                  <span className='form_text_field_constructed_label'>Seller</span>
+                  <span className='form_text_field_constructed_text' onClick={()=>setOpenSeller(true)}>{editSeller.description}</span>
+                  <div className='form_text_field_constructed_actions_1'>
+                    <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenSeller(true)}/>
+                  </div>
+                </div>
+                {editSellerError && <span className='form_error_floating'>Invalid Seller</span>}
+              </div>
+            </div>
+            <div className='form_row_double'>
+              <div className='form_field_container'>              
+                <TextField 
+                  id='code'
+                  label="Code" 
+                  variant="outlined" 
+                  className='form_text_field' 
+                  value={editCode} 
+                  error={editCodeError}
+                  onChange={event=>setEditCode(event.target.value)}
+                  disabled={isSaving||isLoading}
+                  size='small' 
+                  onFocus={()=>setEditCodeError(false)}
+                  inputProps={{style: {fontSize: 13}}}
+                  SelectProps={{style: {fontSize: 13}}}
+                  InputLabelProps={{style: {fontSize: 15}}}
+                />
+                {editCodeError && <span className='form_error_floating'>Invalid Code</span>}
               </div>
               <div className='form_field_container'>
                 <TextField className='form_text_field'
@@ -697,25 +821,7 @@ const View = ({params}) => {
                 {editBarcodeError && <span className='form_error_floating'>Invalid Barcode</span>}
               </div>
             </div>
-            <div className='form_row_double'>
-              <div className='form_field_container'>              
-                <TextField 
-                  id='code'
-                  label="Code" 
-                  variant="outlined" 
-                  className='form_text_field' 
-                  value={editCode} 
-                  error={editCodeError}
-                  onChange={event=>setEditCode(event.target.value)}
-                  disabled={isSaving||isLoading}
-                  size='small' 
-                  onFocus={()=>setEditCodeError(false)}
-                  inputProps={{style: {fontSize: 13}}}
-                  SelectProps={{style: {fontSize: 13}}}
-                  InputLabelProps={{style: {fontSize: 15}}}
-                />
-                {editCodeError && <span className='form_error_floating'>Invalid Code</span>}
-              </div>
+            <div className='form_row_double'>              
               <div className='form_field_container'>              
                 <div className='form_text_field_constructed'>
                   <span className='form_text_field_constructed_label'>Category</span>
@@ -726,14 +832,24 @@ const View = ({params}) => {
                 </div>
                 {editCategoryError && <span className='form_error_floating'>Invalid Category</span>}
               </div>
+              <div className='form_field_container'>              
+                <div className='form_text_field_constructed'>
+                  <span className='form_text_field_constructed_label'>Sub Category</span>
+                  <span className='form_text_field_constructed_text' onClick={openSubCategoryClicked}>{editSubCategory.description}</span>
+                  <div className='form_text_field_constructed_actions_1'>
+                    <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={openSubCategoryClicked}/>
+                  </div>
+                </div>
+                {editSubCategoryError && <span className='form_error_floating'>Invalid Sub Category</span>}
+              </div>
             </div>
             <div className='form_row_double'>
               <div className='form_field_container'>              
                 <div className='form_text_field_constructed'>
                   <span className='form_text_field_constructed_label'>Brand</span>
-                  <span className='form_text_field_constructed_text' onClick={()=>setOpenBrand(true)}>{editBrand.description}</span>
+                  <span className='form_text_field_constructed_text' onClick={openBrandClicked}>{editBrand.description}</span>
                   <div className='form_text_field_constructed_actions_1'>
-                    <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenBrand(true)}/>
+                    <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={openBrandClicked}/>
                   </div>
                 </div>
                 {editBrandError && <span className='form_error_floating'>Invalid Brand</span>}
@@ -741,9 +857,9 @@ const View = ({params}) => {
               <div className='form_field_container'>
                 <div className='form_text_field_constructed'>
                   <span className='form_text_field_constructed_label'>Model</span>
-                  <span className='form_text_field_constructed_text' onClick={()=>setOpenModel(true)}>{editModel.description}</span>
+                  <span className='form_text_field_constructed_text' onClick={openModelClicked}>{editModel.description}</span>
                   <div className='form_text_field_constructed_actions_1'>
-                    <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenModel(true)}/>
+                    <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={openModelClicked}/>
                   </div>
                 </div>
                 {editModelError && <span className='form_error_floating'>Invalid Model</span>}
@@ -1160,8 +1276,11 @@ const View = ({params}) => {
       <Dialog open={openCategory} onClose={()=>setOpenCategory(false)} scroll='paper'>
         <CategoriesBrowser {...{setOpen: setOpenCategory, value: editCategory, setValue: setEditCategory}}/>
       </Dialog>
+      <Dialog open={openSubCategory} onClose={()=>setOpenSubCategory(false)} scroll='paper'>
+        <SubCategoriesBrowser {...{setOpen: setOpenSubCategory, value: editSubCategory, setValue: setEditSubCategory, dependedValue: editCategory, setDependedValue: setEditCategory}}/>
+      </Dialog>
       <Dialog open={openBrand} onClose={()=>setOpenBrand(false)} scroll='paper'>
-        <BrandsBrowser {...{setOpen: setOpenBrand, value: editBrand, setValue: setEditBrand}}/>
+        <BrandsBrowser {...{setOpen: setOpenBrand, value: editBrand, setValue: setEditBrand, category: editCategory, subCategory: editSubCategory}}/>
       </Dialog>
       <Dialog open={openModel} onClose={()=>setOpenModel(false)} scroll='paper'>
         <ModelsBrowser {...{setOpen: setOpenModel, value: editModel, setValue: setEditModel, dependedValue: editBrand, setDependedValue: setEditBrand}}/>

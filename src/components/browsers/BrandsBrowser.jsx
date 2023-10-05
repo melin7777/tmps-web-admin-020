@@ -3,7 +3,7 @@ import { DialogActions, DialogContent, TextField, InputAdornment, CircularProgre
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const BrandsBrowser = ({setOpen, value, setValue}) => {
+const BrandsBrowser = ({setOpen, value, setValue, category, subCategory}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [selectedItem, setSelectedItem] = useState(value);
@@ -37,20 +37,29 @@ const BrandsBrowser = ({setOpen, value, setValue}) => {
     setIsLoading(true);
     try{
       var error = false;
+      var search_data = {};
+      if (category.id !== 0) {
+        search_data["categoryId"] = (category.id);
+      }
+      if (subCategory.id !== 0) {
+        search_data["subCategoryId"] = (subCategory.id);
+      }
       if(!error){
-        const response = await axios.post("/api/brands/active", {});
+        const response = await axios.post("/api/brands/find-for-sub-category", {
+          search_data: search_data,
+        });
         const values = [];
-        response.data.data.rows.map(val => {
+        response.data.data.map(val=>{
           var imageUrl = "";
-          if(val.image_url==="none"){
+          if(val.brand.image_url==="none"){
             imageUrl = "none";
           }
           else{
-            imageUrl = "https://tm-web.techmax.lk/"+val.image_url;
+            imageUrl = "https://tm-web.techmax.lk/"+val.brand.image_url;
           }
           values.push({
-            id: val.id,
-            description: val.description,
+            id: val.brand.id,
+            description: val.brand.description,
             image_url: imageUrl,
           });
         });

@@ -11,6 +11,7 @@ export async function POST(req){
       body: JSON.stringify(body)
     });
     const response = await res.json();
+    console.log(response);
     if (response.error) {
       return new NextResponse("Data error", {status: 400});
     } 
@@ -19,6 +20,7 @@ export async function POST(req){
     }
   }
   catch(error){
+    console.log(error);
     return new NextResponse("Internal error", {status: 500});
   }
 }
