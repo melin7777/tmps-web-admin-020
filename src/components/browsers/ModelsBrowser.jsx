@@ -53,7 +53,9 @@ const ModelsBrowser = ({setOpen, value, setValue, dependedValue, setDependedValu
     try{
       var error = false;
       if(!error){
-        const response = await axios.post("/api/models/active", {});
+        const response = await axios.post("/api/models/find-for-brand", {
+          brandId: dependedValue.id
+        });
         const values = [];
         response.data.data.rows.map(val => {
           values.push({

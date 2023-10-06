@@ -664,8 +664,10 @@ const View = ({params}) => {
 
   useEffect(() => {
     setEditSubCategoryError(false);
-    setEditBrand({id: 0, description: "Please Select"});
-    removeAllFeatures();
+    if(!isSaving){
+      setEditBrand({id: 0, description: "Please Select"});
+      removeAllFeatures();
+    }
   }, [editSubCategory]);
 
   useEffect(() => {

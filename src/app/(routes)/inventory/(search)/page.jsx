@@ -56,73 +56,73 @@ const InventorySearch = () => {
     setIsLoading(false);
     (async () => {
       try {
-        const search_data = localStorage.getItem('seller_inventory_search_data');
+        const search_data = localStorage.getItem('admin_inventory_search_data');
         if(search_data!==null){
           setSearchData(JSON.parse(search_data));
         }
-        const search_nop = localStorage.getItem('seller_inventory_search_nop');
+        const search_nop = localStorage.getItem('admin_inventory_search_nop');
         if(search_nop!==null) {
           setSearchNop(JSON.parse(search_nop));
         }
-        const search_page = localStorage.getItem('seller_inventory_search_page');
+        const search_page = localStorage.getItem('admin_inventory_search_page');
         if(search_page!==null) {
           setSearchPage(JSON.parse(search_page));
         }
-        const sort_by = localStorage.getItem('seller_inventory_search_sort_by');
+        const sort_by = localStorage.getItem('admin_inventory_search_sort_by');
         if(sort_by!==null) {
           setSearchSortBy(JSON.parse(sort_by));
         }
-        const order = localStorage.getItem('seller_inventory_search_order');
+        const order = localStorage.getItem('admin_inventory_search_order');
         if(order!==null) {
           setSearchOrder(JSON.parse(order));
         }
-        const search_brand = localStorage.getItem('seller_inventory_search_brand');
+        const search_brand = localStorage.getItem('admin_inventory_search_brand');
         if(search_brand!==null) {
           setSearchBrand(JSON.parse(search_brand));
         }
-        const search_model = localStorage.getItem('seller_inventory_search_model');
+        const search_model = localStorage.getItem('admin_inventory_search_model');
         if(search_model!==null) {
           setSearchModel((JSON.parse(search_model)));
         }
-        const search_category = localStorage.getItem('seller_inventory_search_category');
+        const search_category = localStorage.getItem('admin_inventory_search_category');
         if(search_category!==null) {
           setSearchCategory(JSON.parse(search_category));
         }
-        const search_sub_category = localStorage.getItem('seller_inventory_search_sub_category');
+        const search_sub_category = localStorage.getItem('admin_inventory_search_sub_category');
         if(search_sub_category!==null) {
           setSearchSubCategory(JSON.parse(search_sub_category));
         }
-        const search_seller = localStorage.getItem('seller_inventory_search_seller');
+        const search_seller = localStorage.getItem('admin_inventory_search_seller');
         if(search_seller!==null) {
           setSearchSeller(JSON.parse(search_seller));
         }
-        const search_description = localStorage.getItem('seller_inventory_search_description');
+        const search_description = localStorage.getItem('admin_inventory_search_description');
         if(search_description!==null) {
           setSearchDescription(search_description);
         }
-        const search_status = localStorage.getItem('seller_inventory_search_status');
+        const search_status = localStorage.getItem('admin_inventory_search_status');
         if(search_status!==null) {
           setSearchStatus(JSON.parse(search_status));
         }
-        const search_rpp = localStorage.getItem('seller_inventory_search_rpp');
+        const search_rpp = localStorage.getItem('admin_inventory_search_rpp');
         if(search_rpp!==null) {
           setSearchRpp(JSON.parse(search_rpp));
         }
-        const search_controls_showing = localStorage.getItem('seller_inventory_search_filters_showing');
+        const search_controls_showing = localStorage.getItem('admin_inventory_search_filters_showing');
         if(search_controls_showing!==null) {
           setFiltersShowing(JSON.parse(search_controls_showing));
         }
         else{
           setFiltersShowing(false);
         }
-        const search_selected_row = localStorage.getItem('seller_inventory_search_selected_row');
+        const search_selected_row = localStorage.getItem('admin_inventory_search_selected_row');
         if(search_selected_row && search_selected_row!==null) {
           setSelectedRow(JSON.parse(search_selected_row));
         }
         else{
           setSelectedRow(0);
         }
-        const search_scroll_top = localStorage.getItem('seller_inventory_search_scroll_top');
+        const search_scroll_top = localStorage.getItem('admin_inventory_search_scroll_top');
         if(search_scroll_top && search_scroll_top!==null) {
           setScrollTop(JSON.parse(search_scroll_top));
           setTimeout(() => window.scrollTo(0, search_scroll_top), 100);
@@ -141,7 +141,7 @@ const InventorySearch = () => {
     const change = () => {
       if(filtersShowing!==null){
         try {
-          localStorage.setItem("seller_inventory_search_filters_showing", JSON.stringify(filtersShowing));
+          localStorage.setItem("admin_inventory_search_filters_showing", JSON.stringify(filtersShowing));
         } 
         catch (e) {}
       }
@@ -153,7 +153,7 @@ const InventorySearch = () => {
     const change = () => {
       if(selectedRow!==null){
         try {
-          localStorage.setItem("seller_inventory_search_selected_row", JSON.stringify(selectedRow));
+          localStorage.setItem("admin_inventory_search_selected_row", JSON.stringify(selectedRow));
         } 
         catch (e) {}
       }      
@@ -179,7 +179,7 @@ const InventorySearch = () => {
   const editClicked = (id) => {
     if(filtersShowing!==null){
       try {
-        localStorage.setItem("seller_inventory_search_scroll_top", JSON.stringify(scrollTop));
+        localStorage.setItem("admin_inventory_search_scroll_top", JSON.stringify(scrollTop));
         router.push("/inventory/"+id);
       } 
       catch (e) {}
@@ -264,20 +264,20 @@ const InventorySearch = () => {
           setSearchPage(page);
 
           try {
-            localStorage.setItem('seller_inventory_search_data', JSON.stringify(values));
-            localStorage.setItem('seller_inventory_search_rpp', JSON.stringify(searchRpp));
-            localStorage.setItem('seller_inventory_search_nop', JSON.stringify(response.data.data.nop));
-            localStorage.setItem('seller_inventory_search_page', JSON.stringify(page));
-            localStorage.setItem('seller_inventory_search_sort_by', JSON.stringify(searchSortBy));
-            localStorage.setItem('seller_inventory_search_order', JSON.stringify(searchOrder));
+            localStorage.setItem('admin_inventory_search_data', JSON.stringify(values));
+            localStorage.setItem('admin_inventory_search_rpp', JSON.stringify(searchRpp));
+            localStorage.setItem('admin_inventory_search_nop', JSON.stringify(response.data.data.nop));
+            localStorage.setItem('admin_inventory_search_page', JSON.stringify(page));
+            localStorage.setItem('admin_inventory_search_sort_by', JSON.stringify(searchSortBy));
+            localStorage.setItem('admin_inventory_search_order', JSON.stringify(searchOrder));
 
-            localStorage.setItem('seller_inventory_search_description', searchDescription);
-            localStorage.setItem('seller_inventory_search_brand', JSON.stringify(searchBrand));
-            localStorage.setItem('seller_inventory_search_model', JSON.stringify(searchModel));
-            localStorage.setItem('seller_inventory_search_category', JSON.stringify(searchCategory));
-            localStorage.setItem('seller_inventory_search_sub_category', JSON.stringify(searchSubCategory));
-            localStorage.setItem('seller_inventory_search_seller', JSON.stringify(searchSeller));
-            localStorage.setItem('seller_inventory_search_status', JSON.stringify(searchStatus));
+            localStorage.setItem('admin_inventory_search_description', searchDescription);
+            localStorage.setItem('admin_inventory_search_brand', JSON.stringify(searchBrand));
+            localStorage.setItem('admin_inventory_search_model', JSON.stringify(searchModel));
+            localStorage.setItem('admin_inventory_search_category', JSON.stringify(searchCategory));
+            localStorage.setItem('admin_inventory_search_sub_category', JSON.stringify(searchSubCategory));
+            localStorage.setItem('admin_inventory_search_seller', JSON.stringify(searchSeller));
+            localStorage.setItem('admin_inventory_search_status', JSON.stringify(searchStatus));
           } 
           catch (e) {
             console.log("put storage error");

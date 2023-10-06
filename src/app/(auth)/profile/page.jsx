@@ -11,6 +11,7 @@ import { Folder, CropRotate, Save, Delete, Key, CameraAlt, MailOutline, Phone, C
 import Loading from '@/components/modals/Loading';
 import useWindowDimensions from '@/hooks/useWindowDimension';
 import LoadingScreen from '@/components/screens/LoadingScreen';
+import { emailReg } from '@/utils/Validate';
 
 const Profile = () => {
   const router = useRouter();
@@ -63,6 +64,8 @@ const Profile = () => {
 
   const getUser = async (id) => {
     try{
+      clearErrors();
+      clearFields();
       setIsLoading(true);
       const response = await axios.post("/api/profile/find", {
         id: id
@@ -126,6 +129,14 @@ const Profile = () => {
     clearErrors();
     setIsSaving(true);
     var error = false;
+    if(editEmail.length>128 || !emailReg.test(editEmail)) {
+      error = true;
+      setEditEmailError(true);
+    }
+    if(editPhone.length===0 || editPhone.length>32) {
+      error = true;
+      setEditPhoneError(true);
+    }
     if(editFirstName.length===0 || editFirstName.length>32) {
       error = true;
       setEditFirstNameError(true);
@@ -141,14 +152,25 @@ const Profile = () => {
       try{
         const response = await axios.post("/api/profile/edit", {
           id: editId,
+          phone: editPhone,
+          email: editEmail,
           firstName: editFirstName,
           lastName: editLastName,
         });
         if(response.data.status==="ok"){
-          saveImage();
+          toast.success("Profile Edited !", {
+            position: toast.POSITION.TOP_RIGHT
+          });
           if(session && session.user){
             sessionUpdate({status: 'active'});
           }
+          saveImage();
+        }
+        else if(response.data.status==="duplicate_email"){
+          setEditDuplicateEmailError(true);
+        }
+        else if(response.data.status==="duplicate_phone"){
+          setEditDuplicatePhoneError(true);
         }
         else{
           toast.error("Edit Profile Failed !", {
@@ -353,7 +375,7 @@ const Profile = () => {
                     InputProps={{
                       startAdornment: <InputAdornment position="start"><MailOutline sx={{width: 26, height: 26, color: editEmailError||editDuplicateEmailError?'crimson':'#94a3b8'}}/></InputAdornment>,
                     }}
-                    disabled={true}
+                    disabled={isLoading||isSaving || isViewOnly}
                     onFocus={()=>{setEditEmailError(false);setEditDuplicateEmailError(false)}}
                     size='small' 
                     inputProps={{style: {fontSize: 13}}}
@@ -375,7 +397,7 @@ const Profile = () => {
                     InputProps={{
                       startAdornment: <InputAdornment position="start"><Phone sx={{width: 26, height: 26, color: editPhoneError?'crimson':'#94a3b8'}}/></InputAdornment>,
                     }}
-                    disabled={true}
+                    disabled={isLoading||isSaving || isViewOnly}
                     onFocus={()=>{setEditPhoneError(false);setEditDuplicatePhoneError(false)}}
                     size='small' 
                     inputProps={{style: {fontSize: 13}}}
@@ -425,7 +447,7 @@ const Profile = () => {
                         disabled={isLoading||isSaving} 
                         style={{textTransform: 'none'}} 
                         startIcon={isLoading||isSaving?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Close />}
-                        onClick={()=>setIsViewOnly(true)}
+                        onClick={()=>{setIsViewOnly(true);getUser(editId);}}
                         size='small'
                       >Cancel</Button>
                       <Button 
