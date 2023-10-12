@@ -85,7 +85,7 @@ const Profile = () => {
         }
       }
       else{
-        setPhotoURL("https://tm-web.techmax.lk/"+response.data.data.image_url);
+        setPhotoURL(" http://localhost:8000/"+response.data.data.image_url);
       }
     }
     catch(error){
@@ -206,7 +206,7 @@ const Profile = () => {
       formData.append('imageUrl', file);
       axios({
         method: "post",
-        url: "https://tm-web.techmax.lk/online-users/edit-image-web",
+        url: " http://localhost:8000/online-users/edit-image-web",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       })

@@ -114,7 +114,7 @@ const View = ({params}) => {
         setEditImage("none");
       }
       else{
-        setEditImage("https://tm-web.techmax.lk/"+val.image_url);
+        setEditImage(" http://localhost:8000/"+val.image_url);
       }
     }
     catch(error){
@@ -323,7 +323,7 @@ const View = ({params}) => {
       formData.append('imageUrl', fileIn);
       axios({
         method: "post",
-        url: "https://tm-web.techmax.lk/banners/edit-image",
+        url: " http://localhost:8000/banners/edit-image",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       })
@@ -336,7 +336,7 @@ const View = ({params}) => {
           setIsSaving(false);
         } 
         else {
-          setEditImage("https://tm-web.techmax.lk/"+response.data.data);
+          setEditImage(" http://localhost:8000/"+response.data.data);
           setIsSaving(false);
         }
       })

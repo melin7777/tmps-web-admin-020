@@ -24,7 +24,7 @@ const MainHeader = () => {
         }
       }
       else{
-        setImageUrl("https://tm-web.techmax.lk/"+session.user.image);
+        setImageUrl(" http://localhost:8000/"+session.user.image);
       }
     }
     else{

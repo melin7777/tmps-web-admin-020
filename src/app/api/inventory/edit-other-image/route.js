@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req){
   try{
-    const res = await fetch("https://tm-web.techmax.lk/parts-web-inventory/edit-other-image-web", {
+    const res = await fetch(" http://localhost:8000/parts-web-inventory/edit-other-image-web", {
       method: "POST",
       headers: { "Content-Type": "multipart/form-data" },
       body: req

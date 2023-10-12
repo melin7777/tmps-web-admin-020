@@ -2,6 +2,7 @@ import { CameraAlt, Cancel, Done, Search } from "@mui/icons-material";
 import { DialogActions, DialogContent, TextField, InputAdornment, CircularProgress, Button, Avatar } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Image from "next/image";
 
 const BrandsBrowser = ({setOpen, value, setValue, category, subCategory}) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -34,32 +35,23 @@ const BrandsBrowser = ({setOpen, value, setValue, category, subCategory}) => {
   }, [searchText]);
 
   async function getData(){
-    setIsLoading(true);
     try{
+      setIsLoading(true);
       var error = false;
-      var search_data = {};
-      if (category.id !== 0) {
-        search_data["categoryId"] = (category.id);
-      }
-      if (subCategory.id !== 0) {
-        search_data["subCategoryId"] = (subCategory.id);
-      }
       if(!error){
-        const response = await axios.post("/api/brands/find-for-sub-category", {
-          search_data: search_data,
-        });
+        const response = await axios.post("/api/brands/active", {});
         const values = [];
-        response.data.data.map(val=>{
+        response.data.data.rows.map(val=>{
           var imageUrl = "";
-          if(val.brand.image_url==="none"){
+          if(val.image_url==="none"){
             imageUrl = "none";
           }
           else{
-            imageUrl = "https://tm-web.techmax.lk/"+val.brand.image_url;
+            imageUrl = " http://localhost:8000/"+val.image_url;
           }
           values.push({
-            id: val.brand.id,
-            description: val.brand.description,
+            id: val.id,
+            description: val.description,
             image_url: imageUrl,
           });
         });
@@ -98,10 +90,10 @@ const BrandsBrowser = ({setOpen, value, setValue, category, subCategory}) => {
         <DialogContent dividers sx={{background: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'start', alignItems: 'start', position: 'relative', height: 600, width: 'auto', minWidth: {sm: 500}}}>
           {viewItems.map(val=>
             <div key={val.id} onClick={()=>setSelectedItem(val)} className='flex flex-row w-full justify-between items-center px-1 cursor-pointer' style={{borderBottom: '1px solid #e0e0e0', backgroundColor: selectedItem?.id===val.id?"#e7e5e4":"#ffffff"}}>
-              <div className='flex flex-col justify-center items-center'>
+              <div className='flex flex-col justify-center items-center h-[30px] w-[80px] relative'>
                 {val.image_url==="none" ? 
                   <CameraAlt sx={{width: 30, height: 30, color: '#cbd5e1'}}/> : 
-                  <Avatar src={val.image_url} sx={{width: 30, height: 30}}/>
+                  <Image src={val.image_url} alt="brand image" fill sizes='80px' priority={true} style={{objectFit: 'contain'}}/>
                 }
               </div>
               <div className='flex flex-col flex-1 justify-center items-start h-[60px] pl-3'>

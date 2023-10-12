@@ -46,7 +46,7 @@ const CategoriesBrowser = ({setOpen, value, setValue}) => {
             imageUrl = "none";
           }
           else{
-            imageUrl = "https://tm-web.techmax.lk/"+val.image_url;
+            imageUrl = " http://localhost:8000/"+val.image_url;
           }
           values.push({
             id: val.id,

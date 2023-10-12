@@ -9,7 +9,7 @@ import Loading from "@/components/modals/Loading";
 import { Button, CircularProgress, Dialog, FormControlLabel, IconButton, MenuItem, Radio, TextField } from "@mui/material";
 import { Add, CameraAlt, CropRotate, Delete, Folder, KeyboardArrowLeft, Save } from "@mui/icons-material";
 import useWindowDimensions from '@/hooks/useWindowDimension';
-import CropEasySmall from '@/components/crop/CropEasySmall';
+import CropEasySmallMedium from '@/components/crop/CropEasySmallMedium';
 
 const View = ({params}) => {
   const router = useRouter();
@@ -71,7 +71,7 @@ const View = ({params}) => {
         setEditImage("none");
       }
       else{
-        setEditImage("https://tm-web.techmax.lk/"+val.image_url);
+        setEditImage(" http://localhost:8000/"+val.image_url);
       }
     }
     catch(error){
@@ -198,7 +198,7 @@ const View = ({params}) => {
       formData.append('imageUrl', fileIn);
       axios({
         method: "post",
-        url: "https://tm-web.techmax.lk/brands/edit-image",
+        url: " http://localhost:8000/brands/edit-image",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       })
@@ -211,7 +211,7 @@ const View = ({params}) => {
           setIsSaving(false);
         } 
         else {
-          setEditImage("https://tm-web.techmax.lk/"+response.data.data);
+          setEditImage(" http://localhost:8000/"+response.data.data);
           setIsSaving(false);
         }
       })
@@ -259,10 +259,10 @@ const View = ({params}) => {
               </div>
               <div className='form_row_single'>
                 <div className='inventory_image_container'>
-                  <div className='flex justify-center items-center w-[120px] sm:w-[140px] h-[120px] sm:h-[140px] relative'>
+                  <div className='flex justify-center items-center w-[200px] sm:w-[150px] h-[80px] sm:h-[60px] relative'>
                     {editImage==="none" ? 
                       <CameraAlt sx={{width: 80, height: 80, color: '#cbd5e1'}}/> : 
-                      <Image src={editImage} alt="brand image" fill sizes='(max-width: 640px) 120px, 140px' priority={true} style={{objectFit: 'cover'}}/>
+                      <Image src={editImage} alt="brand image" fill sizes='(max-width: 640px) 60px, 80px' priority={true} style={{objectFit: 'cover'}}/>
                     }
                     <input type='file' ref={imageRef} onChange={handleImageChange} className='file_input'/>
                   </div>
@@ -377,7 +377,7 @@ const View = ({params}) => {
         </div>
       </div>
       <Dialog open={openCrop} onClose={()=>setOpenCrop(false)}>
-        <CropEasySmall {...{setOpenCrop: setOpenCrop, photoURL: editImage, selectSingleImage}}/>
+        <CropEasySmallMedium {...{setOpenCrop: setOpenCrop, photoURL: editImage, selectSingleImage}}/>
       </Dialog>
       <ToastContainer />
       {isLoading && <Loading height={(height-70)}/>}

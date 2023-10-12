@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export async function POST(req){
   try{
     const body = await req.json();
-    const res = await fetch("https://tm-web.techmax.lk/inventory/remove-all-features", {
+    const res = await fetch(" http://localhost:8000/inventory/remove-all-features", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

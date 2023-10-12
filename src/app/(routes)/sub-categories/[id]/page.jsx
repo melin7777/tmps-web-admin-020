@@ -88,14 +88,14 @@ const View = ({params}) => {
         setEditImage("none");
       }
       else{
-        setEditImage("https://tm-web.techmax.lk/"+val.image_url);
+        setEditImage(" http://localhost:8000/"+val.image_url);
       }
 
       var val2 = [];
       val.sub_categories_features.map(val3=>{
         var img = "none";
         if(val3.feature.image_url!=="none"){
-          img = "https://tm-web.techmax.lk/"+val3.feature.image_url;
+          img = " http://localhost:8000/"+val3.feature.image_url;
         }
         val2.push({id: val3.feature.id, description: val3.feature.description, image_url: img});
       });
@@ -105,7 +105,7 @@ const View = ({params}) => {
       val.sub_categories_brands.map(val4=>{
         var img = "none";
         if(val4.brand.image_url!=="none"){
-          img = "https://tm-web.techmax.lk/"+val4.brand.image_url;
+          img = " http://localhost:8000/"+val4.brand.image_url;
         }
         val3.push({id: val4.brand.id, description: val4.brand.description, image_url: img});
       });
@@ -124,7 +124,7 @@ const View = ({params}) => {
   const newItemClicked = () => {
     clearErrors();
     clearFields();
-    setFormHeading("Create Model");
+    setFormHeading("Create Sub Category");
     setFormSubHeading("Create a new sub category");
   };
   
@@ -241,7 +241,7 @@ const View = ({params}) => {
       formData.append('imageUrl', fileIn);
       axios({
         method: "post",
-        url: "https://tm-web.techmax.lk/sub-categories/edit-image",
+        url: " http://localhost:8000/sub-categories/edit-image",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       })
@@ -254,7 +254,7 @@ const View = ({params}) => {
           setIsSaving(false);
         } 
         else {
-          setEditImage("https://tm-web.techmax.lk/"+response.data.data);
+          setEditImage(" http://localhost:8000/"+response.data.data);
           setIsSaving(false);
         }
       })
@@ -327,7 +327,7 @@ const View = ({params}) => {
     }
   };
 
-  const addModel = async (val) => {
+  const addBrand = async (val) => {
     try{
       setIsSaving(true);
       clearErrors();
@@ -358,7 +358,7 @@ const View = ({params}) => {
     }
   };
 
-  const removeModel = async (id) => {
+  const removeBrand = async (id) => {
     try{
       setIsSaving(true);
       clearErrors();
@@ -623,7 +623,7 @@ const View = ({params}) => {
         {tabIndex===2 &&
           <div className='form_fields_container_search mt-4 relative'>
             <div className='form_row_double'>              
-              <span className="form_internal_header">Add / Remove Models</span>
+              <span className="form_internal_header">Add / Remove Brands</span>
               <Button 
                 variant='contained' 
                 disabled={isLoading||isSaving} 
@@ -668,7 +668,7 @@ const View = ({params}) => {
                             variant='outlined' 
                             style={{textTransform: 'none'}} 
                             startIcon={<DeleteOutline />}
-                            onClick={()=>removeModel(val.id)}
+                            onClick={()=>removeBrand(val.id)}
                             size='small'
                           >Delete</Button>
                         </div>
@@ -679,7 +679,7 @@ const View = ({params}) => {
                         variant='outlined' 
                         style={{textTransform: 'none'}} 
                         startIcon={<DeleteOutline />}
-                        onClick={()=>removeModel(val.id)}
+                        onClick={()=>removeBrand(val.id)}
                         size='small'
                       >Delete</Button>
                     </div>
@@ -696,7 +696,7 @@ const View = ({params}) => {
           <FeaturesBrowser {...{setOpen: setFeaturesShowing, value: null, setValue: addFeature}}/>
         </Dialog>
         <Dialog open={brandsShowing} onClose={()=>setBrandsShowing(false)} scroll='paper'>
-          <BrandsBrowser {...{setOpen: setBrandsShowing, value: null, setValue: addModel}}/>
+          <BrandsBrowser {...{setOpen: setBrandsShowing, value: null, setValue: addBrand, category: editCategory.id, subCategory: editId}}/>
         </Dialog>
         <Dialog open={openCrop} onClose={()=>setOpenCrop(false)}>
           <CropEasySmall {...{setOpenCrop: setOpenCrop, photoURL: editImage, selectSingleImage}}/>
