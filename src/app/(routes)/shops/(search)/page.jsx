@@ -6,17 +6,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { CircularProgress, MenuItem, InputAdornment, IconButton, Typography, Dialog, Button, TextField } from '@mui/material';
-import { Add, ArrowDropDown, CameraAlt, ClearAll, Close, Edit, FilterAlt, ImportExport, KeyboardArrowDown, KeyboardArrowLeft, KeyboardArrowRight, KeyboardArrowUp, Search } from '@mui/icons-material';
+import { CircularProgress, MenuItem, InputAdornment, IconButton, Typography, Button, TextField } from '@mui/material';
+import { Add, CameraAlt, ClearAll, Edit, FilterAlt, ImportExport, KeyboardArrowDown, KeyboardArrowLeft, KeyboardArrowRight, KeyboardArrowUp, Search } from '@mui/icons-material';
 import useWindowDimensions from '@/hooks/useWindowDimension';
-import ModelsBrowser from '@/components/browsers/ModelsBrowser';
-import CategoriesBrowser from '@/components/browsers/CategoriesBrowser';
-import BrandsBrowser from '@/components/browsers/BrandsBrowser';
-import SellersBrowser from '@/components/browsers/SellersBrowser';
-import SubCategoriesBrowser from '@/components/browsers/SubCategoriesBrowser';
 import SupportMenu from '@/components/headers/SupportMenu';
 
-const InventorySearch = () => {
+const ShopsSearch = () => {
   const router = useRouter();
   const {data: session, status} = useSession();
   const [serverError, setServerError] = useState(false);
@@ -29,7 +24,6 @@ const InventorySearch = () => {
   const [selectedRow, setSelectedRow] = useState(0);
   const [filtersShowing, setFiltersShowing] = useState(false);
   const [searchDescription, setSearchDescription] = useState("");
-  const [searchType, setSearchType] = useState("type");
   const [searchStatus, setSearchStatus] = useState("active");
   const [searchSortBy, setSearchSortBy] = useState("id");
   const [searchOrder, setSearchOrder] = useState("ASC");
@@ -40,94 +34,58 @@ const InventorySearch = () => {
   const [searchPage, setSearchPage] = useState(1);
   const [searchData, setSearchData] = useState([]);
 
-  const [searchBrand, setSearchBrand] = useState({id: 0, description: "All"});
-  const [searchBrandError, setSearchBrandError] = useState(false);
-  const [searchModel, setSearchModel] = useState({id: 0, description: "All", brandId: 0, brandDescription: "All"});
-  const [searchCategory, setSearchCategory] = useState({id: 0, description: "All"});
-  const [searchSubCategory, setSearchSubCategory] = useState({id: 0, description: "All"});
-  const [searchSeller, setSearchSeller] = useState({id: 0, description: "All"});
-  const [openBrand, setOpenBrand] = useState(false);
-  const [openModel, setOpenModel] = useState(false);
-  const [openCategory, setOpenCategory] = useState(false);
-  const [openSubCategory, setOpenSubCategory] = useState(false);
-  const [openSeller, setOpenSeller] = useState(false);
-
   useEffect(() => {
     setIsSaving(false);
     setIsLoading(false);
     (async () => {
       try {
-        const search_data = localStorage.getItem('admin_inventory_search_data');
+        const search_data = localStorage.getItem('admin_shops_search_data');
         if(search_data!==null){
           setSearchData(JSON.parse(search_data));
         }
-        const search_nop = localStorage.getItem('admin_inventory_search_nop');
+        const search_nop = localStorage.getItem('admin_shops_search_nop');
         if(search_nop!==null) {
           setSearchNop(JSON.parse(search_nop));
         }
-        const search_page = localStorage.getItem('admin_inventory_search_page');
+        const search_page = localStorage.getItem('admin_shops_search_page');
         if(search_page!==null) {
           setSearchPage(JSON.parse(search_page));
         }
-        const sort_by = localStorage.getItem('admin_inventory_search_sort_by');
+        const sort_by = localStorage.getItem('admin_shops_search_sort_by');
         if(sort_by!==null) {
           setSearchSortBy(JSON.parse(sort_by));
         }
-        const order = localStorage.getItem('admin_inventory_search_order');
+        const order = localStorage.getItem('admin_shops_search_order');
         if(order!==null) {
           setSearchOrder(JSON.parse(order));
         }
-        const search_brand = localStorage.getItem('admin_inventory_search_brand');
-        if(search_brand!==null) {
-          setSearchBrand(JSON.parse(search_brand));
-        }
-        const search_model = localStorage.getItem('admin_inventory_search_model');
-        if(search_model!==null) {
-          setSearchModel((JSON.parse(search_model)));
-        }
-        const search_category = localStorage.getItem('admin_inventory_search_category');
-        if(search_category!==null) {
-          setSearchCategory(JSON.parse(search_category));
-        }
-        const search_sub_category = localStorage.getItem('admin_inventory_search_sub_category');
-        if(search_sub_category!==null) {
-          setSearchSubCategory(JSON.parse(search_sub_category));
-        }
-        const search_seller = localStorage.getItem('admin_inventory_search_seller');
-        if(search_seller!==null) {
-          setSearchSeller(JSON.parse(search_seller));
-        }
-        const search_description = localStorage.getItem('admin_inventory_search_description');
+        const search_description = localStorage.getItem('admin_shops_search_description');
         if(search_description!==null) {
           setSearchDescription(search_description);
         }
-        const search_type = localStorage.getItem('admin_inventory_search_type');
-        if(search_type!==null) {
-          setSearchType(JSON.parse(search_type));
-        }
-        const search_status = localStorage.getItem('admin_inventory_search_status');
+        const search_status = localStorage.getItem('admin_shops_search_status');
         if(search_status!==null) {
           setSearchStatus(JSON.parse(search_status));
         }
-        const search_rpp = localStorage.getItem('admin_inventory_search_rpp');
+        const search_rpp = localStorage.getItem('admin_shops_search_rpp');
         if(search_rpp!==null) {
           setSearchRpp(JSON.parse(search_rpp));
         }
-        const search_controls_showing = localStorage.getItem('admin_inventory_search_filters_showing');
+        const search_controls_showing = localStorage.getItem('admin_shops_search_filters_showing');
         if(search_controls_showing!==null) {
           setFiltersShowing(JSON.parse(search_controls_showing));
         }
         else{
           setFiltersShowing(false);
         }
-        const search_selected_row = localStorage.getItem('admin_inventory_search_selected_row');
+        const search_selected_row = localStorage.getItem('admin_shops_search_selected_row');
         if(search_selected_row && search_selected_row!==null) {
           setSelectedRow(JSON.parse(search_selected_row));
         }
         else{
           setSelectedRow(0);
         }
-        const search_scroll_top = localStorage.getItem('admin_inventory_search_scroll_top');
+        const search_scroll_top = localStorage.getItem('admin_shops_search_scroll_top');
         if(search_scroll_top && search_scroll_top!==null) {
           setScrollTop(JSON.parse(search_scroll_top));
           setTimeout(() => window.scrollTo(0, search_scroll_top), 100);
@@ -146,7 +104,7 @@ const InventorySearch = () => {
     const change = () => {
       if(filtersShowing!==null){
         try {
-          localStorage.setItem("admin_inventory_search_filters_showing", JSON.stringify(filtersShowing));
+          localStorage.setItem("admin_shops_search_filters_showing", JSON.stringify(filtersShowing));
         } 
         catch (e) {}
       }
@@ -158,7 +116,7 @@ const InventorySearch = () => {
     const change = () => {
       if(selectedRow!==null){
         try {
-          localStorage.setItem("admin_inventory_search_selected_row", JSON.stringify(selectedRow));
+          localStorage.setItem("admin_shops_search_selected_row", JSON.stringify(selectedRow));
         } 
         catch (e) {}
       }      
@@ -173,20 +131,14 @@ const InventorySearch = () => {
 
   const clearFields = () => {
     setSearchDescription("");
-    setSearchType("item");
     setSearchStatus("all");
-    setSearchSeller({id: 0, description: "All"});
-    setSearchCategory({id: 0, description: "All"});
-    setSearchSubCategory({id: 0, description: "All"});
-    setSearchBrand({id: 0, description: "All"});
-    setSearchModel({id: 0, description: "All", brandId: 0, brandDescription: "All"});
   }
 
   const editClicked = (id) => {
     if(filtersShowing!==null){
       try {
-        localStorage.setItem("admin_inventory_search_scroll_top", JSON.stringify(scrollTop));
-        router.push("/inventory/"+id);
+        localStorage.setItem("admin_shops_search_scroll_top", JSON.stringify(scrollTop));
+        router.push("/shops/"+id);
       } 
       catch (e) {}
     }
@@ -199,26 +151,8 @@ const InventorySearch = () => {
       try{
         var error = false;
         var search_data = {};
-        if (searchBrand.id !== 0) {
-          search_data["brandId"] = (searchBrand.id);
-        }
-        if (searchModel.id !== 0) {
-          search_data["modelId"] = (searchModel.id);
-        }
-        if (searchCategory.id !== 0) {
-          search_data["categoryId"] = (searchCategory.id);
-        }
-        if (searchSubCategory.id !== 0) {
-          search_data["subCategoryId"] = (searchSubCategory.id);
-        }
-        if (searchSeller.id !== 0) {
-          search_data["sellerId"] = (searchSeller.id);
-        }
         if (searchDescription.length>0) {
           search_data["description"] = searchDescription;
-        }
-        if (searchType !== "0") {
-          search_data["type"] = searchType;
         }
         if (searchStatus !== "0") {
           search_data["status"] = searchStatus;
@@ -226,7 +160,7 @@ const InventorySearch = () => {
         search_data["sortBy"] = searchSortBy;
         search_data["order"] = searchOrder;
         if(!error){
-          const response = await axios.post("/api/inventory/search", {
+          const response = await axios.post("/api/shops/search", {
             search_data: search_data,
             rpp: (searchRpp),
             page: page,
@@ -250,19 +184,11 @@ const InventorySearch = () => {
             }
             const temp = {
               index: index++,
-              sellerId: val.seller_id,
-              sellerName: val.online_user.first_name+" "+val.online_user.last_name,
-              sellerDescription: val.online_user.description,
-              brandId: val.brand_id,
-              brandDescription: val.brand.description,
-              brandCode: val.brand.code,
               id: val.id,
-              partNumber: val.part_number,
               description: val.description,
               shortDescription: val.short_description,
               heading: val.heading,
               imageUrl: imageUrl,
-              inhand: val.inhand,
               status: status,
             };
             values.push(temp);
@@ -273,21 +199,15 @@ const InventorySearch = () => {
           setSearchPage(page);
 
           try {
-            localStorage.setItem('admin_inventory_search_data', JSON.stringify(values));
-            localStorage.setItem('admin_inventory_search_rpp', JSON.stringify(searchRpp));
-            localStorage.setItem('admin_inventory_search_nop', JSON.stringify(response.data.data.nop));
-            localStorage.setItem('admin_inventory_search_page', JSON.stringify(page));
-            localStorage.setItem('admin_inventory_search_sort_by', JSON.stringify(searchSortBy));
-            localStorage.setItem('admin_inventory_search_order', JSON.stringify(searchOrder));
+            localStorage.setItem('admin_shops_search_data', JSON.stringify(values));
+            localStorage.setItem('admin_shops_search_rpp', JSON.stringify(searchRpp));
+            localStorage.setItem('admin_shops_search_nop', JSON.stringify(response.data.data.nop));
+            localStorage.setItem('admin_shops_search_page', JSON.stringify(page));
+            localStorage.setItem('admin_shops_search_sort_by', JSON.stringify(searchSortBy));
+            localStorage.setItem('admin_shops_search_order', JSON.stringify(searchOrder));
 
-            localStorage.setItem('admin_inventory_search_description', searchDescription);
-            localStorage.setItem('admin_inventory_search_brand', JSON.stringify(searchBrand));
-            localStorage.setItem('admin_inventory_search_model', JSON.stringify(searchModel));
-            localStorage.setItem('admin_inventory_search_category', JSON.stringify(searchCategory));
-            localStorage.setItem('admin_inventory_search_sub_category', JSON.stringify(searchSubCategory));
-            localStorage.setItem('admin_inventory_search_seller', JSON.stringify(searchSeller));
-            localStorage.setItem('admin_inventory_search_type', JSON.stringify(searchType));
-            localStorage.setItem('admin_inventory_search_status', JSON.stringify(searchStatus));
+            localStorage.setItem('admin_shops_search_description', searchDescription);
+            localStorage.setItem('admin_shops_search_status', JSON.stringify(searchStatus));
           } 
           catch (e) {
             console.log("put storage error");
@@ -295,7 +215,7 @@ const InventorySearch = () => {
         }
       }
       catch(error){
-        toast.error("Inventory Search Failed !", {
+        toast.error("Shops Search Failed !", {
           position: toast.POSITION.TOP_RIGHT
         });
       }
@@ -305,30 +225,16 @@ const InventorySearch = () => {
     }
   }
 
-  const openModelClicked = () => {
-    setSearchBrandError(false);
-    if(searchBrand.id>0){
-      setOpenModel(true);
-    }
-    else{
-      setSearchBrandError(true);
-    }
-  }
-
-  useEffect(() => {
-    setSearchBrandError(false);
-  }, [searchBrand]);
-
   return (
     <div className='form_container' style={{minHeight: (height-80)}} ref={scrollRef} onScroll={onScroll}>
       <div className='form_container_medium' style={{minHeight: (height-80)}}>
-        <SupportMenu selected_root='inventory'/>
+        <SupportMenu selected_root='shops'/>
         <div className='header_container'>
           <div className='header_container_left'>
             <span></span>
             <div className='header_container_left_text'>
-              <span className="form_header">Inventory</span>
-              <span className="form_sub_header">Add or remove inventory items</span>
+              <span className="form_header">Shops</span>
+              <span className="form_sub_header">Add or remove shops</span>
             </div>
           </div>
           <div className='header_container_right'>
@@ -391,82 +297,6 @@ const InventorySearch = () => {
               </div>
               <div className='form_row_double'>
                 <div className='form_field_container'>
-                  <div className='form_text_field_constructed'>
-                    <span className='form_text_field_constructed_label'>Category</span>
-                    <span className='form_text_field_constructed_text' onClick={()=>setOpenCategory(true)}>{searchCategory.description}</span>
-                    <div className='form_text_field_constructed_actions'>
-                      <Close sx={{width: 20, height: 20, color: '#6b7280'}} onClick={()=>{setSearchCategory({id: 0, description: "All"}); setSearchSubCategory({id: 0, description: "All", categoryId: 0, categoryDescription: ""});}}/>
-                      <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenCategory(true)}/>
-                    </div>
-                  </div>
-                </div>
-                <div className='form_field_container'>
-                  <div className='form_text_field_constructed'>
-                    <span className='form_text_field_constructed_label'>Sub Category</span>
-                    <span className='form_text_field_constructed_text' onClick={()=>setOpenSubCategory(true)}>{searchSubCategory.description}</span>
-                    <div className='form_text_field_constructed_actions'>
-                      <Close sx={{width: 20, height: 20, color: '#6b7280'}} onClick={()=>setSearchSubCategory({id: 0, description: "All"})}/>
-                      <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenSubCategory(true)}/>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className='form_row_double'>
-                <div className='form_field_container'>
-                  <div className='form_text_field_constructed'>
-                    <span className='form_text_field_constructed_label'>Brand</span>
-                    <span className='form_text_field_constructed_text' onClick={()=>setOpenBrand(true)}>{searchBrand.description}</span>
-                    <div className='form_text_field_constructed_actions'>
-                      <Close sx={{width: 20, height: 20, color: '#6b7280'}} onClick={()=>{setSearchBrand({id: 0, description: "All"}); setSearchModel({id: 0, description: "All", brandId: 0, brandDescription: "All"});}}/>
-                      <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenBrand(true)}/>
-                    </div>
-                  </div>
-                  {searchBrandError && <span className='form_error_floating'>Invalid Brand</span>}
-                </div>
-                <div className='form_field_container'>
-                  <div className='form_text_field_constructed cursor-pointer'>
-                    <span className='form_text_field_constructed_label'>Model</span>
-                    <span className='form_text_field_constructed_text' onClick={openModelClicked}>{searchModel.description}</span>
-                    <div className='form_text_field_constructed_actions'>
-                      <Close sx={{width: 20, height: 20, color: '#6b7280'}} onClick={()=>setSearchModel({id: 0, description: "All", brandId: 0, brandDescription: "All"})}/>
-                      <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={openModelClicked}/>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className='form_row_double'>
-                <div className='form_field_container'>
-                  <div className='form_text_field_constructed'>
-                    <span className='form_text_field_constructed_label'>Seller</span>
-                    <span className='form_text_field_constructed_text' onClick={()=>setOpenSeller(true)}>{searchSeller.description}</span>
-                    <div className='form_text_field_constructed_actions'>
-                      <Close sx={{width: 20, height: 20, color: '#6b7280'}} onClick={()=>setSearchSeller({id: 0, description: "All"})}/>
-                      <ArrowDropDown sx={{width: 22, height: 22, color: '#6b7280'}} onClick={()=>setOpenSeller(true)}/>
-                    </div>
-                  </div>
-                </div>
-                <div className='form_field_container'>
-                  <TextField className='form_text_field'
-                    id='type'
-                    value={searchType}
-                    label="Type"
-                    onChange={event=>setSearchType(event.target.value)} 
-                    variant={"outlined"}
-                    select={true}
-                    disabled={isLoading}
-                    size='small'
-                    inputProps={{style: {fontSize: 13}}}
-                    SelectProps={{style: {fontSize: 13}}}
-                    InputLabelProps={{style: {fontSize: 15}}}
-                  >
-                    <MenuItem value={"all"}>All</MenuItem>
-                    <MenuItem value={"item"}>Item</MenuItem>
-                    <MenuItem value={"part"}>Part</MenuItem>
-                  </TextField>
-                </div>
-              </div>
-              <div className='form_row_double'>
-                <div className='form_field_container'>
                   
                 </div>
                 <div className='form_field_container gap-2'>
@@ -507,11 +337,8 @@ const InventorySearch = () => {
               InputLabelProps={{style: {fontSize: 15}}}
             >
               <MenuItem value={"id"}>ID</MenuItem>
-              <MenuItem value={"part_number"}>Part Number</MenuItem>
               <MenuItem value={"heading"}>Heading</MenuItem>
               <MenuItem value={"description"}>Description</MenuItem>
-              <MenuItem value={"price"}>Price</MenuItem>
-              <MenuItem value={"inhand"}>Inhand</MenuItem>
             </TextField>
             <TextField
               className='form_text_field_small'
@@ -598,14 +425,7 @@ const InventorySearch = () => {
                       <span className='table_field_text_center'>{val.id}</span>
                     </div>
                     <div className='table_field'>
-                      <span className='table_field_label'>Stocks:</span>
-                      {val.inhand>0 ? <span className='table_field_active'>{"Available"}</span>:<span className='table_field_inactive'>{"Unavailable"}</span>}
-                    </div>
-                  </div>
-                  <div className='table_field_single'>
-                    <div className='table_field_full'>
-                      <span className='table_field_label'>Part #:</span>
-                      <span className='table_field_text_full h-[30px]'>{val.partNumber}</span>
+                      
                     </div>
                   </div>
                   <div className='table_field_double sm:form_field_single'>
@@ -638,24 +458,9 @@ const InventorySearch = () => {
           </div>
         </div>
       </div>
-      <Dialog open={openSeller} onClose={()=>setOpenSeller(false)} scroll='paper'>
-        <SellersBrowser {...{setOpen: setOpenSeller, value: searchSeller, setValue: setSearchSeller}}/>
-      </Dialog>
-      <Dialog open={openCategory} onClose={()=>setOpenCategory(false)} scroll='paper'>
-        <CategoriesBrowser {...{setOpen: setOpenCategory, value: searchCategory, setValue: setSearchCategory}}/>
-      </Dialog>
-      <Dialog open={openSubCategory} onClose={()=>setOpenSubCategory(false)} scroll='paper'>
-        <SubCategoriesBrowser {...{setOpen: setOpenSubCategory, value: searchSubCategory, setValue: setSearchSubCategory, dependedValue: searchCategory, setDependedValue: setSearchCategory}}/>
-      </Dialog>
-      <Dialog open={openBrand} onClose={()=>setOpenBrand(false)} scroll='paper'>
-        <BrandsBrowser {...{setOpen: setOpenBrand, value: searchBrand, setValue: setSearchBrand, category: searchCategory, subCategory: searchSubCategory}}/>
-      </Dialog>
-      <Dialog open={openModel} onClose={()=>setOpenModel(false)} scroll='paper'>
-        <ModelsBrowser {...{setOpen: setOpenModel, value: searchModel, setValue: setSearchModel, dependedValue: searchBrand, setDependedValue: setSearchBrand}}/>
-      </Dialog>
       <ToastContainer />
     </div>
   )
 }
 
-export default InventorySearch;
+export default ShopsSearch;

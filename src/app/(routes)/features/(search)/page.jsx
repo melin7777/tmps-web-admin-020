@@ -386,13 +386,17 @@ const FeaturesSearch = () => {
               <MenuItem value={50}>50</MenuItem>
               <MenuItem value={100}>100</MenuItem>
             </TextField>
-            <IconButton aria-label="delete" size="small" onClick={()=>getSearchData(searchPage-1)}>
-              <KeyboardArrowLeft size={20} />
-            </IconButton>
-            <Typography sx={{fontSize: 12, color: "#444"}}>{`Page ${searchPage} of ${searchNop}`}</Typography>
-            <IconButton aria-label="delete" size="small" onClick={()=>getSearchData(searchPage+1)}>
-              <KeyboardArrowRight size={20} />
-            </IconButton>
+            {searchRpp!==0 &&
+              <>
+                <IconButton aria-label="delete" size="small" onClick={()=>getSearchData(searchPage-1)}>
+                  <KeyboardArrowLeft size={20} />
+                </IconButton>
+                <Typography sx={{fontSize: 12, color: "#444"}}>{`Page ${searchPage} of ${searchNop}`}</Typography>
+                <IconButton aria-label="delete" size="small" onClick={()=>getSearchData(searchPage+1)}>
+                  <KeyboardArrowRight size={20} />
+                </IconButton>
+              </>
+            }
             {!filtersShowing && 
               <Button 
                 variant='contained' 

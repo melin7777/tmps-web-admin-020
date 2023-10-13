@@ -24,6 +24,7 @@ const CategoriesSearch = () => {
   const [selectedRow, setSelectedRow] = useState(0);
   const [filtersShowing, setFiltersShowing] = useState(false);
   const [searchDescription, setSearchDescription] = useState("");
+  const [searchType, setSearchType] = useState("item");
   const [searchStatus, setSearchStatus] = useState("active");
   const [searchSortBy, setSearchSortBy] = useState("id");
   const [searchOrder, setSearchOrder] = useState("ASC");
@@ -65,6 +66,10 @@ const CategoriesSearch = () => {
         const search_status = localStorage.getItem('admin_categories_search_status');
         if(search_status!==null) {
           setSearchStatus(JSON.parse(search_status));
+        }
+        const search_type = localStorage.getItem('admin_categories_search_type');
+        if(search_type!==null) {
+          setSearchType(JSON.parse(search_type));
         }
         const search_rpp = localStorage.getItem('admin_categories_search_rpp');
         if(search_rpp!==null) {
@@ -130,6 +135,7 @@ const CategoriesSearch = () => {
   
   const clearFields = () => {
     setSearchDescription("");
+    setSearchType("all");
     setSearchStatus("all");
   }
   
@@ -152,6 +158,9 @@ const CategoriesSearch = () => {
         var search_data = {};
         if (searchDescription.length>0) {
           search_data["description"] = searchDescription;
+        }
+        if (searchType !== "0") {
+          search_data["type"] = searchType;
         }
         if (searchStatus !== "0") {
           search_data["status"] = searchStatus;
@@ -205,6 +214,7 @@ const CategoriesSearch = () => {
             localStorage.setItem('admin_categories_search_order', JSON.stringify(searchOrder));
   
             localStorage.setItem('admin_categories_search_description', searchDescription);
+            localStorage.setItem('admin_categories_search_type', JSON.stringify(searchType));
             localStorage.setItem('admin_categories_search_status', JSON.stringify(searchStatus));
           } 
           catch (e) {
@@ -295,7 +305,23 @@ const CategoriesSearch = () => {
               </div>
               <div className='form_row_double'>
                 <div className='form_field_container'>
-                  
+                  <TextField className='form_text_field'
+                    id='type'
+                    value={searchType}
+                    label="Type"
+                    onChange={event=>setSearchType(event.target.value)} 
+                    variant={"outlined"}
+                    select={true}
+                    disabled={isLoading}
+                    size='small'
+                    inputProps={{style: {fontSize: 13}}}
+                    SelectProps={{style: {fontSize: 13}}}
+                    InputLabelProps={{style: {fontSize: 15}}}
+                  >
+                    <MenuItem value={"all"}>All</MenuItem>
+                    <MenuItem value={"item"}>Item</MenuItem>
+                    <MenuItem value={"part"}>Part</MenuItem>
+                  </TextField>
                 </div>
                 <div className='form_field_container gap-2'>
                   <Button 
@@ -379,13 +405,17 @@ const CategoriesSearch = () => {
               <MenuItem value={50}>50</MenuItem>
               <MenuItem value={100}>100</MenuItem>
             </TextField>
-            <IconButton aria-label="delete" size="small" onClick={()=>getSearchData(searchPage-1)}>
-              <KeyboardArrowLeft size={20} />
-            </IconButton>
-            <Typography sx={{fontSize: 12, color: "#444"}}>{`Page ${searchPage} of ${searchNop}`}</Typography>
-            <IconButton aria-label="delete" size="small" onClick={()=>getSearchData(searchPage+1)}>
-              <KeyboardArrowRight size={20} />
-            </IconButton>
+            {searchRpp!==0 &&
+              <>
+                <IconButton aria-label="delete" size="small" onClick={()=>getSearchData(searchPage-1)}>
+                  <KeyboardArrowLeft size={20} />
+                </IconButton>
+                <Typography sx={{fontSize: 12, color: "#444"}}>{`Page ${searchPage} of ${searchNop}`}</Typography>
+                <IconButton aria-label="delete" size="small" onClick={()=>getSearchData(searchPage+1)}>
+                  <KeyboardArrowRight size={20} />
+                </IconButton>
+              </>
+            }
             {!filtersShowing && 
               <Button 
                 variant='contained' 

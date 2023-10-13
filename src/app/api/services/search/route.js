@@ -2,10 +2,13 @@ import { NextResponse } from "next/server";
 
 export async function POST(req){
   try{
-    const res = await fetch(" http://localhost:8000/inventory/edit-other-image-web", {
+    const body = await req.json();
+    const res = await fetch(" http://localhost:8000/services/search-web", {
       method: "POST",
-      headers: { "Content-Type": "multipart/form-data" },
-      body: req
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
     });
     const response = await res.json();
     if (response.error) {

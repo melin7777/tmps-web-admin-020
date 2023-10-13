@@ -22,6 +22,8 @@ const View = ({params}) => {
   const [formSubHeading, setFormSubHeading] = useState("");
 
   const [editId, setEditId] = useState("");
+  const [editType, setEditType] = useState('item');
+  const [editTypeError, setEditTypeError] = useState(false);
   const [editStatus, setEditStatus] = useState('active');
   const [editStatusError, setEditStatusError] = useState(false);
   const [editCode, setEditCode] = useState("");
@@ -61,6 +63,7 @@ const View = ({params}) => {
       });
       let val = response.data.data;
       setEditId(val.id);
+      setEditType(val.type);
       setEditStatus(val.status);
       setEditCode(val.code);
       setEditDescription(val.description);
@@ -92,6 +95,7 @@ const View = ({params}) => {
   }
   
   const clearErrors = () => {
+    setEditTypeError(false);
     setEditStatusError(false);
     setEditCodeError(false);
     setEditDescriptionError(false);
@@ -103,6 +107,7 @@ const View = ({params}) => {
   
   const clearFields = () => {
     setEditId('');
+    setEditType('item');
     setEditStatus('active');
     setEditCode('');
     setEditDescription('');
@@ -134,6 +139,7 @@ const View = ({params}) => {
         }
         const response = await axios.post(`/api/categories/${apiDes}`, {
           id: parseInt(editId),
+          type: editType,
           status: editStatus,
           code: editCode,
           description: editDescription,
@@ -340,6 +346,29 @@ const View = ({params}) => {
                 {editFeaturedError && <span className='form_error_floating'>Invalid Featured</span>}
               </div>
             </div>
+          </div>
+          <div className='form_row_double'>
+            <div className='form_field_container'>
+              <TextField className='form_text_field'
+                id='type'
+                value={editType}
+                label="Type"
+                onChange={event=>setEditType(event.target.value)} 
+                variant={"outlined"}
+                select={true}
+                disabled={isLoading||isSaving}
+                size='small'
+                onFocus={()=>setEditTypeError(false)}
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+              >
+                <MenuItem value={"item"}>Item</MenuItem>
+                <MenuItem value={"part"}>Part</MenuItem>
+              </TextField>
+              {editTypeError && <span className='form_error_floating'>Invalid Type</span>}
+            </div>
+            <div className='form_field_container'></div>
           </div>
           <div className='form_row_single'>
             <div className='form_field_container_full'>
