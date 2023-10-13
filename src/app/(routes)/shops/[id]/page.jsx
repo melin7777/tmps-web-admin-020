@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,12 +22,16 @@ const View = ({params}) => {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { width, height=500 } = useWindowDimensions();
+  const mapRef = useRef();
   const center = useMemo(()=>({lat: 7.2918, lng: 80.6338}), []);
+  const options = useMemo(()=>({clickableIcons: false, disableDefaultUI: false}), []);
   const [userLocation, setUserLocation] = useState(center);
   const {isLoaded} = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     libraries: libraries
   });
+  const onLoad = useCallback((map)=>(mapRef.current=map), []);
+  const [shopLocation, setShopLocation] = useState(userLocation);
 
   const [formHeading, setFormHeading] = useState("");
   const [formSubHeading, setFormSubHeading] = useState("");
@@ -51,9 +55,9 @@ const View = ({params}) => {
   const [editAddress, setEditAddress] = useState("");
   const [editAddressError, setEditAddressError] = useState(false);
 
-  const [editLat, setEditLat] = useState(0.0);
+  const [editLat, setEditLat] = useState();
   const [editLatError, setEditLatError] = useState(false);
-  const [editLng, setEditLng] = useState(0.0);
+  const [editLng, setEditLng] = useState();
   const [editLngError, setEditLngError] = useState(false);
   const [editFeatured, setEditFeatured] = useState("no");
   const [editFeaturedError, setEditFeaturedError] = useState(false);
@@ -94,8 +98,18 @@ const View = ({params}) => {
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position)=>{
       setUserLocation({lat: position.coords.latitude, lng: position.coords.longitude});
+      setShopLocation({lat: position.coords.latitude, lng: position.coords.longitude});
     })
   }, []);
+  
+  useEffect(() => {
+    if(shopLocation){
+      setEditLatError(false);
+      setEditLngError(false);
+      setEditLat(shopLocation.lat);
+      setEditLng(shopLocation.lng);
+    }
+  }, [shopLocation]);
   
 
   const handleTabChange = (event, newValue) => {
@@ -121,6 +135,7 @@ const View = ({params}) => {
 
       setEditLat(val.lat);
       setEditLng(val.lng);
+      setShopLocation({lat: val.lat, lng: val.lng});
       setEditFeatured(val.featured);
 
       if(val.image_url==="none"){
@@ -669,29 +684,17 @@ const View = ({params}) => {
                 {editLngError && <span className='form_error_floating'>Invalid Lng</span>}
               </div>
             </div>
-
             {isLoaded ?
             <div className='flex flex-col justify-center items-center w-full h-[400px] mb-5 bg-zinc-100'>
-              <GoogleMap zoom={8} center={userLocation} mapContainerStyle={{width: '100%', height: 400}}></GoogleMap>
+              <GoogleMap zoom={8} center={userLocation} options={options} onLoad={onLoad} mapContainerStyle={{width: '100%', height: 400}} onClick={(mapsMouseEvent)=>setShopLocation(mapsMouseEvent.latLng.toJSON(), null, 2)}>
+                <Marker position={shopLocation} draggable={true} onDragEnd={(mapsMouseEvent)=>setShopLocation(mapsMouseEvent.latLng.toJSON(), null, 2)}/>
+              </GoogleMap>
             </div>
             :
               <div className='flex flex-col justify-center items-center w-full h-[400px] mb-5 bg-zinc-100'>
                 <CircularProgress size={18} style={{'color': '#9ca3af'}}/>
               </div>
             }
-
-            {/* <div id='map-div' className='flex flex-col justify-center items-center w-full h-[400px] mb-5 bg-zinc-100' ref={mapRef}>
-              {!mapRef.current && 
-                <Button 
-                  variant='contained' 
-                  disabled={isSaving||isLoading} 
-                  style={{textTransform: 'none'}} 
-                  startIcon={isSaving||isLoading?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Refresh />}
-                  onClick={loadMap}
-                  size='small'
-                >Load Map</Button>
-              }
-            </div> */}
             <div className='form_row_double'>
               <div className='form_field_container'>
                 <div className='form_text_field_constructed'>
