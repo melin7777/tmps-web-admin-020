@@ -2,17 +2,18 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from "@/components/modals/Loading";
 import { Button, CircularProgress, Dialog, FormControlLabel, IconButton, MenuItem, Radio, Tab, Tabs, TextField } from "@mui/material";
-import { Add, AddAPhoto, CameraAlt, Delete, Folder, KeyboardArrowLeft, Save } from "@mui/icons-material";
+import { Add, AddAPhoto, CameraAlt, Delete, Folder, KeyboardArrowLeft, Refresh, Save } from "@mui/icons-material";
 import useWindowDimensions from '@/hooks/useWindowDimension';
 import CropEasyMulti from '@/components/crop/CropEasyMulti';
 import CropEasySingle from '@/components/crop/CropEasySingle';
-import { Loader } from '@googlemaps/js-api-loader';
+import { useLoadScript, GoogleMap, Marker } from '@react-google-maps/api';
+const libraries = ['places'];
 
 const View = ({params}) => {
   const router = useRouter();
@@ -21,7 +22,12 @@ const View = ({params}) => {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { width, height=500 } = useWindowDimensions();
-  const mapRef = useRef();
+  const center = useMemo(()=>({lat: 7.2918, lng: 80.6338}), []);
+  const [userLocation, setUserLocation] = useState(center);
+  const {isLoaded} = useLoadScript({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    libraries: libraries
+  });
 
   const [formHeading, setFormHeading] = useState("");
   const [formSubHeading, setFormSubHeading] = useState("");
@@ -68,7 +74,7 @@ const View = ({params}) => {
   useEffect(() => {
     if(status==='unauthenticated'){
       router.push("/signin");
-    }
+    }    
   }, [status]);
 
   useEffect(() => {
@@ -86,28 +92,9 @@ const View = ({params}) => {
   }, []);
 
   useEffect(() => {
-    (async ()=>{
-      const loader = new Loader({
-        apiKey: 'AIzaSyA5yhDnmG4Swv6iRHNxYWnm7C69GvX7ZHk',
-        version: 'weekly'
-      });
-
-      const { Map } = await loader.importLibrary('maps');
-
-      const position = {
-        lat: 7.2918,
-        lng: 80.6338,
-      }
-
-      const mapOptions = {
-        center: position,
-        zoom: 10,
-        mapId: 'tmps-web-admin-map'
-      }
-
-      const map = new Map(mapRef.current, mapOptions);
-
-    })();
+    navigator.geolocation.getCurrentPosition((position)=>{
+      setUserLocation({lat: position.coords.latitude, lng: position.coords.longitude});
+    })
   }, []);
   
 
@@ -682,7 +669,29 @@ const View = ({params}) => {
                 {editLngError && <span className='form_error_floating'>Invalid Lng</span>}
               </div>
             </div>
-            <div className='flex w-[400px] h-[400px]' ref={mapRef}></div>
+
+            {isLoaded ?
+            <div className='flex flex-col justify-center items-center w-full h-[400px] mb-5 bg-zinc-100'>
+              <GoogleMap zoom={8} center={userLocation} mapContainerStyle={{width: '100%', height: 400}}></GoogleMap>
+            </div>
+            :
+              <div className='flex flex-col justify-center items-center w-full h-[400px] mb-5 bg-zinc-100'>
+                <CircularProgress size={18} style={{'color': '#9ca3af'}}/>
+              </div>
+            }
+
+            {/* <div id='map-div' className='flex flex-col justify-center items-center w-full h-[400px] mb-5 bg-zinc-100' ref={mapRef}>
+              {!mapRef.current && 
+                <Button 
+                  variant='contained' 
+                  disabled={isSaving||isLoading} 
+                  style={{textTransform: 'none'}} 
+                  startIcon={isSaving||isLoading?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Refresh />}
+                  onClick={loadMap}
+                  size='small'
+                >Load Map</Button>
+              }
+            </div> */}
             <div className='form_row_double'>
               <div className='form_field_container'>
                 <div className='form_text_field_constructed'>
