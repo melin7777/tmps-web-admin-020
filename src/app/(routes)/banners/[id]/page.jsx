@@ -385,7 +385,7 @@ const View = ({params}) => {
               <div className='form_row_single'>
                 <div className='inventory_image_container'>
                   {size==="large"?
-                    <div className='flex justify-center items-center w-[200px] xs:w-[300px] sm:w-[400px] h-[130px] xs:h-[200px] sm:h-[270px] relative'>
+                    <div className='flex justify-center items-center w-[200px] xs:w-[300px] sm:w-[400px] h-[100px] xs:h-[150px] sm:h-[200px] relative'>
                       {editImage==="none" ? 
                         <CameraAlt sx={{width: 60, height: 60, color: '#cbd5e1'}}/> : 
                         <Image src={editImage} alt="banner image" fill sizes='(max-width: 640px) 400px, (max-width: 440px) 300px, 200px' priority={true} style={{objectFit: 'contain'}}/>
@@ -521,7 +521,7 @@ const View = ({params}) => {
                 SelectProps={{style: {fontSize: 13}}}
                 InputLabelProps={{style: {fontSize: 15}}}
                 InputProps={{
-                  endAdornment: <InputAdornment position="start"><span style={{fontSize: 13}}>px</span></InputAdornment>,
+                  endAdornment: <InputAdornment position="start"><span style={{fontSize: 13}}>%</span></InputAdornment>,
                 }}
               />
               {editVPositionError && <span className='form_error_floating'>Invalid V Position</span>}
@@ -542,7 +542,7 @@ const View = ({params}) => {
                 SelectProps={{style: {fontSize: 13}}}
                 InputLabelProps={{style: {fontSize: 15}}}
                 InputProps={{
-                  endAdornment: <InputAdornment position="start"><span style={{fontSize: 13}}>px</span></InputAdornment>,
+                  endAdornment: <InputAdornment position="start"><span style={{fontSize: 13}}>%</span></InputAdornment>,
                 }}
               />
               {editHPositionError && <span className='form_error_floating'>Invalid H Position</span>}

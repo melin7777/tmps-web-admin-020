@@ -111,7 +111,6 @@ const View = ({params}) => {
     }
   }, [shopLocation]);
   
-
   const handleTabChange = (event, newValue) => {
     setTabIndex(newValue);
   };
@@ -685,11 +684,11 @@ const View = ({params}) => {
               </div>
             </div>
             {isLoaded ?
-            <div className='flex flex-col justify-center items-center w-full h-[400px] mb-5 bg-zinc-100'>
-              <GoogleMap zoom={8} center={userLocation} options={options} onLoad={onLoad} mapContainerStyle={{width: '100%', height: 400}} onClick={(mapsMouseEvent)=>setShopLocation(mapsMouseEvent.latLng.toJSON(), null, 2)}>
-                <Marker position={shopLocation} draggable={true} onDragEnd={(mapsMouseEvent)=>setShopLocation(mapsMouseEvent.latLng.toJSON(), null, 2)}/>
-              </GoogleMap>
-            </div>
+              <div className='flex flex-col justify-center items-center w-full h-[400px] mb-5 bg-zinc-100'>
+                <GoogleMap zoom={8} center={userLocation} options={options} onLoad={onLoad} mapContainerStyle={{width: '100%', height: 400}} onClick={(mapsMouseEvent)=>setShopLocation(mapsMouseEvent.latLng.toJSON(), null, 2)}>
+                  <Marker position={shopLocation} draggable={true} onDragEnd={(mapsMouseEvent)=>setShopLocation(mapsMouseEvent.latLng.toJSON(), null, 2)}/>
+                </GoogleMap>
+              </div>
             :
               <div className='flex flex-col justify-center items-center w-full h-[400px] mb-5 bg-zinc-100'>
                 <CircularProgress size={18} style={{'color': '#9ca3af'}}/>

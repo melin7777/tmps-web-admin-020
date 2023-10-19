@@ -217,7 +217,7 @@ const InventorySearch = () => {
         if (searchDescription.length>0) {
           search_data["description"] = searchDescription;
         }
-        if (searchType !== "0") {
+        if (searchType !== "all") {
           search_data["type"] = searchType;
         }
         if (searchStatus !== "0") {

@@ -334,6 +334,7 @@ const View = ({params}) => {
       const index = brands.findIndex(val2 => val2.id === val.id);
       if(index<0){
         const response = await axios.post(`/api/sub-categories/add-brand`, {
+          category_id: parseInt(editCategory.id),
           sub_category_id: parseInt(editId),
           brand_id: val.id,
         });

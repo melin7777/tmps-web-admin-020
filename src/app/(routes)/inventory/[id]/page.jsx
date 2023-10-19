@@ -8,7 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from "@/components/modals/Loading";
 import { Button, Checkbox, CircularProgress, Dialog, FormControlLabel, IconButton, InputAdornment, MenuItem, Radio, Tab, Tabs, TextField } from "@mui/material";
-import { Add, AddAPhoto, ArrowDropDown, CameraAlt, CropRotate, Delete, Folder, KeyboardArrowLeft, Save } from "@mui/icons-material";
+import { Add, AddAPhoto, ArrowDropDown, CameraAlt, Delete, Folder, KeyboardArrowLeft, Save } from "@mui/icons-material";
 import useWindowDimensions from '@/hooks/useWindowDimension';
 import CategoriesBrowser from '@/components/browsers/CategoriesBrowser';
 import BrandsBrowser from '@/components/browsers/BrandsBrowser';
@@ -182,7 +182,6 @@ const View = ({params}) => {
       getFeaturesForSubCategory(val.sub_category_id);
     }
     catch(error){
-      console.log(error);
       toast.error("Find Item Failed !", {
         position: toast.POSITION.TOP_RIGHT
       });
@@ -190,7 +189,7 @@ const View = ({params}) => {
     finally{
       setIsLoading(false);
     }
-  }
+  };
 
   const getFeaturesForSubCategory = async (id) => {
     try{
@@ -211,7 +210,7 @@ const View = ({params}) => {
     finally{
       setIsSaving(false);
     }
-  }
+  };
 
   const newItemClicked = () => {
     clearErrors();
@@ -219,7 +218,7 @@ const View = ({params}) => {
     setFormHeading("Create Item");
     setFormSubHeading("Create a new item");
     setTabIndex(0);
-  }
+  };
 
   const clearErrors = () => {
     setEditTypeError(false);
@@ -258,18 +257,17 @@ const View = ({params}) => {
     setEditPartNumber('');
     setEditBarcode('');
     setEditCode('');
-    //setEditSeller({id: 0, description: "Please Select"});
-    //setEditCategory({id: 0, description: "Please Select"});
-    //setEditSubCategory({id: 0, description: "Please Select"});
-    //setEditBrand({id: 0, description: "Please Select"});
-    //setEditModel({id: 0, description: "Please Select", brand_id: 0, brand_description: "Please Select"});
+    setEditSeller({id: 0, description: "Please Select"});
+    setEditCategory({id: 0, description: "Please Select"});
+    setEditSubCategory({id: 0, description: "Please Select"});
+    setEditBrand({id: 0, description: "Please Select"});
+    setEditModel({id: 0, description: "Please Select", brand_id: 0, brand_description: "Please Select"});
     setEditHeading('');
     setEditShortDescription('');
     setEditDescription('');
     setEditPrice(0);
     setEditDiscount(0);
-    //setEditFeatured("no");
-    setEditFeatured("yes");
+    setEditFeatured("no");
     setEditFreeShipping("no");
     setEditInhand(0);
     setEditQuantityDiscountAmount(0);
@@ -390,12 +388,12 @@ const View = ({params}) => {
     finally{
       setIsSaving(false);
     }
-  }
+  };
 
   const handleImageRemove = (event) => {
     setPhotoURL("none");
     deleteImage();
-  }
+  };
 
   const deleteImage = async () => {
     if(editId!==""){
@@ -413,7 +411,7 @@ const View = ({params}) => {
         setIsSaving(false);
       }
     }
-  }
+  };
 
   const handleImageChange = (event) => {
     const file1 = event.target.files[0];
@@ -421,7 +419,7 @@ const View = ({params}) => {
       setPhotoURL(URL.createObjectURL(file1));
       setOpenCrop(true);
     }
-  }
+  };
 
   const selectSingleImage = (fileIn, url) => {
     if(editId!==""){
@@ -452,11 +450,11 @@ const View = ({params}) => {
         setIsSaving(false);
       });
     }
-  }
+  };
 
   const handleOtherImageRemove = (event, id) => {
     deleteOtherImage(id);
-  }
+  };
 
   const deleteOtherImage = async (id) => {
     if(editId!==""){
@@ -481,7 +479,7 @@ const View = ({params}) => {
         setIsSaving(false);
       }
     }
-  }
+  };
 
   const handleOtherImageChange = (event, id) => {
     const file1 = event.target.files[0];
@@ -490,7 +488,7 @@ const View = ({params}) => {
       setOtherPhotoURL(URL.createObjectURL(file1));
       setOpenOtherCrop(true);
     }
-  }
+  };
 
   const selectMultiImage = (fileIn, url) => {
     if(editId!==""){
@@ -524,7 +522,7 @@ const View = ({params}) => {
         setIsSaving(false);
       });
     }
-  }
+  };
 
   const subFeatureAdded = async (value, type, featureId) => {
     try{
@@ -595,7 +593,7 @@ const View = ({params}) => {
     finally{
       setIsSaving(false);
     }
-  }
+  };
 
   const removeAllFeatures = async () => {
     if(editId!==""){
@@ -628,7 +626,7 @@ const View = ({params}) => {
     else{
       setEditItemFeatures([]);
     }
-  }
+  };
 
   const openSubCategoryClicked = () => {
     setEditCategoryError(false);
@@ -638,7 +636,7 @@ const View = ({params}) => {
     else{
       setEditCategoryError(true);
     }
-  }
+  };
 
   const openBrandClicked = () => {
     setEditSubCategoryError(false);
@@ -648,7 +646,7 @@ const View = ({params}) => {
     else{
       setEditSubCategoryError(true);
     }
-  }
+  };
 
   const openModelClicked = () => {
     setEditBrandError(false);
@@ -658,13 +656,16 @@ const View = ({params}) => {
     else{
       setEditBrandError(true);
     }
-  }
+  };
 
   useEffect(() => {
     setEditCategoryError(false);
     if(!isSaving){
       setEditSubCategory({id: 0, description: "Please Select"});
       setEditBrand({id: 0, description: "Please Select"});
+      if(editCategory.id>0){
+        setEditType(editCategory.type);
+      }
     }
   }, [editCategory]);
 
@@ -686,7 +687,6 @@ const View = ({params}) => {
     setEditModelError(false);
   }, [editModel]);
   
-
   return (
     <div className='form_container' style={{minHeight: (height-80)}}>
       <div className='form_container_medium' style={{minHeight: (height-80)}}>
@@ -792,29 +792,6 @@ const View = ({params}) => {
               </div>
             </div>
             <div className='form_row_double'>
-              <div className='form_field_container'>
-                <TextField className='form_text_field'
-                  id='type'
-                  value={editType}
-                  label="Type"
-                  onChange={event=>setEditType(event.target.value)} 
-                  variant={"outlined"}
-                  select={true}
-                  disabled={isLoading}
-                  size='small'
-                  onFocus={()=>setEditTypeError(false)}
-                  inputProps={{style: {fontSize: 13}}}
-                  SelectProps={{style: {fontSize: 13}}}
-                  InputLabelProps={{style: {fontSize: 15}}}
-                >
-                  <MenuItem value={"item"}>Item</MenuItem>
-                  <MenuItem value={"part"}>Part</MenuItem>
-                </TextField>
-                {editTypeError && <span className='form_error_floating'>Invalid Type</span>}
-              </div>
-              <div className='form_field_container'></div>
-            </div>
-            <div className='form_row_double'>
               <div className='form_field_container'>              
                 <TextField 
                   id='part-number'
@@ -873,6 +850,29 @@ const View = ({params}) => {
                 </div>
                 {editSubCategoryError && <span className='form_error_floating'>Invalid Sub Category</span>}
               </div>
+            </div>
+            <div className='form_row_double'>
+              <div className='form_field_container'>
+                <TextField className='form_text_field'
+                  id='type'
+                  value={editType}
+                  label="Type"
+                  onChange={event=>setEditType(event.target.value)} 
+                  variant={"outlined"}
+                  select={true}
+                  disabled={true}
+                  size='small'
+                  onFocus={()=>setEditTypeError(false)}
+                  inputProps={{style: {fontSize: 13}}}
+                  SelectProps={{style: {fontSize: 13}}}
+                  InputLabelProps={{style: {fontSize: 15}}}
+                >
+                  <MenuItem value={"item"}>Item</MenuItem>
+                  <MenuItem value={"part"}>Part</MenuItem>
+                </TextField>
+                {editTypeError && <span className='form_error_floating'>Invalid Type</span>}
+              </div>
+              <div className='form_field_container'></div>
             </div>
             <div className='form_row_double'>
               <div className='form_field_container'>              

@@ -50,6 +50,7 @@ const CategoriesBrowser = ({setOpen, value, setValue}) => {
           }
           values.push({
             id: val.id,
+            type: val.type,
             description: val.description,
             image_url: imageUrl,
           });

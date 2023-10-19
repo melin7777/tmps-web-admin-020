@@ -361,7 +361,7 @@ const View = ({params}) => {
               </div>
               <div className='form_row_single'>
                 <div className='inventory_image_container'>
-                  <div className='flex justify-center items-center w-[200px] xs:w-[300px] sm:w-[400px] h-[80px] xs:h-[120px] sm:h-[160px] relative'>
+                  <div className='flex justify-center items-center w-[200px] xs:w-[300px] sm:w-[400px] h-[100px] xs:h-[150px] sm:h-[200px] relative'>
                     {editImage==="none" ? 
                       <CameraAlt sx={{width: 60, height: 60, color: '#cbd5e1'}}/> : 
                       <Image src={editImage} alt="slide image" fill sizes='(max-width: 640px) 400px, (max-width: 440px) 300px, 200px' priority={true} style={{objectFit: 'contain'}}/>

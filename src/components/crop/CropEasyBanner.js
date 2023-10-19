@@ -44,7 +44,7 @@ const CropEasyBanner = ({setOpenCrop, photoURL, selectSingleImage, imageSize}) =
           zoom={zoom} 
           zoomWithScroll={true}
           rotation={rotaion} 
-          aspect={imageSize==="large"?16/9:4/1} 
+          aspect={imageSize==="large"?1280/640:1000/250} 
           cropShape="rect"
           showGrid={true}
           onCropChange={setCrop}
