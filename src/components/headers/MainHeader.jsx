@@ -24,7 +24,7 @@ const MainHeader = () => {
         }
       }
       else{
-        setImageUrl(" http://localhost:8000/"+session.user.image);
+        setImageUrl(" http://tm-web.effisoftsolutions.com/"+session.user.image);
       }
     }
     else{

@@ -81,7 +81,7 @@ const View = ({params}) => {
         setPhotoURL("none");
       }
       else{
-        setPhotoURL(" http://localhost:8000/"+val.image_url);
+        setPhotoURL(" http://tm-web.effisoftsolutions.com/"+val.image_url);
       }
     }
     catch(error){
@@ -261,7 +261,7 @@ const View = ({params}) => {
       formData.append('imageUrl', file);
       axios({
         method: "post",
-        url: " http://localhost:8000/online-users/edit-image-web",
+        url: " http://tm-web.effisoftsolutions.com/online-users/edit-image-web",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       })
@@ -271,7 +271,7 @@ const View = ({params}) => {
           setIsSaving(false);
         } 
         else {
-          setPhotoURL(" http://localhost:8000/"+response.data.data.image_url);
+          setPhotoURL(" http://tm-web.effisoftsolutions.com/"+response.data.data.image_url);
           setFile(null);
           setIsSaving(false);
         }

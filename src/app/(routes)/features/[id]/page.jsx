@@ -88,14 +88,14 @@ const View = ({params}) => {
         setEditImage("none");
       }
       else{
-        setEditImage(" http://localhost:8000/"+val.image_url);
+        setEditImage(" http://tm-web.effisoftsolutions.com/"+val.image_url);
       }
 
       var val2 = [];
       val.sub_features.map(val3=>{
         var img = "none";
         if(val3.image_url!=="none"){
-          img = " http://localhost:8000/"+val3.image_url;
+          img = " http://tm-web.effisoftsolutions.com/"+val3.image_url;
         }
         val2.push({id: val3.id, feature_id: val.id, description: val3.description, status: val3.status, show_on_filters: val3.show_on_filters, image_url: img});
       });
@@ -228,7 +228,7 @@ const View = ({params}) => {
       formData.append('imageUrl', fileIn);
       axios({
         method: "post",
-        url: " http://localhost:8000/features/edit-image-web",
+        url: " http://tm-web.effisoftsolutions.com/features/edit-image-web",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       })
@@ -241,7 +241,7 @@ const View = ({params}) => {
           setIsSaving(false);
         } 
         else {
-          setEditImage(" http://localhost:8000/"+response.data.data);
+          setEditImage(" http://tm-web.effisoftsolutions.com/"+response.data.data);
           setIsSaving(false);
         }
       })
@@ -276,7 +276,7 @@ const View = ({params}) => {
         setEditSubFeatureImage("none");
       }
       else{
-        setEditSubFeatureImage(" http://localhost:8000/"+val.image_url);
+        setEditSubFeatureImage(" http://tm-web.effisoftsolutions.com/"+val.image_url);
       }
     }
     catch(error){
@@ -396,7 +396,7 @@ const View = ({params}) => {
       formData.append('imageUrl', fileIn);
       axios({
         method: "post",
-        url: " http://localhost:8000/sub-features/edit-image-web",
+        url: " http://tm-web.effisoftsolutions.com/sub-features/edit-image-web",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       })
@@ -409,12 +409,12 @@ const View = ({params}) => {
           setIsSaving(false);
         } 
         else {
-          setEditSubFeatureImage(" http://localhost:8000/"+response.data.data);
+          setEditSubFeatureImage(" http://tm-web.effisoftsolutions.com/"+response.data.data);
           setFileSubFeature(null);
           const index = subFeatures.findIndex(val2 => val2.id === editSubFeatureId);
           if(index>-1){
             var val3 = [...subFeatures];
-            val3[index] = {id: val3[index].id, feature_id: val3[index].feature_id, status: val3[index].status, description: val3[index].description, show_on_filters: val3[index].show_on_filters, image_url: " http://localhost:8000/"+response.data.data};
+            val3[index] = {id: val3[index].id, feature_id: val3[index].feature_id, status: val3[index].status, description: val3[index].description, show_on_filters: val3[index].show_on_filters, image_url: " http://tm-web.effisoftsolutions.com/"+response.data.data};
             setSubFeatures(val3);
           }
           setIsSaving(false);

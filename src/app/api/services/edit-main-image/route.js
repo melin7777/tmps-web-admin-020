@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req){
   try{
-    const res = await fetch(" http://localhost:8000/services/edit-main-image-web", {
+    const res = await fetch(" http://tm-web.effisoftsolutions.com/services/edit-main-image-web", {
       method: "POST",
       headers: { "Content-Type": "multipart/form-data" },
       body: req

@@ -88,14 +88,14 @@ const View = ({params}) => {
         setEditImage("none");
       }
       else{
-        setEditImage(" http://localhost:8000/"+val.image_url);
+        setEditImage(" http://tm-web.effisoftsolutions.com/"+val.image_url);
       }
 
       var val2 = [];
       val.sub_categories_features.map(val3=>{
         var img = "none";
         if(val3.feature.image_url!=="none"){
-          img = " http://localhost:8000/"+val3.feature.image_url;
+          img = " http://tm-web.effisoftsolutions.com/"+val3.feature.image_url;
         }
         val2.push({id: val3.feature.id, description: val3.feature.description, image_url: img});
       });
@@ -105,7 +105,7 @@ const View = ({params}) => {
       val.sub_categories_brands.map(val4=>{
         var img = "none";
         if(val4.brand.image_url!=="none"){
-          img = " http://localhost:8000/"+val4.brand.image_url;
+          img = " http://tm-web.effisoftsolutions.com/"+val4.brand.image_url;
         }
         val3.push({id: val4.brand.id, description: val4.brand.description, image_url: img});
       });
@@ -241,7 +241,7 @@ const View = ({params}) => {
       formData.append('imageUrl', fileIn);
       axios({
         method: "post",
-        url: " http://localhost:8000/sub-categories/edit-image",
+        url: " http://tm-web.effisoftsolutions.com/sub-categories/edit-image",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       })
@@ -254,7 +254,7 @@ const View = ({params}) => {
           setIsSaving(false);
         } 
         else {
-          setEditImage(" http://localhost:8000/"+response.data.data);
+          setEditImage(" http://tm-web.effisoftsolutions.com/"+response.data.data);
           setIsSaving(false);
         }
       })

@@ -8,7 +8,7 @@ const handler = NextAuth({
       credentials: {},
       authorize: async (credentials)=>{
         const {email, password} = credentials;
-        const res = await fetch(" http://localhost:8000/online-users/signin-web", {
+        const res = await fetch(" http://tm-web.effisoftsolutions.com/online-users/signin-web", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -49,7 +49,7 @@ const handler = NextAuth({
       session.iat = token.iat;
       session.exp = token.exp;
       session.jti = token.jti;
-      const res = await fetch(" http://localhost:8000/online-users/find-by-email-web", {
+      const res = await fetch(" http://tm-web.effisoftsolutions.com/online-users/find-by-email-web", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

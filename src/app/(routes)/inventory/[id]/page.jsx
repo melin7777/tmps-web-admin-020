@@ -167,13 +167,13 @@ const View = ({params}) => {
         setEditImage("none");
       }
       else{
-        setEditImage(" http://localhost:8000/"+val.image_url);
+        setEditImage(" http://tm-web.effisoftsolutions.com/"+val.image_url);
       }
 
       var val1 = val.inventory_images;
       var val2 = [];
       val1.map(val3=>{
-        val2.push({id: val3.id, inventoryId: val.id, imageUrl: " http://localhost:8000/"+val3.image_url});
+        val2.push({id: val3.id, inventoryId: val.id, imageUrl: " http://tm-web.effisoftsolutions.com/"+val3.image_url});
       });
       setEditImages(val2);
 
@@ -429,7 +429,7 @@ const View = ({params}) => {
       formData.append('imageUrl', fileIn);
       axios({
         method: "post",
-        url: " http://localhost:8000/inventory/edit-main-image-web",
+        url: " http://tm-web.effisoftsolutions.com/inventory/edit-main-image-web",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       })
@@ -442,7 +442,7 @@ const View = ({params}) => {
           setIsSaving(false);
         } 
         else {
-          setEditImage(" http://localhost:8000/"+response.data.data);
+          setEditImage(" http://tm-web.effisoftsolutions.com/"+response.data.data);
           setIsSaving(false);
         }
       })
@@ -498,7 +498,7 @@ const View = ({params}) => {
       formData.append('imageUrl', fileIn);
       axios({
         method: "post",
-        url: " http://localhost:8000/inventory/edit-other-image-web",
+        url: " http://tm-web.effisoftsolutions.com/inventory/edit-other-image-web",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       })
@@ -512,7 +512,7 @@ const View = ({params}) => {
         } 
         else {
           let val = [...editImages];
-          val.push({id: response.data.data.data.id, inventoryId: parseInt(editId), imageUrl: " http://localhost:8000/"+response.data.data.data.image_url});
+          val.push({id: response.data.data.data.id, inventoryId: parseInt(editId), imageUrl: " http://tm-web.effisoftsolutions.com/"+response.data.data.data.image_url});
           setEditImages(val);
           setOtherPhotoURL("none");
           setIsSaving(false);
@@ -1249,7 +1249,7 @@ const View = ({params}) => {
                   <div className='flex justify-center items-center w-[26px] h-[26px] rounded-[13px] relative overflow-hidden'>
                     {val.feature.image_url==="none" ? 
                       <CameraAlt sx={{width: 26, height: 26, color: '#cbd5e1'}}/> : 
-                      <Image src={" http://localhost:8000/"+val.feature.image_url} alt="feature image" fill sizes='26px' priority={true} style={{objectFit: 'cover'}}/>
+                      <Image src={" http://tm-web.effisoftsolutions.com/"+val.feature.image_url} alt="feature image" fill sizes='26px' priority={true} style={{objectFit: 'cover'}}/>
                     }
                   </div>
                   <span className="text-sm mb-1 ml-3">{val.feature.description}</span>
@@ -1266,7 +1266,7 @@ const View = ({params}) => {
                             <div className='flex justify-center items-center w-[26px] h-[26px] rounded-[13px] relative overflow-hidden'>
                               {val1.image_url==="none" ? 
                                 <CameraAlt sx={{width: 26, height: 26, color: '#cbd5e1'}}/> : 
-                                <Image src={" http://localhost:8000/"+val1.image_url} alt="feature image" fill sizes='26px' priority={true} style={{objectFit: 'cover'}}/>
+                                <Image src={" http://tm-web.effisoftsolutions.com/"+val1.image_url} alt="feature image" fill sizes='26px' priority={true} style={{objectFit: 'cover'}}/>
                               }
                             </div>
                             <span className="text-sm mb-1 ml-3">{val1.description}</span>
@@ -1286,7 +1286,7 @@ const View = ({params}) => {
                             <div className='flex justify-center items-center w-[26px] h-[26px] rounded-[13px] relative overflow-hidden'>
                               {val1.image_url==="none" ? 
                                 <CameraAlt sx={{width: 26, height: 26, color: '#cbd5e1'}}/> : 
-                                <Image src={" http://localhost:8000/"+val1.image_url} alt="feature image" fill sizes='26px' priority={true} style={{objectFit: 'cover'}}/>
+                                <Image src={" http://tm-web.effisoftsolutions.com/"+val1.image_url} alt="feature image" fill sizes='26px' priority={true} style={{objectFit: 'cover'}}/>
                               }
                             </div>
                             <span className="text-sm mb-1 ml-3">{val1.description}</span>

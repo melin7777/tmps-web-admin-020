@@ -192,7 +192,7 @@ const ServicesSearch = () => {
               imageUrl = "none";
             }
             else{
-              imageUrl = " http://localhost:8000/"+val.image_url;
+              imageUrl = " http://tm-web.effisoftsolutions.com/"+val.image_url;
             }
             const temp = {
               index: index++,
