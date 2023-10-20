@@ -41,6 +41,8 @@ const View = ({params}) => {
   const [editBarcodeError, setEditBarcodeError] = useState(false);
   const [editCode, setEditCode] = useState("");
   const [editCodeError, setEditCodeError] = useState(false);
+  const [editUrlString, setEditUrlString] = useState("");
+  const [editUrlStringError, setEditUrlStringError] = useState(false);
   const [editHeading, setEditHeading] = useState("");
   const [editHeadingError, setEditHeadingError] = useState(false);
   const [editShortDescription, setEditShortDescription] = useState("");
@@ -140,6 +142,7 @@ const View = ({params}) => {
       setEditPartNumber(val.part_number);
       setEditBarcode(val.barcode);
       setEditCode(val.code);
+      setEditUrlString(val.url_string);
       setEditHeading(val.heading);
       setEditShortDescription(val.short_description);
       setEditDescription(val.description);
@@ -226,6 +229,7 @@ const View = ({params}) => {
     setEditPartNumberError(false);
     setEditBarcodeError(false);
     setEditCodeError(false);
+    setEditUrlStringError(false);
     setEditCategoryError(false);
     setEditSubCategoryError(false);
     setEditSellerError(false);
@@ -257,6 +261,7 @@ const View = ({params}) => {
     setEditPartNumber('');
     setEditBarcode('');
     setEditCode('');
+    setEditUrlString('');
     setEditSeller({id: 0, description: "Please Select"});
     setEditCategory({id: 0, description: "Please Select"});
     setEditSubCategory({id: 0, description: "Please Select"});
@@ -297,6 +302,10 @@ const View = ({params}) => {
       if (editCode.length>32) {
         error = true;
         setEditCodeError(true);
+      }
+      if (editUrlString.length>128) {
+        error = true;
+        setEditUrlStringError(true);
       }
       if (editCategory.id===0) {
         error = true;
@@ -346,6 +355,7 @@ const View = ({params}) => {
           part_number: editPartNumber,
           barcode: editBarcode,
           code: editCode,
+          url_string: editUrlString,
           category_id: editCategory.id,
           sub_category_id: editSubCategory.id,
           brand_id: editBrand.id,
@@ -894,6 +904,26 @@ const View = ({params}) => {
                   </div>
                 </div>
                 {editModelError && <span className='form_error_floating'>Invalid Model</span>}
+              </div>
+            </div>
+            <div className='form_row_single'>
+              <div className='form_field_container_full'>
+                <TextField 
+                  id='url-string'
+                  label="Url String" 
+                  variant="outlined" 
+                  className='form_text_field' 
+                  value={editUrlString} 
+                  error={editUrlStringError}
+                  onChange={event=>setEditUrlString(event.target.value)}
+                  disabled={isSaving||isLoading}
+                  size='small' 
+                  onFocus={()=>setEditUrlStringError(false)}
+                  inputProps={{style: {fontSize: 13}}}
+                  SelectProps={{style: {fontSize: 13}}}
+                  InputLabelProps={{style: {fontSize: 15}}}
+                />
+                {editUrlStringError && <span className='form_error_floating'>Invalid Url String</span>}
               </div>
             </div>
             <div className='form_row_single'>

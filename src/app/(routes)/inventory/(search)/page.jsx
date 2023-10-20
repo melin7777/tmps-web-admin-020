@@ -29,7 +29,7 @@ const InventorySearch = () => {
   const [selectedRow, setSelectedRow] = useState(0);
   const [filtersShowing, setFiltersShowing] = useState(false);
   const [searchDescription, setSearchDescription] = useState("");
-  const [searchType, setSearchType] = useState("type");
+  const [searchType, setSearchType] = useState("all");
   const [searchStatus, setSearchStatus] = useState("active");
   const [searchSortBy, setSearchSortBy] = useState("id");
   const [searchOrder, setSearchOrder] = useState("ASC");
