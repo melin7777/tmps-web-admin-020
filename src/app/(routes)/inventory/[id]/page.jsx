@@ -17,6 +17,7 @@ import CropEasyMulti from '@/components/crop/CropEasyMulti';
 import CropEasySingle from '@/components/crop/CropEasySingle';
 import SellersBrowser from '@/components/browsers/SellersBrowser';
 import SubCategoriesBrowser from '@/components/browsers/SubCategoriesBrowser';
+import { urlString } from '@/utils/Validate';
 
 const View = ({params}) => {
   const router = useRouter();
@@ -338,6 +339,10 @@ const View = ({params}) => {
       if (editDescription.length>2048) {
         error = true;
         setEditDescriptionError(true);
+      }
+      if (!urlString.test(editUrlString) || editUrlString.length>128) {
+        error = true;
+        setEditUrlStringError(true);
       }
       if(!error){
         var apiDes = "";

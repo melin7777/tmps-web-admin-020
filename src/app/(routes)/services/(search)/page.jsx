@@ -19,8 +19,6 @@ const ServicesSearch = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { width, height=500 } = useWindowDimensions();
-  const scrollRef = useRef();
-  const [scrollTop, setScrollTop] = useState(0);
 
   const [selectedRow, setSelectedRow] = useState(0);
   const [filtersShowing, setFiltersShowing] = useState(false);
@@ -93,14 +91,6 @@ const ServicesSearch = () => {
         else{
           setSelectedRow(0);
         }
-        const search_scroll_top = localStorage.getItem('admin_services_search_scroll_top');
-        if(search_scroll_top && search_scroll_top!==null) {
-          setScrollTop(JSON.parse(search_scroll_top));
-          setTimeout(() => window.scrollTo(0, search_scroll_top), 100);
-        }
-        else{
-          setScrollTop(0);
-        }
       } 
       catch(e) {
         console.log("get storage error - "+e);
@@ -131,26 +121,11 @@ const ServicesSearch = () => {
     }
     change();
   }, [selectedRow]);
-  
-  const onScroll = (e) => {
-    const scrollTop = scrollRef.current.scrollTop;
-    setScrollTop(scrollTop);    
-  }
 
   const clearFields = () => {
     setSearchDescription("");
     setSearchStatus("all");
     setSearchSeller({id: 0, description: "All"});
-  }
-
-  const editClicked = (id) => {
-    if(filtersShowing!==null){
-      try {
-        localStorage.setItem("admin_services_search_scroll_top", JSON.stringify(scrollTop));
-        router.push("/services/"+id);
-      } 
-      catch (e) {}
-    }
   }
 
   async function getSearchData(page){
@@ -242,7 +217,7 @@ const ServicesSearch = () => {
   }
 
   return (
-    <div className='form_container' style={{minHeight: (height-80)}} ref={scrollRef} onScroll={onScroll}>
+    <div className='form_container' style={{minHeight: (height-80)}}>
       <div className='form_container_medium' style={{minHeight: (height-80)}}>
         <SupportMenu selected_root='services'/>
         <div className='header_container'>
@@ -259,7 +234,8 @@ const ServicesSearch = () => {
               disabled={isSaving} 
               style={{textTransform: 'none'}} 
               startIcon={isSaving?<CircularProgress size={18} style={{'color': '#9ca3af'}}/>:<Add />}
-              onClick={()=>editClicked("create-item")}
+              href={'/services/create-item'}
+              target='_blank'
               size='small'
             >New Item</Button>
             <Button 
@@ -461,7 +437,8 @@ const ServicesSearch = () => {
                         variant='outlined' 
                         style={{textTransform: 'none'}} 
                         startIcon={<Edit />}
-                        onClick={()=>editClicked(val.id)}
+                        href={'/services/'+encodeURIComponent(val.id)}
+                        target='_blank'
                         size='small'
                       >Edit</Button>
                     </div>
@@ -472,7 +449,8 @@ const ServicesSearch = () => {
                     variant='outlined' 
                     style={{textTransform: 'none'}} 
                     startIcon={<Edit />}
-                    onClick={()=>editClicked(val.id)}
+                    href={'/services/'+encodeURIComponent(val.id)}
+                    target='_blank'
                     size='small'
                   >Edit</Button>
                 </div>

@@ -10,6 +10,7 @@ import { Button, CircularProgress, Dialog, FormControlLabel, IconButton, MenuIte
 import { Add, CameraAlt, CropRotate, Delete, Folder, KeyboardArrowLeft, Save } from "@mui/icons-material";
 import useWindowDimensions from '@/hooks/useWindowDimension';
 import CropEasySmall from '@/components/crop/CropEasySmall';
+import { urlString } from '@/utils/Validate';
 
 const View = ({params}) => {
   const router = useRouter();
@@ -30,6 +31,8 @@ const View = ({params}) => {
   const [editCodeError, setEditCodeError] = useState(false);
   const [editDescription, setEditDescription] = useState("");
   const [editDescriptionError, setEditDescriptionError] = useState(false);
+  const [editUrlString, setEditUrlString] = useState("");
+  const [editUrlStringError, setEditUrlStringError] = useState(false);
   const [editFeatured, setEditFeatured] = useState("no");
   const [editFeaturedError, setEditFeaturedError] = useState(false);
   const [editShowOnFilters, setEditShowOnFilters] = useState("no");
@@ -67,6 +70,7 @@ const View = ({params}) => {
       setEditStatus(val.status);
       setEditCode(val.code);
       setEditDescription(val.description);
+      setEditUrlString(val.url_string);
       setEditFeatured(val.featured);
       setEditShowOnFilters(val.show_on_filters);
 
@@ -99,6 +103,7 @@ const View = ({params}) => {
     setEditStatusError(false);
     setEditCodeError(false);
     setEditDescriptionError(false);
+    setEditUrlStringError(false);
     setEditFeaturedError(false);
     setEditShowOnFiltersError(false);
     setEditImageError(false);
@@ -111,6 +116,7 @@ const View = ({params}) => {
     setEditStatus('active');
     setEditCode('');
     setEditDescription('');
+    setEditUrlString('');
     setEditFeatured("no");
     setEditShowOnFilters("no");
     setEditImage('none');
@@ -129,6 +135,10 @@ const View = ({params}) => {
         error = true;
         setEditDescriptionError(true);
       }
+      if (!urlString.test(editUrlString) || editUrlString.length>128) {
+        error = true;
+        setEditUrlStringError(true);
+      }
       if(!error){
         var apiDes = "";
         if(editId===""){
@@ -143,6 +153,7 @@ const View = ({params}) => {
           status: editStatus,
           code: editCode,
           description: editDescription,
+          url_string: editUrlString,
           featured: editFeatured,
           show_on_filters: editShowOnFilters,
         });
@@ -388,6 +399,26 @@ const View = ({params}) => {
                 InputLabelProps={{style: {fontSize: 15}}}
               />
               {editDescriptionError && <span className='form_error_floating'>Invalid Description</span>}
+            </div>
+          </div>
+          <div className='form_row_single'>
+            <div className='form_field_container_full'>
+              <TextField 
+                id='url-string'
+                label="Url String" 
+                variant="outlined" 
+                className='form_text_field' 
+                value={editUrlString} 
+                error={editUrlStringError}
+                onChange={event=>setEditUrlString(event.target.value)}
+                disabled={isLoading||isSaving}
+                size='small' 
+                onFocus={()=>setEditUrlStringError(false)}
+                inputProps={{style: {fontSize: 13}}}
+                SelectProps={{style: {fontSize: 13}}}
+                InputLabelProps={{style: {fontSize: 15}}}
+              />
+              {editUrlStringError && <span className='form_error_floating'>Invalid Url String</span>}
             </div>
           </div>
           <div className='form_row_double'>

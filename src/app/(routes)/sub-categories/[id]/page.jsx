@@ -14,6 +14,7 @@ import CropEasySmall from '@/components/crop/CropEasySmall';
 import Image from 'next/image';
 import FeaturesBrowser from '@/components/browsers/FeaturesBrowser';
 import BrandsBrowser from '@/components/browsers/BrandsBrowser';
+import { urlString } from '@/utils/Validate';
 
 const View = ({params}) => {
   const router = useRouter();
@@ -39,6 +40,8 @@ const View = ({params}) => {
   const [editDescription, setEditDescription] = useState("");
   const [editDescriptionError, setEditDescriptionError] = useState(false);
   const [editCategory, setEditCategory] = useState({id: 0, description: "Please Select"});
+  const [editUrlString, setEditUrlString] = useState("");
+  const [editUrlStringError, setEditUrlStringError] = useState(false);
   const [editCategoryError, setEditCategoryError] = useState(false);
   const [openCategory, setOpenCategory] = useState(false);
   const [editShowOnFilters, setEditShowOnFilters] = useState("no");
@@ -81,6 +84,7 @@ const View = ({params}) => {
       setEditStatus(val.status);
       setEditCode(val.code);
       setEditDescription(val.description);
+      setEditUrlString(val.url_string);
       setEditCategory({id: val.category_id, description: val.category.description});
       setEditShowOnFilters(val.show_on_filters);
 
@@ -132,6 +136,7 @@ const View = ({params}) => {
     setEditStatusError(false);
     setEditCodeError(false);
     setEditDescriptionError(false);
+    setEditUrlStringError(false);
     setEditCategoryError(false);
     setEditShowOnFiltersError(false);
     setEditImageError(false);
@@ -143,6 +148,7 @@ const View = ({params}) => {
     setEditStatus('active');
     setEditCode('');
     setEditDescription('');
+    setEditUrlString('');
     setEditShowOnFilters("no");
     setEditCategory({id: 0, description: "Please Select"});
     setEditImage('none');
@@ -163,6 +169,10 @@ const View = ({params}) => {
         error = true;
         setEditDescriptionError(true);
       }
+      if (!urlString.test(editUrlString) || editUrlString.length>128) {
+        error = true;
+        setEditUrlStringError(true);
+      }
       if (editCategory.id===0) {
         error = true;
         setEditCategoryError(true);
@@ -180,6 +190,7 @@ const View = ({params}) => {
           status: editStatus,
           code: editCode,
           description: editDescription,
+          url_string: editUrlString,
           categoryId: editCategory.id,
           show_on_filters: editShowOnFilters,
         });
@@ -535,6 +546,26 @@ const View = ({params}) => {
                   InputLabelProps={{style: {fontSize: 15}}}
                 />
                 {editDescriptionError && <span className='form_error_floating'>Invalid Description</span>}
+              </div>
+            </div>
+            <div className='form_row_single'>
+              <div className='form_field_container_full'>
+                <TextField 
+                  id='url-string'
+                  label="Url String" 
+                  variant="outlined" 
+                  className='form_text_field' 
+                  value={editUrlString} 
+                  error={editUrlStringError}
+                  onChange={event=>setEditUrlString(event.target.value)}
+                  disabled={isLoading||isSaving}
+                  size='small' 
+                  onFocus={()=>setEditUrlStringError(false)}
+                  inputProps={{style: {fontSize: 13}}}
+                  SelectProps={{style: {fontSize: 13}}}
+                  InputLabelProps={{style: {fontSize: 15}}}
+                />
+                {editUrlStringError && <span className='form_error_floating'>Invalid Url String</span>}
               </div>
             </div>
             <div className='form_row_double'>
